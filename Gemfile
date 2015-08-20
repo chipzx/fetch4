@@ -40,6 +40,7 @@ group :development, :test do
 end
 
 gem 'devise'
+gem 'bower-rails'
 
 gem 'rmagick'
 gem 'paperclip', '~> 4.3'
