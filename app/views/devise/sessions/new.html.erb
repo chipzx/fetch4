@@ -1,15 +1,6 @@
-<header>
-  <div class= "row">
-    <div class="col-md-4">
-      <%= image_tag("Logo.png", size: "295x80", alt: "FetchIT Software", class: "img-responsive") %>
-    </div>
-    <div class="col-md-8">
-      <h4 class="pull-right text-success"><em>The Next Generation of Animal Care Management Software</em></h4>
-    </div>
-  </div>
-  <h1 class="text-success">Log in</h1>
-</header>
+<%= render "fetch_header" %>
 
+<h1 class="text-success">FetchIt Log In</h1>
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <div class="form-group">
     <%= f.label :email %><br />
@@ -36,3 +27,4 @@
 <% end %>
 
 <%= render "devise/shared/links" %>
+<%= render "fetch_footer" %>
