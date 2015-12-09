@@ -5,8 +5,17 @@
   <%= devise_error_messages! %>
 
   <div class="form-group">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, class: "form-control"%>
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.label :email %><br />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.email_field :email, autofocus: true, class: "form-control"%>
+      </div>
+    </div>
   </div>
 
   <div class="actions">

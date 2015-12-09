@@ -1,15 +1,31 @@
 <%= render "fetch_header" %>
 
-<h1 class="text-success">FetchIt Log In</h1>
+<h1 class="text-success">FetchIT Log In</h1>
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <div class="form-group">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, class: 'form-control' %>
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.label :email %><br />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.email_field :email, size: 50, autofocus: true, class: 'form-control' %>
+      </div>
+    </div>
   </div>
 
   <div class="form-group">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "off", class: 'form-control' %>
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.label :password %><br />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.password_field :password, size: 50, autocomplete: "off", class: 'form-control' %>
+      </div>
+    </div>
   </div>
 
   <% if devise_mapping.rememberable? -%>

@@ -1,26 +1,50 @@
 <%= render("fetch_header") %>
-<h1 class="text-success">FetchIt Sign Up</h1>
+<h1 class="text-success">FetchIT Sign Up</h1>
 
 <section>
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
     <%= devise_error_messages! %>
   
     <div class="form-group">
-      <%= f.label :email %><br />
-      <%= f.email_field :email, autofocus: true, class: "form-control"%>
+      <div class="row">
+        <div class="col-md-6">
+          <%= f.label :email %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <%= f.email_field :email, autofocus: true, class: "form-control"%>
+        </div>
+      </div>
     </div>
   
     <div class="form-group">
-      <%= f.label :password %>
-      <% if @validatable %>
-        <em>(<%= @minimum_password_length %> characters minimum)</em>
-      <% end %><br />
-      <%= f.password_field :password, autocomplete: "off", class: "form-control"%>
+      <div class="row">
+        <div class="col-md-8">
+          <%= f.label :password %>
+          <% if @validatable %>
+            <em>(<%= @minimum_password_length %> characters minimum)</em>
+          <% end %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <%= f.password_field :password, autocomplete: "off", class: "form-control"%>
+        </div>
+      </div>
     </div>
   
     <div class="form-group">
-      <%= f.label :password_confirmation %><br />
-      <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
+      <div class="row">
+        <div class="col-md-6">
+          <%= f.label :password_confirmation %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
+        </div>
+      </div>
     </div>
   
     <div class="actions">
