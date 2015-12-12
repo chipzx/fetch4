@@ -5,6 +5,21 @@
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
     <%= devise_error_messages! %>
   
+
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-6">
+          <%= f.label :group_name %>
+        </div>`
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <%= f.text_field :group_name, placeholder: "Ask your administrator for your group name ", 
+                           autocomplete: "off", class: "form-control" %>
+        </div>
+      </div>
+    </div>
+
     <div class="form-group">
       <div class="row">
         <div class="col-md-6">
