@@ -12,6 +12,9 @@
 !/log/.keep
 /tmp
 
+# Ignore simplecov coverage directory
+/coverage
+
 Gemfile.lock
 Gemfile.old
 vim-sleuth

@@ -2,7 +2,7 @@ class MultiTenantBase < ActiveRecord::Base
   self.abstract_class = true
   validates :group_id, presence: true
   
-  before_save :set_group
+  before_save :before_save
   after_create :init
 
   def init
@@ -13,15 +13,16 @@ class MultiTenantBase < ActiveRecord::Base
 
   def before_save
     puts 'Executed before save'
+    set_group_and_user
   end
 
   def self.current
-    Thread.current['current_group']
+    return Thread.current['current_group']
   end
 
   def self.current=(group)
     Thread.current['current_group'] = group
-    Thread.current['current_user'] = current_user   # this is from devise
+    Thread.current['current_user'] = get_user   # this is from devise
   end
 
   def set_group_and_user
@@ -47,4 +48,12 @@ class MultiTenantBase < ActiveRecord::Base
     end
   end
 
+  private
+  def self.get_user
+    if ENV['RAILS_ENV'].eql?('production')
+      return current_user
+    else
+      return User.all[0]
+    end
+  end
 end

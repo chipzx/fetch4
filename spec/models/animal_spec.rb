@@ -1,5 +1,5 @@
 require 'rails_helper'
 
-describe Animal do
-
-end
+# describe Animal do
+#
+# end
