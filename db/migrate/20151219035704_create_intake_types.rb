@@ -6,8 +6,11 @@ class CreateIntakeTypes < ActiveRecord::Migration
       t.string :name, :null => false
       t.integer :group_id, :null => false
       t.text :description
-      t.timestamps
+      t.timestamps null: false
     end
+
+    add_index :intake_types, [ :group_id, :name ], :unique => true
+    add_index :intake_types, :name
 
     # Add default intake types
     conn.execute("INSERT INTO intake_types (name, group_id, description, created_at, updated_at) VALUES ('Stray', 0, 'Stray animal brought to animal care facility', now(), now())")
