@@ -23,4 +23,11 @@ FactoryGirl.define do
     created_at DateTime.now
     updated_at DateTime.now
   end
+  factory :intaketype, class:IntakeType do
+    name 'Stray'
+    group_id 1
+    description 'Stray Animal'
+    created_at DateTime.now
+    updated_at DateTime.now
+  end
 end
