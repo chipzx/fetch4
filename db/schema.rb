@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151221170958) do
+ActiveRecord::Schema.define(version: 20151221172526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,17 @@ ActiveRecord::Schema.define(version: 20151221170958) do
   add_index "intake_types", ["group_id", "name"], name: "index_intake_types_on_group_id_and_name", unique: true, using: :btree
   add_index "intake_types", ["name"], name: "index_intake_types_on_name", using: :btree
 
+  create_table "outcome_types", force: :cascade do |t|
+    t.string   "name",        null: false
+    t.text     "description"
+    t.integer  "group_id",    null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "outcome_types", ["group_id", "name"], name: "index_outcome_types_on_group_id_and_name", unique: true, using: :btree
+  add_index "outcome_types", ["name"], name: "index_outcome_types_on_name", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -79,5 +90,6 @@ ActiveRecord::Schema.define(version: 20151221170958) do
 
   add_foreign_key "animal_types", "groups", name: "animal_types_groups_fk"
   add_foreign_key "intake_types", "groups", name: "intake_types_groups_fk"
+  add_foreign_key "outcome_types", "groups", name: "outcome_types_groups_fk"
   add_foreign_key "users", "groups", name: "users_groups_fk"
 end
