@@ -41,9 +41,12 @@ ActiveRecord::Schema.define(version: 20151221170958) do
     t.string   "name",        null: false
     t.integer  "group_id",    null: false
     t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
+
+  add_index "intake_types", ["group_id", "name"], name: "index_intake_types_on_group_id_and_name", unique: true, using: :btree
+  add_index "intake_types", ["name"], name: "index_intake_types_on_name", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false

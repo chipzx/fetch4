@@ -30,4 +30,11 @@ FactoryGirl.define do
     created_at DateTime.now
     updated_at DateTime.now
   end
+  factory :outcometype, class:OutcomeType do
+    name 'Adoption'
+    group_id 1
+    description 'Animal adopted'
+    created_at DateTime.now
+    updated_at DateTime.now
+  end
 end
