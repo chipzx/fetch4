@@ -1,16 +1,26 @@
-<h2>Resend unlock instructions</h2>
+<%= render "fetch_header" %>
+<h1 class="text-success">Resend unlock instructions</h1>
 
 <%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f| %>
   <%= devise_error_messages! %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true %>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-6"/>
+        <%= f.label :email %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6"/>
+        <%= f.email_field :email, size: 50, autofocus: true, class: 'form-control' %>
+      </div>
+    </div>
   </div>
 
   <div class="actions">
-    <%= f.submit "Resend unlock instructions" %>
+    <%= f.submit "Resend unlock instructions", class: "btn btn-primary btn-lg" %>
   </div>
 <% end %>
 
 <%= render "devise/shared/links" %>
+<%= render "fetch_footer" %>
