@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151221172526) do
+ActiveRecord::Schema.define(version: 20151222215920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,34 @@ ActiveRecord::Schema.define(version: 20151221172526) do
 
   add_index "animal_types", ["group_id", "name"], name: "index_animal_types_on_group_id_and_name", unique: true, using: :btree
   add_index "animal_types", ["name"], name: "index_animal_types_on_name", using: :btree
+
+  create_table "animals", force: :cascade do |t|
+    t.integer  "animal_type_id",               null: false
+    t.string   "anumber",                      null: false
+    t.string   "name"
+    t.integer  "kennel_id"
+    t.integer  "gender_id"
+    t.string   "breed"
+    t.string   "coloring"
+    t.decimal  "weight"
+    t.datetime "dob"
+    t.boolean  "dob_known"
+    t.datetime "intake_date"
+    t.integer  "intake_type_id",   default: 0, null: false
+    t.text     "description"
+    t.integer  "group_id",                     null: false
+    t.string   "microchip_number"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "animals", ["anumber", "group_id"], name: "index_animals_on_anumber_and_group_id", unique: true, using: :btree
+  add_index "animals", ["breed"], name: "index_animals_on_breed", using: :btree
+  add_index "animals", ["group_id"], name: "index_animals_on_group_id", using: :btree
+  add_index "animals", ["intake_type_id"], name: "index_animals_on_intake_type_id", using: :btree
+  add_index "animals", ["kennel_id"], name: "index_animals_on_kennel_id", using: :btree
+  add_index "animals", ["microchip_number"], name: "index_animals_on_microchip_number", using: :btree
+  add_index "animals", ["name"], name: "index_animals_on_name", using: :btree
 
   create_table "groups", force: :cascade do |t|
     t.string   "name",        null: false
@@ -89,6 +117,9 @@ ActiveRecord::Schema.define(version: 20151221172526) do
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
   add_foreign_key "animal_types", "groups", name: "animal_types_groups_fk"
+  add_foreign_key "animals", "animal_types", name: "animals_animal_types_fk"
+  add_foreign_key "animals", "groups", name: "animals_groups_fk"
+  add_foreign_key "animals", "intake_types", name: "animals_intake_types_fk"
   add_foreign_key "intake_types", "groups", name: "intake_types_groups_fk"
   add_foreign_key "outcome_types", "groups", name: "outcome_types_groups_fk"
   add_foreign_key "users", "groups", name: "users_groups_fk"
