@@ -3,16 +3,15 @@ class MultiTenantBase < ActiveRecord::Base
   validates :group_id, presence: true
   
   before_save :before_save
-  after_create :init
+
+  after_initialize :init
 
   def init
-    puts 'Executed init'
-    @user = nil
-    @group_id = nil
+    self.group_id = set_group if self.group_id.nil?
+    @user = set_user
   end
 
   def before_save
-    puts 'Executed before save'
     set_group_and_user
   end
 
