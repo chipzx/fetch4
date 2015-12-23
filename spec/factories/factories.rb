@@ -7,6 +7,14 @@ FactoryGirl.define do
     created_at DateTime.now
     updated_at DateTime.now
   end
+  factory :new_group, class: Group do
+    name 'test'
+    description 'test group'
+    id 2
+    time_zone 'US/Central'
+    created_at DateTime.now
+    updated_at DateTime.now
+  end
   factory :user do
     # defaults
     email "test@example.com"

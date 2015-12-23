@@ -4,6 +4,9 @@ describe Gender do
   let (:group) {
     create(:group)
   }
+  let (:new_group) {
+    create(:new_group)
+  }
 
   it "checks multi-tenant methods" do
     Gender.current = group.id
@@ -48,4 +51,15 @@ describe Gender do
     expect { g.save! }.to raise_error(ActiveRecord::InvalidForeignKey)
   end
 
+  it "provisions to a new group" do
+    Gender.current = group.id
+    it = create(:gender)
+    it.save!
+    puts("Group Id is #{group.id}, new group id is #{new_group.id}")
+    it_all = Gender.all
+    Gender.provision(group.id, new_group.id)
+    # TODO: Add assertions
+    # validation happens inside provision method - have problem with newly
+    # created records showing up in test environment [ccy 2015/12/23]
+  end
 end
