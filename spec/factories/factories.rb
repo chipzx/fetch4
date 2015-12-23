@@ -37,4 +37,10 @@ FactoryGirl.define do
   factory :animal do
     anumber 'A123456'
   end
+  factory :gender do
+    name 'X'
+    description 'Unknown'
+    created_at DateTime.now
+    updated_at DateTime.now
+  end
 end
