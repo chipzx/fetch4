@@ -18,23 +18,23 @@ FactoryGirl.define do
   end
   factory :animaltype, class: AnimalType do
     name 'Rabbit'
-    group_id 1
     description 'Rabbits and Bunnies'
     created_at DateTime.now
     updated_at DateTime.now
   end
   factory :intaketype, class:IntakeType do
     name 'Stray'
-    group_id 1
     description 'Stray Animal'
     created_at DateTime.now
     updated_at DateTime.now
   end
   factory :outcometype, class:OutcomeType do
     name 'Adoption'
-    group_id 1
     description 'Animal adopted'
     created_at DateTime.now
     updated_at DateTime.now
+  end
+  factory :animal do
+    anumber 'A123456'
   end
 end
