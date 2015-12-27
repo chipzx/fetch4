@@ -51,4 +51,14 @@ FactoryGirl.define do
     created_at DateTime.now
     updated_at DateTime.now
   end
+  factory :kenneltype, class: KennelType do
+    name 'Standard'
+    created_at DateTime.now
+    updated_at DateTime.now
+  end
+  factory :kennel do
+    name '101'
+    created_at DateTime.now
+    updated_at DateTime.now
+  end
 end
