@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151223045541) do
+ActiveRecord::Schema.define(version: 20151223175911) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,6 +87,35 @@ ActiveRecord::Schema.define(version: 20151223045541) do
   add_index "intake_types", ["group_id", "name"], name: "index_intake_types_on_group_id_and_name", unique: true, using: :btree
   add_index "intake_types", ["name"], name: "index_intake_types_on_name", using: :btree
 
+  create_table "kennel_types", force: :cascade do |t|
+    t.string   "name",        null: false
+    t.text     "description"
+    t.integer  "group_id",    null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "kennel_types", ["group_id"], name: "index_kennel_types_on_group_id", using: :btree
+  add_index "kennel_types", ["name", "group_id"], name: "index_kennel_types_on_name_and_group_id", unique: true, using: :btree
+
+  create_table "kennels", force: :cascade do |t|
+    t.string   "name",                           null: false
+    t.string   "building"
+    t.integer  "kennel_type_id",                 null: false
+    t.integer  "max_occupancy",  default: 1,     null: false
+    t.boolean  "full_name",      default: false, null: false
+    t.boolean  "is_onsite",      default: true,  null: false
+    t.boolean  "is_public",      default: true,  null: false
+    t.boolean  "is_permanent",   default: true,  null: false
+    t.boolean  "is_available",   default: true,  null: false
+    t.integer  "group_id",                       null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "kennels", ["group_id"], name: "index_kennels_on_group_id", using: :btree
+  add_index "kennels", ["name", "building", "group_id"], name: "index_kennels_on_name_and_building_and_group_id", unique: true, using: :btree
+
   create_table "outcome_types", force: :cascade do |t|
     t.string   "name",        null: false
     t.text     "description"
@@ -133,6 +162,8 @@ ActiveRecord::Schema.define(version: 20151223045541) do
   add_foreign_key "animals", "intake_types", name: "animals_intake_types_fk"
   add_foreign_key "genders", "groups", name: "genders_groups_fk"
   add_foreign_key "intake_types", "groups", name: "intake_types_groups_fk"
+  add_foreign_key "kennels", "groups", name: "kennels_groups"
+  add_foreign_key "kennels", "kennel_types", name: "kennels_kennel_types"
   add_foreign_key "outcome_types", "groups", name: "outcome_types_groups_fk"
   add_foreign_key "users", "groups", name: "users_groups_fk"
 end
