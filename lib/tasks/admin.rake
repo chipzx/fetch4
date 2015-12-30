@@ -21,6 +21,10 @@ namespace :admin do
       OutcomeType.provision(root_id, group_id)
       puts "Provisioning gender types for group_id #{group_id}"
       Gender.provision(root_id, group_id)
+      puts "Provisioning kennel types for group_id #{group_id}"
+      KennelType.provision(root_id, group_id)
+      puts "Provisioning roles for group_id #{group_id}"
+      Role.provision(root_id, group_id)
     end
   end
 
