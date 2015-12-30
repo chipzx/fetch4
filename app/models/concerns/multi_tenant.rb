@@ -48,7 +48,6 @@ module MultiTenant
   end
 
   def before_save
-    puts "before_save called"
     mutex = Mutex.new
     mutex.synchronize do
       set_group_and_user

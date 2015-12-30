@@ -6,7 +6,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :confirmable, :lockable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  validates :group_id, presence: true
+  has_many :roles, :join_table => 'user_roles'
+  has_many :rights, :join_table => 'privileges'
 
   def group_name
     g = Group.find(self.group_id) unless self.group_id.nil?  

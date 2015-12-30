@@ -4,4 +4,5 @@ class Right < ActiveRecord::Base
   validates :resource, uniqueness: { scope: :resource}
 
   has_and_belongs_to_many :roles, :join_table => "role_rights"
+  has_many :users, :join_table => 'privileges'
 end

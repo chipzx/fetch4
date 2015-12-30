@@ -72,4 +72,12 @@ FactoryGirl.define do
     created_at DateTime.now
     updated_at DateTime.now
   end
+  factory :privilege do
+    created_at DateTime.now
+    updated_at DateTime.now
+  end
+  factory :userrole, class: UserRole do
+    created_at DateTime.now
+    updated_at DateTime.now
+  end
 end
