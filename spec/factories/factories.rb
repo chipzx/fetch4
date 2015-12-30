@@ -61,4 +61,9 @@ FactoryGirl.define do
     created_at DateTime.now
     updated_at DateTime.now
   end
+  factory :role do
+    name 'Admin'
+    description 'Administrator Role'
+    active true
+  end
 end

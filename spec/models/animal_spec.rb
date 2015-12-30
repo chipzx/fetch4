@@ -70,5 +70,4 @@ describe Animal do
     expect { animal.save! }.to raise_error(ActiveRecord::InvalidForeignKey)
   end
 
-
 end

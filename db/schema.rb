@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151223175911) do
+ActiveRecord::Schema.define(version: 20151227162341) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -127,6 +127,61 @@ ActiveRecord::Schema.define(version: 20151223175911) do
   add_index "outcome_types", ["group_id", "name"], name: "index_outcome_types_on_group_id_and_name", unique: true, using: :btree
   add_index "outcome_types", ["name"], name: "index_outcome_types_on_name", using: :btree
 
+  create_table "privileges", force: :cascade do |t|
+    t.integer  "user_id",    null: false
+    t.integer  "right_id",   null: false
+    t.integer  "group_id",   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "privileges", ["group_id"], name: "index_privileges_on_group_id", using: :btree
+  add_index "privileges", ["right_id"], name: "index_privileges_on_right_id", using: :btree
+  add_index "privileges", ["user_id", "right_id"], name: "index_privileges_on_user_id_and_right_id", unique: true, using: :btree
+
+  create_table "rights", force: :cascade do |t|
+    t.string   "resource",   null: false
+    t.string   "action",     null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "rights", ["resource", "action"], name: "index_rights_on_resource_and_action", unique: true, using: :btree
+
+  create_table "role_rights", force: :cascade do |t|
+    t.integer  "role_id",    null: false
+    t.integer  "right_id",   null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "role_rights", ["right_id"], name: "index_role_rights_on_right_id", using: :btree
+  add_index "role_rights", ["role_id", "right_id"], name: "index_role_rights_on_role_id_and_right_id", unique: true, using: :btree
+
+  create_table "roles", force: :cascade do |t|
+    t.string   "name",                       null: false
+    t.text     "description",                null: false
+    t.integer  "group_id",                   null: false
+    t.boolean  "active",      default: true, null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "roles", ["group_id"], name: "index_roles_on_group_id", using: :btree
+  add_index "roles", ["name", "group_id"], name: "index_roles_on_name_and_group_id", unique: true, using: :btree
+
+  create_table "user_roles", force: :cascade do |t|
+    t.integer  "user_id",    null: false
+    t.integer  "role_id",    null: false
+    t.integer  "group_id",   null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "user_roles", ["group_id"], name: "index_user_roles_on_group_id", using: :btree
+  add_index "user_roles", ["role_id"], name: "index_user_roles_on_role_id", using: :btree
+  add_index "user_roles", ["user_id", "role_id"], name: "index_user_roles_on_user_id_and_role_id", unique: true, using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -165,5 +220,14 @@ ActiveRecord::Schema.define(version: 20151223175911) do
   add_foreign_key "kennels", "groups", name: "kennels_groups"
   add_foreign_key "kennels", "kennel_types", name: "kennels_kennel_types"
   add_foreign_key "outcome_types", "groups", name: "outcome_types_groups_fk"
+  add_foreign_key "privileges", "groups", name: "privileges_groups_fk"
+  add_foreign_key "privileges", "groups", name: "user_roles_groups_fk"
+  add_foreign_key "privileges", "rights", name: "privileges_rights_fk"
+  add_foreign_key "privileges", "rights", name: "user_roles_rights_fk"
+  add_foreign_key "privileges", "users", name: "privileges_users_fk"
+  add_foreign_key "role_rights", "rights", name: "role_rights_rights_fk"
+  add_foreign_key "role_rights", "roles", name: "role_rights_roles_fk"
+  add_foreign_key "roles", "groups", name: "roles_groups_fk"
+  add_foreign_key "user_roles", "users", name: "user_roles_users_fk"
   add_foreign_key "users", "groups", name: "users_groups_fk"
 end

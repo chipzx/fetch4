@@ -1,6 +1,7 @@
-class Kennel < MultiTenantBase
-  default_scope { self.current ? where('kennels.group_id = ?', self.current) : nil }
-  validates :name, :group_id, presence: true
+class Kennel < ActiveRecord::Base
+  include MultiTenant
+
+  validates :name, presence: true
   validates :name, uniqueness: {scope: [:building, :group_id] }
 
   def kennel_name
