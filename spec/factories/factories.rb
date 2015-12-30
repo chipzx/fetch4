@@ -66,4 +66,10 @@ FactoryGirl.define do
     description 'Administrator Role'
     active true
   end
+  factory :right do 
+    resource 'animal'
+    action 'index'
+    created_at DateTime.now
+    updated_at DateTime.now
+  end
 end
