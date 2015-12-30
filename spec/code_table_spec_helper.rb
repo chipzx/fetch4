@@ -8,9 +8,12 @@ shared_examples "a provisionedCodeTable" do
     create(:new_group)
   }
 
+  before (:each) do
+      provisionedCodeTable.class.current = group.id
+  end
+
   describe "multitenancy" do
     it "sets and checks the group id" do
-      provisionedCodeTable.class.current = group.id
       g = provisionedCodeTable.class.current
       expect(g).to eq(group.id)
     end
@@ -18,7 +21,6 @@ shared_examples "a provisionedCodeTable" do
 
   describe "validations" do
     it "requires name and group id" do
-      provisionedCodeTable.class.current = group.id
       provisionedCodeTable.name = 'some name'
       provisionedCodeTable.group_id = group.id
       provisionedCodeTable.save!
@@ -29,7 +31,6 @@ shared_examples "a provisionedCodeTable" do
     end
 
     it "prevents duplicate records" do
-      provisionedCodeTable.class.current = group.id
       provisionedCodeTable.name = 'some name'
       provisionedCodeTable.group_id = provisionedCodeTable.class.current
       provisionedCodeTable.save!
@@ -45,9 +46,16 @@ shared_examples "a provisionedCodeTable" do
     end
   end
 
+  describe "constraints" do
+    it "checks group_id foreign key constraint" do
+      provisionedCodeTable.save!
+      provisionedCodeTable.group_id = -1
+      expect { provisionedCodeTable.save! }.to raise_error(ActiveRecord::InvalidForeignKey)
+    end
+  end
+
   describe "provisioning" do
     it "provisions to a new group" do
-      provisionedCodeTable.class.current = group.id
       provisionedCodeTable.group_id = provisionedCodeTable.class.current
       provisionedCodeTable.save!
       puts("Group Id is #{group.id}, new group id is #{new_group.id}")

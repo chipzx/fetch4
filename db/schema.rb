@@ -217,6 +217,7 @@ ActiveRecord::Schema.define(version: 20151227162341) do
   add_foreign_key "animals", "intake_types", name: "animals_intake_types_fk"
   add_foreign_key "genders", "groups", name: "genders_groups_fk"
   add_foreign_key "intake_types", "groups", name: "intake_types_groups_fk"
+  add_foreign_key "kennel_types", "groups", name: "kennel_types_groups_fk"
   add_foreign_key "kennels", "groups", name: "kennels_groups"
   add_foreign_key "kennels", "kennel_types", name: "kennels_kennel_types"
   add_foreign_key "outcome_types", "groups", name: "outcome_types_groups_fk"

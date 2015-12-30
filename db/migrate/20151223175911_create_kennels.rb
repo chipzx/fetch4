@@ -15,6 +15,7 @@ class CreateKennels < ActiveRecord::Migration
     conn.execute("ALTER TABLE kennel_types ALTER COLUMN created_at SET DATA TYPE timestamp with time zone")
     conn.execute("ALTER TABLE kennel_types ALTER COLUMN updated_at SET DATA TYPE timestamp with time zone")
 
+    conn.execute("ALTER TABLE kennel_types ADD CONSTRAINT kennel_types_groups_fk FOREIGN KEY (group_id) REFERENCES groups(id)")
     conn.execute("INSERT INTO kennel_types (name, description, group_id, created_at, updated_at) VALUES ('Standard Kennel', 'Default kennel type', 0, now(), now())")    
 
     create_table :kennels do |t|
