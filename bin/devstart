@@ -1,0 +1,6 @@
+#!/bin/bash
+
+  # start mailcatcher
+  mailcatcher
+  # start the rails server
+  rails s
