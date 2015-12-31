@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151227162341) do
+ActiveRecord::Schema.define(version: 20151230202127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -153,10 +153,12 @@ ActiveRecord::Schema.define(version: 20151227162341) do
     t.integer  "right_id",   null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "group_id",   null: false
   end
 
+  add_index "role_rights", ["group_id"], name: "index_role_rights_on_group_id", using: :btree
   add_index "role_rights", ["right_id"], name: "index_role_rights_on_right_id", using: :btree
-  add_index "role_rights", ["role_id", "right_id"], name: "index_role_rights_on_role_id_and_right_id", unique: true, using: :btree
+  add_index "role_rights", ["role_id", "right_id", "group_id"], name: "index_role_rights_on_role_id_and_right_id_and_group_id", unique: true, using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.string   "name",                       null: false
@@ -226,6 +228,7 @@ ActiveRecord::Schema.define(version: 20151227162341) do
   add_foreign_key "privileges", "rights", name: "privileges_rights_fk"
   add_foreign_key "privileges", "rights", name: "user_roles_rights_fk"
   add_foreign_key "privileges", "users", name: "privileges_users_fk"
+  add_foreign_key "role_rights", "groups", name: "role_rights_groups_fk"
   add_foreign_key "role_rights", "rights", name: "role_rights_rights_fk"
   add_foreign_key "role_rights", "roles", name: "role_rights_roles_fk"
   add_foreign_key "roles", "groups", name: "roles_groups_fk"

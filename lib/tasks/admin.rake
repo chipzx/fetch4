@@ -25,6 +25,8 @@ namespace :admin do
       KennelType.provision(root_id, group_id)
       puts "Provisioning roles for group_id #{group_id}"
       Role.provision(root_id, group_id)
+      puts "Provisioning role_rights for group_id #{group_id}"
+      RoleRight.provision(root_id, group_id)
     end
   end
 

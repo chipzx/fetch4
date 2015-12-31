@@ -56,7 +56,6 @@ shared_examples "a provisionedCodeTable" do
 
   describe "provisioning" do
     it "provisions to a new group" do
-      provisionedCodeTable.group_id = provisionedCodeTable.class.current
       provisionedCodeTable.save!
       puts("Group Id is #{group.id}, new group id is #{new_group.id}")
       provisionedCodeTable.class.provision(group.id, new_group.id)

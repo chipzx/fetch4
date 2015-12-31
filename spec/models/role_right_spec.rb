@@ -6,6 +6,10 @@ describe RoleRight do
     create(:group)
   }
 
+  let (:new_group) {
+    create(:new_group)
+  }
+
   let(:role) {
     build(:role)
   }
@@ -15,7 +19,7 @@ describe RoleRight do
   }
 
   before(:each) do
-    Role.current = group.id
+    RoleRight.current = group.id
     role.save!
     right.save!
   end
@@ -28,6 +32,7 @@ describe RoleRight do
     rr.role_id = role.id
     expect{rr.save!}.to raise_error(ActiveRecord::RecordInvalid)
     rr.right_id = right.id
+    rr.group_id = group.id
     rr.created_at = DateTime.now
     rr.updated_at = DateTime.now    
     rr.save!
@@ -35,6 +40,15 @@ describe RoleRight do
   end
 
   it "checks unique fields" do
+  end
+
+  it "provisions to a new group" do
+    rr = RoleRight.new
+    rr.role_id = role.id
+    rr.right_id = right.id
+    rr.group_id = group.id
+    rr.save!
+    RoleRight.provision(role.group_id, new_group.id)
   end
 
 end
