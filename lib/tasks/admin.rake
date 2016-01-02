@@ -5,28 +5,32 @@ namespace :admin do
     name = args[:arg1]
     tz = args[:arg2]
     descr = args[:arg3]
-    puts "Group name is #{name}"
-    puts "Description is #{descr}"
-    puts "Time zone is #{tz}"
-    ActiveRecord::Base.transaction do
-      newGroup = Group.new(:name => name, :time_zone => tz, :description => descr)
-      newGroup.save!
-      root_id = Group.find_by_name('root').id
-      group_id = newGroup.id
-      puts "Provisioning animal_types for group_id #{group_id}"
-      AnimalType.provision(root_id, group_id)
-      puts "Provisioning intake_types for group_id #{group_id}"
-      IntakeType.provision(root_id, group_id)
-      puts "Provisioning outcome_types for group_id #{group_id}"
-      OutcomeType.provision(root_id, group_id)
-      puts "Provisioning gender types for group_id #{group_id}"
-      Gender.provision(root_id, group_id)
-      puts "Provisioning kennel types for group_id #{group_id}"
-      KennelType.provision(root_id, group_id)
-      puts "Provisioning roles for group_id #{group_id}"
-      Role.provision(root_id, group_id)
-      puts "Provisioning role_rights for group_id #{group_id}"
-      RoleRight.provision(root_id, group_id)
+    if (descr.nil? || tz.nil? || name.nil?)
+      puts("Usage:  rake admin:provision_group[name,time_zone,description]")
+    else
+      puts "Group name is #{name}"
+      puts "Description is #{descr}"
+      puts "Time zone is #{tz}"
+      ActiveRecord::Base.transaction do
+        newGroup = Group.new(:name => name, :time_zone => tz, :description => descr)
+        newGroup.save!
+        root_id = Group.find_by_name('root').id
+        group_id = newGroup.id
+        puts "Provisioning animal_types for group_id #{group_id}"
+        AnimalType.provision(root_id, group_id)
+        puts "Provisioning intake_types for group_id #{group_id}"
+        IntakeType.provision(root_id, group_id)
+        puts "Provisioning outcome_types for group_id #{group_id}"
+        OutcomeType.provision(root_id, group_id)
+        puts "Provisioning gender types for group_id #{group_id}"
+        Gender.provision(root_id, group_id)
+        puts "Provisioning kennel types for group_id #{group_id}"
+        KennelType.provision(root_id, group_id)
+        puts "Provisioning roles for group_id #{group_id}"
+        Role.provision(root_id, group_id)
+        puts "Provisioning role_rights for group_id #{group_id}"
+        RoleRight.provision(root_id, group_id)
+      end
     end
   end
 
