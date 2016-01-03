@@ -1,0 +1,39 @@
+<%# Navigation header for Fetch app %>
+<section>
+  <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" 
+                  class="navbar-toggle collapsed"
+                  data-toggle="collapse" 
+                  data-target="#fetchit-main-menu-1" 
+                  aria-expanded="false">
+            <span class="sr-only">Toggle Navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">
+            <img height="30px" 
+                 width="111px" 
+                 alt="FetchIt!" 
+                 src="assets/brandLogo.png"/>
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="fetchit-main-menu-1">
+          <ul class="nav navbar-nav">
+            <li class="active"><%= link_to "Home", root_path %></li>
+            <li class="active"><%= link_to "Animals", animals_path %></li>
+            <li class="active"><%= link_to "Intake", animals_path %></li>
+            <li class="active"><%= link_to "Outcomes", animals_path %></li>
+            <li class="active"><%= link_to "Animals", animals_path %></li>
+            <li class="active"><%= link_to "Animals", animals_path %></li>
+            <li class="active"><%= link_to "Animals", animals_path %></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

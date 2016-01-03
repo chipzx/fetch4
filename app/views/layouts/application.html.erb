@@ -18,19 +18,34 @@
     <%= favicon_link_tag 'favicon.png' %>
   </head>
 
-  <body class="container default-bg">
-    <% if notice.present? %>
-      <aside class="alert alert-info">
-        <%= notice %>
-      </aside>
-    <% end %>
-    <% if alert.present? %>
-      <aside class="alert alert-danger">
-        <%= alert %></p>
-      </aside>
-    <% end %>
+  <body>
+    <header>
+      <nav>
+        <%= render "layouts/main_nav" %>
+      </nav>
+    </header>
 
-    <%= yield %>
+    <div class="container-fluid">
+      <div class="row pull-left">
+        
+        <div class="col-xs-10 col-sm-10 col-md-9 col-lg-9">
+          <%= render "layouts/main_article" %>
+        </div>
+      
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"> 
+        <aside>
+          <%= render "layouts/main_sidebar" %>
+        </aside>
+        </div>
+
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="col-md-offset-4 col-md-4"/>
+      <br/>
+      <p class="text-muted text-center" style="margin-bottom:0;">FetchIT! is a product of <a href="http://www.fetchitsoftware.com" target="_blank">www.fetchitsoftware.com</a></p>
+      <p class="text-muted text-center" style="margin-bottom:0;"><small>Copyright, 2015-2016 FetchIT Software, LLC. All Rights Reserved.</small></p>
+    </div>
 
   </body>
 
