@@ -80,12 +80,9 @@ ActiveRecord::Schema.define(version: 20151230202127) do
     t.string   "name",        null: false
     t.integer  "group_id",    null: false
     t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
-
-  add_index "intake_types", ["group_id", "name"], name: "index_intake_types_on_group_id_and_name", unique: true, using: :btree
-  add_index "intake_types", ["name"], name: "index_intake_types_on_name", using: :btree
 
   create_table "kennel_types", force: :cascade do |t|
     t.string   "name",        null: false
@@ -219,7 +216,6 @@ ActiveRecord::Schema.define(version: 20151230202127) do
   add_foreign_key "animals", "intake_types", name: "animals_intake_types_fk"
   add_foreign_key "genders", "groups", name: "genders_groups_fk"
   add_foreign_key "intake_types", "groups", name: "intake_types_groups_fk"
-  add_foreign_key "kennel_types", "groups", name: "kennel_types_groups_fk"
   add_foreign_key "kennels", "groups", name: "kennels_groups"
   add_foreign_key "kennels", "kennel_types", name: "kennels_kennel_types"
   add_foreign_key "outcome_types", "groups", name: "outcome_types_groups_fk"
