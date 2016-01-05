@@ -2,49 +2,75 @@
 
 <section class="search-form">
   <div class="row">
-  <div class="col-md-5 col-lg-5 col-xs-5 col-sm-5">
-  <form>
-    <div class="input-group input-group-lg">
-      <label for="keywords" class="sr-only">Keywords</label>
-      <input type="text" 
-             name="keywords" 
-             class="form-control input-lg"
-             placeholder="Type here"
-             ng-model="keywords">
-      <span class="input-group-btn">
-        <button class="btn btn-primary btn-lg" 
-                ng-click="search(keywords)">
-          Search
-        </button>
-      </span>
+    <div class="col-md-5 col-lg-5 col-xs-5 col-sm-5">
+      <form>
+        <div class="input-group input-group-lg">
+          <label for="keywords" class="sr-only">Keywords</label>
+          <input type="text" 
+                 name="keywords" 
+                 class="form-control input-lg"
+                 placeholder="Type here"
+                 ng-model="keywords">
+          <span class="input-group-btn">
+            <button class="btn btn-primary btn-lg" 
+                    ng-click="search(keywords)">
+              Search
+            </button>
+          </span>
+        </div>
+      </form>
+      <h1 class="searchedFor" ng-if="searchedFor">
+        <small>Searched for:</small> {{searchedFor}}
+      </h1>
     </div>
-  </form>
-  <h1 class="searchedFor" ng-if="searchedFor">
-    <small>Searched for:</small> {{searchedFor}}
-  </h1>
-  </div>
   </div>
 </section>
 
   <h1>Animals Under Care</h1>
   
+
 <table id="mainlisting" class="table table-striped">
     <thead>
       <tr>
         <th>Image</th>
-        <th><%= "ID" %></th>
-        <th><%= "Name" %></th>
-        <th><%= "Kennel" %></th>
-        <th><%= "Breed" %></th>
-        <th><%= "Gender" %></th>
-        <th><%= "Age" %></th>
-        <th><%= "Days In Care" %></th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Kennel</th>
+        <th>Breed</th>
+        <th>Gender</th>
+        <th>Age</th>
+        <th>Days In Care</th>
       </tr>
     </thead>
 
     <tbody>
-      <!-- % @listings.each do |listing| % -->
-      <!--
+      <section>
+      <tr ng-repeat="a in animals">
+        <td> image </td>
+        <td> {{ a.anumber }} </td>
+        <td> {{ a.name }} </td>
+        <td> 101 </td>
+        <td> {{ a.breed }} </td>
+        <td> {{ a.gender }} </td>
+        <td> {{ a.dob }} </td>
+        <td> 100 </td>
+      </tr>
+      </section>
+<!--
+      <section>
+        <tr>
+          <td>image</td>
+          <td>{{animal.animal_type_id}}</td>
+          <td>{{animal.name}}</td>
+          <td>kennel</td>
+          <td>{{animal.breed}}</td>
+          <td>{{animal.gender_id}}</td>
+          <td>age</td>
+          <td>days in care</td>
+        </tr>
+      </section>
+-->
+<!--
         <section>
           <tr>
             <td style="text-align: center;" rowspan=2>
@@ -74,16 +100,19 @@
     </tbody>
   </table>
   
+
+<!--
     <tbody>
-      <% @animals.each do |animal| %>
+      < @animals.each do |animal| %>
         <tr>
-          <td><%= link_to 'Show', animal %></td>
-          <td><%= link_to 'Edit', edit_animal_path(animal) %></td>
-          <td><%= link_to 'Destroy', animal, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td><= link_to 'Show', animal %></td>
+          <td><= link_to 'Edit', edit_animal_path(animal) %></td>
+          <td><= link_to 'Destroy', animal, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         </tr>
-      <% end %>
+      < end %>
     </tbody>
   </table>
+-->
   
   <br>
   
