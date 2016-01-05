@@ -17,7 +17,7 @@ class CreateGender < ActiveRecord::Migration
     conn.execute("ALTER TABLE genders ADD CONSTRAINT genders_groups_fk FOREIGN KEY (group_id) REFERENCES groups(id)")
 
     conn.execute("INSERT INTO genders (name, description, group_id, created_at, updated_at) VALUES ('M', 'Male (Intact)', 0, now(), now())")
-    conn.execute("INSERT INTO genders (name, description, group_id, created_at, updated_at) VALUES ('F', 'Neutered Male', 0, now(), now())")
+    conn.execute("INSERT INTO genders (name, description, group_id, created_at, updated_at) VALUES ('F', 'Female (Intact)', 0, now(), now())")
     conn.execute("INSERT INTO genders (name, description, group_id, created_at, updated_at) VALUES ('N', 'Neutered Male', 0, now(), now())")
     conn.execute("INSERT INTO genders (name, description, group_id, created_at, updated_at) VALUES ('S', 'Spayed Female', 0, now(), now())")
     conn.execute("INSERT INTO genders (name, description, group_id, created_at, updated_at) VALUES ('X', 'Unknown', 0, now(), now())")
