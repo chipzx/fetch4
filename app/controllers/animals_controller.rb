@@ -4,7 +4,7 @@ class AnimalsController < ApplicationController
   # GET /animals
   # GET /animals.json
   def index
-    @keywords = params["keywords"]
+    @keywords = (params["keywords"]) || ''
     @page = (params["page"] || 0).to_i
     logger.debug("keywords are #{@keywords}")
     logger.debug("page is #{@page}")
@@ -17,13 +17,12 @@ class AnimalsController < ApplicationController
     end
   end
 
-  def search(keywords, page)
-    keywords = '' if keywords.nil?
+  def search(searchOn, page)
     page += 1
     logger.debug("Page for pagination is #{page}")
     srch = Animal.search do
       with(:group_id, current_user.group_id)
-      fulltext(keywords)
+      keywords(searchOn)
       paginate :page => page
       order_by(:kennel)
     end

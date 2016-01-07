@@ -18,6 +18,9 @@ app.controller('AnimalsController', [ "$scope",  "$http",
 
     $scope.search = function(searchTerm) {
       $scope.searchedFor = searchTerm;
+      if (searchTerm.length == 1) {
+        return;
+      }
       if (searchTerm != prevTerm) {
         page = 0
       }
