@@ -1,0 +1,13 @@
+#/bin/bash
+
+# xargs is used to remove leading spaces from ps output
+pid=`ps -eo pid,command | grep mailcatcher | grep -v grep | grep -v stop | xargs | cut -f1 -d" "`
+
+if [ ! -z "$pid" ]; then
+  echo -n "Killing mailcatcher $pid..."
+  kill $pid
+  echo "done"
+else
+  echo "Did not find pid for mailcatcher"
+fi
+
