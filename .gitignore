@@ -15,6 +15,9 @@
 # Ignore simplecov coverage directory
 /coverage
 
+# Ignore solr dev directory
+/solr 
+
 Gemfile.lock
 Gemfile.old
 vim-sleuth
