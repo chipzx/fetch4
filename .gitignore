@@ -16,7 +16,7 @@
 /coverage
 
 # Ignore solr dev directory
-/solr 
+solr/
 
 Gemfile.lock
 Gemfile.old
