@@ -16,6 +16,32 @@ ActiveRecord::Schema.define(version: 20151230202127) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "animal_dump", id: false, force: :cascade do |t|
+    t.integer  "id",                             null: false
+    t.integer  "atype_id",                       null: false
+    t.string   "anumber",            limit: 255, null: false
+    t.string   "name",               limit: 255
+    t.integer  "kennel_id"
+    t.integer  "gender_id"
+    t.string   "breed",              limit: 255
+    t.string   "coloring",           limit: 255
+    t.datetime "dob"
+    t.boolean  "dob_known"
+    t.datetime "intake_date"
+    t.integer  "intake_type_id"
+    t.text     "description"
+    t.integer  "group_id",                       null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.string   "image_file_name",    limit: 255
+    t.string   "image_content_type", limit: 255
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+    t.decimal  "weight"
+    t.datetime "last_modified_time",             null: false
+    t.string   "last_modified_by",   limit: 255, null: false
+  end
+
   create_table "animal_types", force: :cascade do |t|
     t.string   "name",        null: false
     t.integer  "group_id",    null: false
@@ -80,9 +106,12 @@ ActiveRecord::Schema.define(version: 20151230202127) do
     t.string   "name",        null: false
     t.integer  "group_id",    null: false
     t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
+
+  add_index "intake_types", ["group_id", "name"], name: "index_intake_types_on_group_id_and_name", unique: true, using: :btree
+  add_index "intake_types", ["name"], name: "index_intake_types_on_name", using: :btree
 
   create_table "kennel_types", force: :cascade do |t|
     t.string   "name",        null: false
@@ -216,6 +245,7 @@ ActiveRecord::Schema.define(version: 20151230202127) do
   add_foreign_key "animals", "intake_types", name: "animals_intake_types_fk"
   add_foreign_key "genders", "groups", name: "genders_groups_fk"
   add_foreign_key "intake_types", "groups", name: "intake_types_groups_fk"
+  add_foreign_key "kennel_types", "groups", name: "kennel_types_groups_fk"
   add_foreign_key "kennels", "groups", name: "kennels_groups"
   add_foreign_key "kennels", "kennel_types", name: "kennels_kennel_types"
   add_foreign_key "outcome_types", "groups", name: "outcome_types_groups_fk"

@@ -4,7 +4,31 @@ class AnimalsController < ApplicationController
   # GET /animals
   # GET /animals.json
   def index
-    @animals = Animal.all
+    @keywords = params["keywords"]
+    @page = (params["page"] || 0).to_i
+    logger.debug("keywords are #{@keywords}")
+    logger.debug("page is #{@page}")
+    logger.debug("Group id is #{current_user.group_id}")
+    @animals = search(@keywords, @page)
+    respond_to do |format|
+      format.html 
+      format.json { render :json => @animals, 
+        :methods => [ :kennel, :age, :days_under_care, :animal_type, :intake_type, :gender ] }
+    end
+  end
+
+  def search(keywords, page)
+    keywords = '' if keywords.nil?
+    page += 1
+    logger.debug("Page for pagination is #{page}")
+    srch = Animal.search do
+      with(:group_id, current_user.group_id)
+      fulltext(keywords)
+      paginate :page => page
+      order_by(:kennel)
+    end
+    logger.debug("Search returned #{srch.results.size} records")
+    srch.results
   end
 
   # GET /animals/1
