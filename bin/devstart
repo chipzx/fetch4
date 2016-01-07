@@ -1,6 +1,11 @@
 #!/bin/bash
 
   # start mailcatcher
+  stop_mailcatcher
   mailcatcher
+  # start sunspot
+  if [ "$RAILS_ENV" != "production" ]; then
+    bundle exec rake sunspot:solr:start
+  fi
   # start the rails server
   rails s

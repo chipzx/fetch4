@@ -1,0 +1,4 @@
+#!/bin/bash
+# runs in background, run instead of start will run in foreground
+bundle exec rake sunspot:solr:stop
+stop_mailcatcher
