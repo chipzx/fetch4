@@ -8,7 +8,7 @@ app.controller('AnimalsController', [ "$scope",  "$http",
     $scope.animals = [];
     $scope.sortBy = "kennel";
     $scope.pagesize = 30;
-    $scope.reverseSort = false;
+    $scope.reverseSort = true;
     $scope.pagesizes = {
       sizes: [
         {id: '5',   name: 'Show 5 Entries'},
@@ -38,6 +38,12 @@ app.controller('AnimalsController', [ "$scope",  "$http",
       }
     );
 
+    $scope.keyword_search = function(searchTerm) {
+      $scope.sortBy = "score";
+      $scope.reverseSort = true;
+      $scope.search(searchTerm);
+    }
+
     $scope.search = function(searchTerm) {
       $scope.searchedFor = searchTerm;
       if (searchTerm != prevTerm) {
@@ -50,7 +56,7 @@ app.controller('AnimalsController', [ "$scope",  "$http",
             "pagesize": $scope.pagesize,
             "sortby": $scope.sortBy,
             "sortOrder": $scope.reverseSort
-          }
+         }
         }
       ).then(function(response) {
         $scope.animals = response.data;
