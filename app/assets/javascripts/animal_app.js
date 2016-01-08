@@ -1,4 +1,4 @@
-var app = angular.module('animals', [ ]);
+var app = angular.module('animals', ['tableSort']);
 
 app.controller('AnimalsController', [ "$scope",  "$http",
   function($scope, $http) {
@@ -6,7 +6,9 @@ app.controller('AnimalsController', [ "$scope",  "$http",
     var prevTerm = ''
 
     $scope.animals = [];
+    $scope.sortBy = "kennel";
     $scope.pagesize = 30;
+    $scope.reverseSort = false;
     $scope.pagesizes = {
       sizes: [
         {id: '5',   name: 'Show 5 Entries'},
@@ -23,7 +25,9 @@ app.controller('AnimalsController', [ "$scope",  "$http",
         { "params": 
           { "keywords": '', 
             "page": 0, 
-            "pagesize": $scope.pagesize
+            "pagesize": $scope.pagesize,
+            "sortby": $scope.sortBy,
+            "sortOrder": $scope.reverseSort
           }
         } 
     ).then(
@@ -31,15 +35,11 @@ app.controller('AnimalsController', [ "$scope",  "$http",
         $scope.animals = response.data; 
       },
       function(response) {
-        alert("Problem retrieving data: " + response.statusText);
       }
     );
 
     $scope.search = function(searchTerm) {
       $scope.searchedFor = searchTerm;
-      if (searchTerm.length == 1) {
-        return;
-      }
       if (searchTerm != prevTerm) {
         page = 0
       }
@@ -47,7 +47,9 @@ app.controller('AnimalsController', [ "$scope",  "$http",
         { "params": 
           { "keywords": searchTerm, 
             "page": page, 
-            "pagesize": $scope.pagesize
+            "pagesize": $scope.pagesize,
+            "sortby": $scope.sortBy,
+            "sortOrder": $scope.reverseSort
           }
         }
       ).then(function(response) {
@@ -70,6 +72,15 @@ app.controller('AnimalsController', [ "$scope",  "$http",
     }
     $scope.changePageSize = function() {
       $scope.pagesize = $scope.pagesizes.selectedSize.id
+      $scope.search($scope.keywords);
+    }
+    $scope.sortedBy = function(sortCol) {
+      if ($scope.sortBy == sortCol) {
+        $scope.reverseSort = !$scope.reverseSort;
+      }
+      else {
+        $scope.sortBy = sortCol;
+      }
       $scope.search($scope.keywords);
     }
   }

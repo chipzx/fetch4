@@ -4,15 +4,14 @@ class AnimalsController < ApplicationController
   # GET /animals
   # GET /animals.json
   def index
+    logger.debug("params are #{params}")
+    logger.debug("Group id is #{current_user.group_id}")
     @keywords = (params["keywords"]) || ''
     @page = (params["page"] || 0).to_i
     @pagesize = params["pagesize"]
-    logger.debug("params are #{params}")
-    logger.debug("keywords are #{@keywords}")
-    logger.debug("page is #{@page}")
-    logger.debug("pagesize is #{@pagesize}")
-    logger.debug("Group id is #{current_user.group_id}")
-    @animals = search(@keywords, @page, @pagesize)
+    @sortby = params["sortby"] || "kennel"
+    @sortOrder = params["sortOrder"] || "false"
+    @animals = search(@keywords, @page, @pagesize, @sortby, @sortOrder)
     respond_to do |format|
       format.html 
       format.json { render :json => @animals, 
@@ -20,14 +19,15 @@ class AnimalsController < ApplicationController
     end
   end
 
-  def search(searchOn, page, pagesize)
-    logger.debug("Invoked search on #{searchOn} #{page+1} #{pagesize}")
+  def search(searchOn, page, pagesize, sortBy, sortOrder)
+    sortAs = sortOrder.eql?("true") ? :desc : :asc
+    logger.debug("Invoked search on #{searchOn} #{page+1} #{pagesize} sorted by #{sortBy} #{sortOrder} #{sortAs}")
     page += 1
     srch = Animal.search do
       with(:group_id, current_user.group_id)
       keywords(searchOn)
       paginate :page => page, :per_page => pagesize
-      order_by(:kennel)
+      order_by(sortBy.to_sym, sortAs)
     end
     logger.debug("Search returned #{srch.results.size} records")
     srch.results

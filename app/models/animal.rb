@@ -12,6 +12,7 @@ class Animal < ActiveRecord::Base
     string  :kennel
     string  :breed
     string  :coloring
+    string  :gender
     string  :anumber
     string  :microchip_number
     integer :age

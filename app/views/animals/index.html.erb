@@ -38,14 +38,14 @@
     <thead>
       <tr>
         <th>Image</th>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Kennel</th>
-        <th>Breed</th>
-        <th>Color</th>
-        <th>Gender</th>
-        <th>Age</th>
-        <th>Days In Care</th>
+        <th><a href="" ng-click="sortedBy('anumber');">ID</a></th>
+        <th><a href="" ng-click="sortedBy('name');">Name</a></th>
+        <th><a href="" ng-click="sortedBy('kennel');">Kennel</a></th>
+        <th><a href="" ng-click="sortedBy('breed');">Breed</a></th>
+        <th><a href="" ng-click="sortedBy('coloring');">Coloring</a></th>
+        <th><a href="" ng-click="sortedBy('gender');">Gender</a></th>
+        <th><a href="" ng-click="sortedBy('age');">Age</a></th>
+        <th><a href="" ng-click="sortedBy('days_under_care');">Days In Care</a></th>
       </tr>
     </thead>
 
@@ -63,63 +63,8 @@
         <td> {{ a.days_under_care }} </td>
       </tr>
       </section>
-<!--
-      <section>
-        <tr>
-          <td>image</td>
-          <td>{{animal.animal_type_id}}</td>
-          <td>{{animal.name}}</td>
-          <td>kennel</td>
-          <td>{{animal.breed}}</td>
-          <td>{{animal.gender_id}}</td>
-          <td>age</td>
-          <td>days in care</td>
-        </tr>
-      </section>
--->
-<!--
-        <section>
-          <tr>
-            <td style="text-align: center;" rowspan=2>
---> <!-- %= link_to(image_tag(listing.image.url(:tabsize), :size => "160x135", :class => "img-polaroid"), listing_path(listing.id)) % --> 
-<!-- 
-            </td>
-            <td><= link_to listing.animal_id, listing_path(listing.id) ></td>
-            <td><= link_to listing.name, listing_path(listing.id) ></td>
-            <td><= listing.kennel_number ></td>
-            <td><= listing.breed ></td>
-            <td><= listing.gender ></td>
-            <td><= listing.age_in_years_months ></td>
-            <td><= listing.days_since_intake ></td>
-          </tr>
-          <tr>
-            <td colspan=7 title="
--->
-<!-- %= listing_description_text(listing) % --> 
-<!-- "-->
-              <!-- %= short_description(listing_description_text(listing), 500) % -->
-<!--
-            </td>
-          </tr>
-        </section>
--->
-      <!-- % end % -->
     </tbody>
   </table>
-  
-
-<!--
-    <tbody>
-      < @animals.each do |animal| %>
-        <tr>
-          <td><= link_to 'Show', animal %></td>
-          <td><= link_to 'Edit', edit_animal_path(animal) %></td>
-          <td><= link_to 'Destroy', animal, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        </tr>
-      < end %>
-    </tbody>
-  </table>
--->
   
   <br>
   
