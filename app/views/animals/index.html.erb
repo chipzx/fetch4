@@ -2,7 +2,7 @@
 
 <section class="search-form">
   <div class="row">
-    <div class="col-md-5 col-lg-5 col-xs-5 col-sm-5">
+    <div class="col-md-4 col-lg-4 col-xs-4 col-sm-4">
       <form>
         <div class="input-group input-group-lg">
           <label for="keywords" class="sr-only">Keywords</label>
@@ -12,17 +12,19 @@
                  placeholder="Search"
                  ng-change="search(keywords)"
                  ng-model="keywords">
-          <!-- span class="input-group-btn">
-            <button class="btn btn-primary btn-lg" 
-                    ng-click="search(keywords)">
-              Search
-            </button>
-          </span -->
         </div>
+        
       </form>
-      <h1 class="searchedFor" ng-if="searchedFor">
-        <small>Searched for:</small> {{searchedFor}}
-      </h1>
+    </div>
+    <div class="col-md-3 col-lg-3 col-xs-3 col-sm-3">
+      <form>
+        <select name="pageSizeSelector"
+                class="form-control input-lg"
+                ng-options="option.name for option in pagesizes.sizes track by option.id"
+                ng-change="changePageSize()"
+                ng-model="pagesizes.selectedSize">
+        </select>
+      </form>
     </div>
   </div>
 </section>
@@ -40,6 +42,7 @@
         <th>Name</th>
         <th>Kennel</th>
         <th>Breed</th>
+        <th>Color</th>
         <th>Gender</th>
         <th>Age</th>
         <th>Days In Care</th>
@@ -54,6 +57,7 @@
         <td> {{ a.name }} </td>
         <td> {{ a.kennel }} </td>
         <td> {{ a.breed }} </td>
+        <td> {{ a.coloring }} </td>
         <td> {{ a.gender }} </td>
         <td> {{ a.age }} </td>
         <td> {{ a.days_under_care }} </td>

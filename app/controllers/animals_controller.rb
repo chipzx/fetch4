@@ -6,10 +6,13 @@ class AnimalsController < ApplicationController
   def index
     @keywords = (params["keywords"]) || ''
     @page = (params["page"] || 0).to_i
+    @pagesize = params["pagesize"]
+    logger.debug("params are #{params}")
     logger.debug("keywords are #{@keywords}")
     logger.debug("page is #{@page}")
+    logger.debug("pagesize is #{@pagesize}")
     logger.debug("Group id is #{current_user.group_id}")
-    @animals = search(@keywords, @page)
+    @animals = search(@keywords, @page, @pagesize)
     respond_to do |format|
       format.html 
       format.json { render :json => @animals, 
@@ -17,13 +20,13 @@ class AnimalsController < ApplicationController
     end
   end
 
-  def search(searchOn, page)
+  def search(searchOn, page, pagesize)
+    logger.debug("Invoked search on #{searchOn} #{page+1} #{pagesize}")
     page += 1
-    logger.debug("Page for pagination is #{page}")
     srch = Animal.search do
       with(:group_id, current_user.group_id)
       keywords(searchOn)
-      paginate :page => page
+      paginate :page => page, :per_page => pagesize
       order_by(:kennel)
     end
     logger.debug("Search returned #{srch.results.size} records")

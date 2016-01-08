@@ -6,8 +6,27 @@ app.controller('AnimalsController', [ "$scope",  "$http",
     var prevTerm = ''
 
     $scope.animals = [];
+    $scope.pagesize = 30;
+    $scope.pagesizes = {
+      sizes: [
+        {id: '5',   name: 'Show 5 Entries'},
+        {id: '10',  name: 'Show 10 Entries'},
+        {id: '30',  name: 'Show 30 Entries'},
+        {id: '50',  name: 'Show 50 Entries'},
+        {id: '100', name: 'Show 100 Entries'},
+        {id: '500', name: 'Show 500 Entries'}
+      ],
+      selectedSize: {id: '30', name: '30 Entries'} 
+    };
 
-    $http.get("/animals.json").then(
+    $http.get("/animals.json",
+        { "params": 
+          { "keywords": '', 
+            "page": 0, 
+            "pagesize": $scope.pagesize
+          }
+        } 
+    ).then(
       function(response) {
         $scope.animals = response.data; 
       },
@@ -25,7 +44,12 @@ app.controller('AnimalsController', [ "$scope",  "$http",
         page = 0
       }
       $http.get("/animals.json", 
-        { "params": { "keywords": searchTerm, "page": page }}
+        { "params": 
+          { "keywords": searchTerm, 
+            "page": page, 
+            "pagesize": $scope.pagesize
+          }
+        }
       ).then(function(response) {
         $scope.animals = response.data;
       },function(response) {
@@ -42,6 +66,10 @@ app.controller('AnimalsController', [ "$scope",  "$http",
     }
     $scope.nextPage = function() {
       page = page + 1;
+      $scope.search($scope.keywords);
+    }
+    $scope.changePageSize = function() {
+      $scope.pagesize = $scope.pagesizes.selectedSize.id
       $scope.search($scope.keywords);
     }
   }
