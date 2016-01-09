@@ -53,8 +53,8 @@
       <section>
       <tr ng-repeat="a in animals">
         <td> image </td>
-        <td> {{ a.anumber }} </td>
-        <td> {{ a.name }} </td>
+        <td> <a href="/animals/{{a.id}}">{{ a.anumber }}</a> </td>
+        <td> <a href="/animals/{{a.id}}">{{ a.name }} </td>
         <td> {{ a.kennel }} </td>
         <td> {{ a.breed }} </td>
         <td> {{ a.coloring }} </td>

@@ -1,4 +1,28 @@
-<p id="notice"><%= notice %></p>
+<article ng-app="show" ng-controller="ShowController" >
 
-<%= link_to 'Edit', edit_animal_path(@animal) %> |
-<%= link_to 'Back', animals_path %>
+  <div class="row">
+    <div class="col-md-4 col-lg-4">
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <p> {{animal.notes}} </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2 col-lg-2">
+      <p class="pull-left">Animal Id:</p>
+    </div>
+    <div class="col-md-2 col-lg-2">
+      <p class="pull-left">{{animal.anumber}}</p>
+    </div>
+    <div class="col-md-2 col-lg-2">
+      <p class="pull-left">Animal Type:</p>
+    </div>
+    <div class="col-md-2 col-lg-2">
+      <p class="pull-left">{{animal.animal_type}}</p>
+    </div>
+    <div class="col-md-4 col-lg-4">
+    </div>
+  </div>
+<!-- %= link_to 'Edit', edit_animal_path(@animal) % --> 
+<!-- %= link_to 'Back', animals_path % -->
+</article>

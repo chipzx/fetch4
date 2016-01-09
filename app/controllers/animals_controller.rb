@@ -36,6 +36,13 @@ class AnimalsController < ApplicationController
   # GET /animals/1
   # GET /animals/1.json
   def show
+    @animal = Animal.find(params[:id])
+    logger.debug("Description is #{@animal.description}")
+    respond_to do |format|
+      format.html 
+      format.json { render :json => @animal, 
+        :methods => [ :kennel, :age, :days_under_care, :animal_type, :intake_type, :gender, :notes ] }
+    end
   end
 
   # GET /animals/new

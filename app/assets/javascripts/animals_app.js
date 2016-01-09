@@ -1,4 +1,4 @@
-var app = angular.module('animals', ['tableSort']);
+var app = angular.module('animals', []);
 
 app.controller('AnimalsController', [ "$scope",  "$http",
   function($scope, $http) {
