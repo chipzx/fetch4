@@ -1,43 +1,14 @@
 <%# Sidebar for main Fetch app %>
-    <div class="row">
-      <div class="pull-left">
-        <%= image_tag("logoThumb.png", alt: "FetchIT") %>
-      </div>
+  <div class="row">
+    <div class="pull-left">
+      <%= image_tag("logoThumb.png", alt: "FetchIT") %>
     </div>
-    <div class="row">
-    <h5>
+  </div>
+  <div class="row">
+    <h6>
        <strong>
        <%= link_to "Log Out", destroy_user_session_path, method: :delete %>
        </strong>
-    </h5>
-    </div>
-<!--
-    <div>
-      <ul class="hmenu">
--->
-        <!-- %= render :partial => "devise/menu/login_out" % -->
-<!--
-      </ul>
-    </div>
-    <div id='admin'>    
--->
-      <!-- % if content_for(:admin) % -->
-<!--
-        <p class='admin'>
--->
-          <!-- %= yield :admin % -->
-<!-- 
-        </p>
--->
-      <!-- % end % -->
-<!--
-    </div>
-    <div id='recents'>
--->
-      <!-- % if content_for(:recents) % -->
-        <!-- %= yield :recents % -->
-      <!-- % end % -->
-<!--
-    </div>
--->
+    </h6>
+  </div>
 
