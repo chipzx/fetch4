@@ -4,7 +4,7 @@
     "bootstrap-sass-official": "latest",
     "angular": "~> 1.5",
     "angular-tablesort": "latest",
-    "angular-route": "latest"
+    "angular-route": "~> 1.5"
   },
   "resolutions": {
     "angular": "1.5"
