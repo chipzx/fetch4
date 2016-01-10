@@ -14,11 +14,11 @@
   <section>
   <div class="row">
 
-    <div class="col-md-5 col-lg-5">
+    <div class="col-md-6 col-lg-6">
       <%= image_tag("missing.jpg", size: "320x240", alt: "Upload a Photo!", class: "img-thumbnail") %>
     </div>
 
-    <div class="col-md-5 col-lg-5"> 
+    <div class="col-md-6 col-lg-6"> 
 
       <div class="row">
         <div class="col-md-5 col-lg-5">
@@ -110,17 +110,16 @@
     <div class="col-md-2 col-lg-2">
       <h5 class="pull-left text-primary">Intake Type:&nbsp;&nbsp;</h5>
     </div>
-    <div class="col-md-3 col-lg-3">
+    <div class="col-md-4 col-lg-4">
       <h5 class="pull-left">{{animal.intake_type}}&nbsp;&nbsp;</h5>
     </div>
     <div class="col-md-2 col-lg-2">
       <h5 class="pull-left text-primary">Intake Date:&nbsp;&nbsp;</h5>
     </div>
-    <div class="col-md-3 col-lg-3">
-      <h5 class="pull-left">{{animal.intake_date}}</h5>
+    <div class="col-md-4 col-lg-4">
+      <h5 class="pull-left">{{animal.intake_date | date}}</h5>
     </div>
   </div>
-
 
   <div class="row">
     <div class="col-md-10 col-lg-10">
