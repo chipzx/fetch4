@@ -1,4 +1,4 @@
-var app = angular.module('show', []);
+var app = angular.module('show', ['ngRoute']);
 
 app.controller('ShowController', [ "$scope",  "$http", "$location",
   function($scope, $http, $location) {

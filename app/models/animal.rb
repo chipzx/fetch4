@@ -28,6 +28,10 @@ class Animal < ActiveRecord::Base
 
   end
 
+  def notes
+    self.description
+  end
+
   def animal_type
     AnimalType.find(self.animal_type_id).name
   end
@@ -61,7 +65,4 @@ class Animal < ActiveRecord::Base
     ((Time.zone.now - self.intake_date)/(24*60*60)).floor
   end
 
-  def notes
-    self.description || 'No description found'
-  end
 end
