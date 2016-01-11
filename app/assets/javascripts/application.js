@@ -14,5 +14,6 @@
 //= require jquery_ujs
 //= require angular
 //= require angular-route
+//= require angular-sanitize
 //= require angular-tablesort
 //= require_tree .

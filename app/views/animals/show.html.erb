@@ -1,6 +1,5 @@
 <article ng-app="show" ng-controller="ShowController" >
 
-
   <section>
     <div class="row">
       <div class="col-md-6 col-lg-6">
@@ -128,7 +127,7 @@
   </div>
   <div class="row">
     <div class="col-md-10 col-lg-10">
-      <%= format_notes(@animal.description, true) %>
+      <p ng-bind-html="trustAsHtml(animal.notes)"></p>
     </div>
   </div>
 

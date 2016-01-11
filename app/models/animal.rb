@@ -29,7 +29,7 @@ class Animal < ActiveRecord::Base
   end
 
   def notes
-    self.description
+    format_notes(self.description, true)
   end
 
   def animal_type
@@ -63,6 +63,26 @@ class Animal < ActiveRecord::Base
 
   def days_under_care
     ((Time.zone.now - self.intake_date)/(24*60*60)).floor
+  end
+
+  private
+  def format_notes(notes, html)
+    descr = ""
+    eol = html ? "<br/>" : "\n"
+    small = html ? "<small>" : ""
+    em = html ? "<em>" : ""
+    small_end = html ? "</em>" : ""
+    em_end = html ? "</small>" : ""
+
+    unless notes.nil?
+      if html
+        descr += notes.gsub("\r\n", "<br/>")
+      else
+        descr += notes
+      end
+    end
+
+    return descr
   end
 
 end

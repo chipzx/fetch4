@@ -1,7 +1,8 @@
-var app = angular.module('show', ['ngRoute']);
+var app = angular.module('show', ['ngRoute','ngSanitize']);
 
-app.controller('ShowController', [ "$scope",  "$http", "$location",
-  function($scope, $http, $location) {
+app.controller('ShowController', [ "$scope",  "$http", "$location", "$sce",
+  function($scope, $http, $location, $sce) {
+    $scope.trustAsHtml = $sce.trustAsHtml;
     $scope.test = "test";
     $scope.sortBy = "kennel";
     $scope.absUrl = $location.absUrl();
