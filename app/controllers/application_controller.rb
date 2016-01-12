@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+
   # Lazy way to add additional parameters to devise - see http://devise.plataformatec.com.br/#strong-parameters
 #  before_action :configure_permitted_parameters, if :devise_controller?
 

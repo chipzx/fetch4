@@ -57,11 +57,13 @@ class Animal < ActiveRecord::Base
   end
 
   def age
+    return if self.dob.nil?
     now = Time.zone.now
     now.year - self.dob.year - ((now.month > self.dob.month || (now.month == self.dob.month && now.day >= dob.day)) ? 0 : 1)
   end 
 
   def days_under_care
+    return if self.intake_date.nil?
     ((Time.zone.now - self.intake_date)/(24*60*60)).floor
   end
 

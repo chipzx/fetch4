@@ -8,7 +8,6 @@ describe User do
     expect(test1.email.eql?('test@example.com'))
     expect(test1.encrypted_password.eql?('xyzabc123uandme'))
     expect(test1.sign_in_count == 0) 
-    puts "Group ID is #{test1.group_id}"
     expect(test1.group_name.eql?('root'))
   end
 

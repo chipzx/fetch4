@@ -1,4 +1,10 @@
 FactoryGirl.define do
+  factory :admin, class: User do
+    email 'admin@fetchitsoftware.com'
+    password "password"
+    password_confirmation "password"
+    confirmed_at Date.today
+  end
   factory :group do
     name 'root'
     description 'admin group'

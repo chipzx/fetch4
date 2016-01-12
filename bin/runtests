@@ -1,0 +1,10 @@
+#!/bin/bash
+# runs in background, run instead of start will run in foreground
+echo "Stopping dev instance of solr and starting test instance..."
+RAILS_ENV=development bundle exec rake sunspot:solr:stop
+RAILS_ENV=test bundle exec rake sunspot:solr:start  
+rake | tee 2>&1 /tmp/test.results
+echo "Test results saved to /tmp/test.results"
+echo "Stopping test instance of solr and restarting dev instance..."
+RAILS_ENV=test bundle exec rake sunspot:solr:stop
+RAILS_ENV=development bundle exec rake sunspot:solr:start
