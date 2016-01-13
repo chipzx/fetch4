@@ -46,6 +46,7 @@ end
 
 gem 'devise'
 gem 'bower-rails'
+gem 'faker'
 
 gem 'rmagick'
 gem 'paperclip', '~> 4.3'

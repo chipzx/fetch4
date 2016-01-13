@@ -1,9 +1,20 @@
 #!/bin/bash
 # runs in background, run instead of start will run in foreground
+if [ $# -gt 1 ]; then
+  echo "Usage: `basename $0` [spec_file]"
+  exit 1
+fi
 echo "Stopping dev instance of solr and starting test instance..."
 RAILS_ENV=development bundle exec rake sunspot:solr:stop
+sleep 2
 RAILS_ENV=test bundle exec rake sunspot:solr:start  
-rake | tee 2>&1 /tmp/test.results
+sleep 3
+if [ $# -eq 0 ]; then
+  rake | tee 2>&1 /tmp/test.results
+else
+  echo "Running single test"
+  rspec $1
+fi
 echo "Test results saved to /tmp/test.results"
 echo "Stopping test instance of solr and restarting dev instance..."
 RAILS_ENV=test bundle exec rake sunspot:solr:stop

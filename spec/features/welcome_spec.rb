@@ -21,7 +21,7 @@ feature 'angular test' do
     # Log In
     fill_in "Email", with: "admin@fetchitsoftware.com"
     fill_in "Password", with: "password"
-    r = click_button "Log in" 
+    click_button "Log in" 
 
     expect(page).to have_content("Welcome")
     fill_in "motd", with: "Test message of the day"

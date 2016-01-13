@@ -28,6 +28,8 @@ class AnimalsController < ApplicationController
       keywords(searchOn)
       paginate :page => page, :per_page => pagesize
       order_by(sortBy.to_sym, sortAs)
+      # always do secondary ordering by anumber
+      order_by(:anumber)
     end
     logger.debug("Search returned #{srch.results.size} records")
     srch.results

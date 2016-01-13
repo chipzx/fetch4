@@ -1,72 +1,80 @@
 <article ng-app="animals" ng-controller="AnimalsController">
 
-<section class="search-form">
-  <div class="row">
-    <div class="col-md-4 col-lg-4 col-xs-4 col-sm-4">
-      <form>
-        <div class="input-group input-group-lg">
-          <label for="keywords" class="sr-only">Keywords</label>
-          <input type="text" 
-                 name="keywords" 
-                 class="form-control input-lg"
-                 placeholder="Search"
-                 ng-change="keyword_search(keywords)"
-                 ng-model="keywords">
-        </div>
-        
-      </form>
+  <section class="search-form" id="animal-search-input">
+    <div class="row">
+      <div class="col-md-4 col-lg-4 col-xs-4 col-sm-4">
+        <form>
+          <div class="input-group input-group-lg">
+            <label for="keywords" class="sr-only">Keywords</label>
+            <input type="text" 
+                   name="keywords" 
+                   class="form-control input-lg"
+                   placeholder="Search"
+                   ng-change="keyword_search(keywords)"
+                   ng-model="keywords">
+          </div>
+          
+        </form>
+      </div>
+      <div class="col-md-3 col-lg-3 col-xs-3 col-sm-3">
+        <form>
+          <select name="pageSizeSelector"
+                  class="form-control input-lg"
+                  ng-options="option.name for option in pagesizes.sizes track by option.id"
+                  ng-change="changePageSize()"
+                  ng-model="pagesizes.selectedSize">
+          </select>
+        </form>
+      </div>
     </div>
-    <div class="col-md-3 col-lg-3 col-xs-3 col-sm-3">
-      <form>
-        <select name="pageSizeSelector"
-                class="form-control input-lg"
-                ng-options="option.name for option in pagesizes.sizes track by option.id"
-                ng-change="changePageSize()"
-                ng-model="pagesizes.selectedSize">
-        </select>
-      </form>
-    </div>
-  </div>
-</section>
-
-  <h1>Animals Under Care</h1>
+  </section>
   
-<%= render partial: "pager",
-           locals: { keywords: @keywords, page: @page } %>
-
-<table id="mainlisting" class="table table-striped">
-    <thead>
-      <tr>
-        <th>Image</th>
-        <th><a href="" ng-click="sortedBy('anumber');">ID</a></th>
-        <th><a href="" ng-click="sortedBy('name');">Name</a></th>
-        <th><a href="" ng-click="sortedBy('kennel');">Kennel</a></th>
-        <th><a href="" ng-click="sortedBy('breed');">Breed</a></th>
-        <th><a href="" ng-click="sortedBy('coloring');">Coloring</a></th>
-        <th><a href="" ng-click="sortedBy('gender');">Gender</a></th>
-        <th><a href="" ng-click="sortedBy('age');">Age</a></th>
-        <th><a href="" ng-click="sortedBy('days_under_care');">Days In Care</a></th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <section>
-      <tr ng-repeat="a in animals">
-        <td> image </td>
-        <td> <a href="/animals/{{a.id}}">{{ a.anumber }}</a> </td>
-        <td> <a href="/animals/{{a.id}}">{{ a.name }} </td>
-        <td> {{ a.kennel }} </td>
-        <td> {{ a.breed }} </td>
-        <td> {{ a.coloring }} </td>
-        <td> {{ a.gender }} </td>
-        <td> {{ a.age }} </td>
-        <td> {{ a.days_under_care }} </td>
-      </tr>
-      </section>
-    </tbody>
-  </table>
+  <h1 class="text-success">Animals Under Care</h1>
+    
+  <%= render partial: "pager",
+             locals: { keywords: @keywords, page: @page } %>
   
-  <br>
+  <section class="search-results" ng-if="animals.length == 0">
+    <h2 class="text-danger"><em>No results found for &quot;{{ keywords }}&quot;</em></h2>
+  </section>
+
+  <section class="search-results" ng-if="animals.length > 0">
+    <table id="mainlisting" class="table table-striped">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th><a href="" ng-click="sortedBy('anumber');">ID</a></th>
+          <th><a href="" ng-click="sortedBy('name');">Name</a></th>
+          <th><a href="" ng-click="sortedBy('kennel');">Kennel</a></th>
+          <th><a href="" ng-click="sortedBy('breed');">Breed</a></th>
+          <th><a href="" ng-click="sortedBy('coloring');">Coloring</a></th>
+          <th><a href="" ng-click="sortedBy('gender');">Gender</a></th>
+          <th><a href="" ng-click="sortedBy('age');">Age</a></th>
+          <th><a href="" ng-click="sortedBy('days_under_care');">Days In Care</a></th>
+        </tr>
+      </thead>
   
-  <%= link_to 'New Animal', new_animal_path %>
+      <tbody>
+        <section>
+        <tr ng-repeat="a in animals">
+          <td> image </td>
+          <td> <a href="/animals/{{a.id}}">{{ a.anumber }}</a> </td>
+          <td> <a href="/animals/{{a.id}}">{{ a.name }} </td>
+          <td> {{ a.kennel }} </td>
+          <td> {{ a.breed }} </td>
+          <td> {{ a.coloring }} </td>
+          <td> {{ a.gender }} </td>
+          <td> {{ a.age }} </td>
+          <td> {{ a.days_under_care }} </td>
+        </tr>
+        </section>
+      </tbody>
+    </table>
+    
+  </section>
+  
+  <section>
+    <br>
+    <%= link_to 'New Animal', new_animal_path %>
+  </section>
 </article>
