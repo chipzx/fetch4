@@ -28,8 +28,8 @@ class Animal < ActiveRecord::Base
 
   end
 
-  def notes
-    format_notes(self.description, true)
+  def notes(to_html: true)
+    format_notes(self.description, to_html)
   end
 
   def animal_type
@@ -79,6 +79,7 @@ class Animal < ActiveRecord::Base
     unless notes.nil?
       if html
         descr += notes.gsub("\r\n", "<br/>")
+        descr += notes.gsub("\n", "<br/>")
       else
         descr += notes
       end

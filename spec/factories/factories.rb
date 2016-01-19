@@ -52,8 +52,8 @@ FactoryGirl.define do
     anumber 'A123456'
   end
   factory :gender do
-    name 'X'
-    description 'Unknown'
+    name 'N'
+    description 'Neutered Male'
     created_at DateTime.now
     updated_at DateTime.now
   end
