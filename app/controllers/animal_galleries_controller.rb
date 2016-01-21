@@ -31,7 +31,7 @@ logger.debug("URL: #{@pic.photo.url}")
       flash[:notice] = "#{@pic.photo_file_name} saved"
     else
       render json: @pic.errors
-      flash[:alert] = "Alert: #{@pic.photo_file_name} saved!"
+      flash[:alert] = "Alert: #{@pic.errors.full_messages}"
     end
   end
 

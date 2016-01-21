@@ -22,8 +22,10 @@ app.controller('AnimalGalleryController', ['$scope', 'Upload', '$timeout', funct
           photo.result = response.data;
         });
       }, function (response) {
-        if (response.status > 0)
+        alert(response.status)
+        if (response.status > 0) {
           $scope.errorMsg = response.status + ': ' + response.data;
+        }
       }, function (evt) {
         // Math.min is to fix IE which reports 200% sometimes
         photo.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
