@@ -28,6 +28,8 @@ class Animal < ActiveRecord::Base
 
   end
 
+  has_many :animal_galleries
+
   def notes(to_html: true)
     format_notes(self.description, to_html)
   end

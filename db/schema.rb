@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151230202127) do
+ActiveRecord::Schema.define(version: 20160119004350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,19 @@ ActiveRecord::Schema.define(version: 20151230202127) do
     t.datetime "last_modified_time",             null: false
     t.string   "last_modified_by",   limit: 255, null: false
   end
+
+  create_table "animal_galleries", force: :cascade do |t|
+    t.integer  "animal_id",                          null: false
+    t.boolean  "primary_image",      default: false, null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.string   "photo_file_name"
+    t.string   "photo_content_type"
+    t.integer  "photo_file_size"
+    t.datetime "photo_updated_at"
+  end
+
+  add_index "animal_galleries", ["animal_id"], name: "index_animal_galleries_on_animal_id", using: :btree
 
   create_table "animal_types", force: :cascade do |t|
     t.string   "name",        null: false
@@ -239,6 +252,7 @@ ActiveRecord::Schema.define(version: 20151230202127) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
+  add_foreign_key "animal_galleries", "animals", name: "animal_animal_galleries_fk"
   add_foreign_key "animal_types", "groups", name: "animal_types_groups_fk"
   add_foreign_key "animals", "animal_types", name: "animals_animal_types_fk"
   add_foreign_key "animals", "groups", name: "animals_groups_fk"

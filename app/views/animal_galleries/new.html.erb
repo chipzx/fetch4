@@ -1,0 +1,31 @@
+<article ng-app="galleryUpload" ng-controller="AnimalGalleryController">
+
+<form name="galleryForm">
+    <fieldset>
+      <legend>Upload on form submit</legend>
+      Animal ID:
+      <input type="text" name="animal_id" ng-model="animal_id" size="31" required>
+      <i ng-show="galleryForm.userName.$error.required">*required</i>
+      <br>Photo:
+      <input type="file" ngf-select ng-model="picFile" name="photo"    
+             accept="image/*" ngf-max-size="2MB" required
+             ngf-model-invalid="errorFiles">
+      <i ng-show="galleryForm.file.$error.required">*required</i><br>
+      <i ng-show="galleryForm.file.$error.maxSize">File too large 
+          {{errorFiles[0].size / 10000000|number:1}}MB: max 10M</i>
+      <img ng-show="galleryForm.file.$valid" ngf-thumbnail="picFile" class="img-thumbnail" height="128px" width="128px"> <button ng-click="picFile = null" ng-show="picFile">Remove</button>
+      <br>
+      <button ng-disabled="!galleryForm.$valid" 
+              ng-click="uploadPic(picFile)">Submit</button>
+      <span class="progress" ng-show="picFile.progress >= 0">
+        <div style="width:{{picFile.progress}}%" 
+            ng-bind="picFile.progress + '%'"></div>
+      </span>
+      <span ng-show="picFile.result">Upload Successful</span>
+      <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
+    </fieldset>
+    <br>
+  </form>
+  <%= link_to 'Back', animal_galleries_path %>
+
+</article>

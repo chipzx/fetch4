@@ -18,6 +18,8 @@
 # Ignore solr dev directory
 solr/
 
+public/system
+
 Gemfile.lock
 Gemfile.old
 vim-sleuth

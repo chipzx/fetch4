@@ -21,6 +21,8 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
+gem 'aws-sdk', '~>1.6'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -46,12 +48,13 @@ group :development, :test do
 end
 
 gem 'devise'
+gem 'angular_rails_csrf'
+
 gem 'bower-rails'
 gem 'faker'
 
 gem 'rmagick'
 gem 'paperclip', '~> 4.3'
-gem 'carrierwave'
 
 # Gems for sunspot/solr search engine
 gem 'sunspot_rails'

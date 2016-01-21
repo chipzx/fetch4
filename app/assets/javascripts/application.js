@@ -16,4 +16,5 @@
 //= require angular-route
 //= require angular-sanitize
 //= require angular-tablesort
+//= require ng-file-upload
 //= require_tree .
