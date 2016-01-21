@@ -20,8 +20,13 @@ solr/
 
 # ignore config files with sensitive data
 config/secrets.yml
+config/initializers/devise.yml
 config/aws.yml
 
+# ignore production files directory
+production/
+
+# ignore public/system directory
 public/system
 
 Gemfile.lock
