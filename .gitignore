@@ -18,6 +18,10 @@
 # Ignore solr dev directory
 solr/
 
+# ignore config files with sensitive data
+config/secrets.yml
+config/aws.yml
+
 public/system
 
 Gemfile.lock
