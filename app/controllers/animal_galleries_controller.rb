@@ -1,5 +1,17 @@
 class AnimalGalleriesController < ApplicationController
 
+  def index
+    @animals = Animal.all
+    respond_to do |format|
+      format.html
+      format.json { render :json => @animals,
+        :methods => [ :animal_galleries ] }
+    end
+  end
+
+  def show
+  end
+
   def new
     @pic = AnimalGallery.new()
     respond_to do |format|

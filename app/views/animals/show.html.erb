@@ -11,128 +11,137 @@
   <hr/>
 
   <section>
-  <div class="row">
-
-    <div class="col-md-6 col-lg-6">
-      <%= image_tag("missing.jpg", size: "320x240", alt: "Upload a Photo!", class: "img-thumbnail") %>
+    <div class="row">
+  
+      <div class="col-md-6 col-lg-6">
+        <%= image_tag("missing.jpg", size: "320x240", alt: "Upload a Photo!", class: "img-thumbnail") %>
+      </div>
+  
+      <div class="col-md-6 col-lg-6"> 
+  
+        <div class="row">
+          <div class="col-md-5 col-lg-5">
+            <p class="pull-left text-primary" style="margin-bottom:0;">Animal Type:&nbsp;&nbsp;</p>
+          </div>
+          <div class="col-md-7 col-lg-7">
+            <p class="pull-left" style="margin-bottom:0;">{{animal.animal_type}}</p>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col-md-5 col-lg-5">
+            <h5 class="pull-left text-primary" style="margin-bottom:0;">Animal Id:&nbsp;&nbsp;</h5>
+          </div>
+          <div class="col-md-7 col-lg-7">
+            <h5 class="pull-left" style="margin-bottom:0;">{{animal.anumber}}</h5>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col-md-5 col-lg-5">
+            <h5 class="pull-left text-primary" style="margin-bottom:0;">Name:&nbsp;&nbsp;</h5>
+          </div>
+          <div class="col-md-7 col-lg-7">
+            <h5 class="pull-left" style="margin-bottom:0;">{{animal.name}}</h5>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col-md-5 col-lg-5">
+            <h5 class="pull-left text-primary" style="margin-bottom:0;">Looks Like:&nbsp;&nbsp;</h5>
+          </div>
+          <div class="col-md-7 col-lg-7">
+            <h5 class="pull-left" style="margin-bottom:0;">{{animal.breed}}</h5>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col-md-5 col-lg-5">
+            <h5 class="pull-left text-primary" style="margin-bottom:0;">Coloring:&nbsp;&nbsp;</h5>
+          </div>
+          <div class="col-md-7 col-lg-7">
+            <h5 class="pull-left" style="margin-bottom:0;">{{animal.coloring}}</h5>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col-md-5 col-lg-5">
+            <h5 class="pull-left text-primary" style="margin-bottom:0;">Gender:&nbsp;&nbsp;</h5>
+          </div>
+          <div class="col-md-7 col-lg-7">
+            <h5 class="pull-left" style="margin-bottom:0;">{{animal.gender}}</h5>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col-md-5 col-lg-5">
+            <h5 class="pull-left text-primary" style="margin-bottom:0;">Weight:&nbsp;&nbsp;</h5>
+          </div>
+          <div class="col-md-7 col-lg-7">
+            <h5 class="pull-left" style="margin-bottom:0;">{{animal.weight}}</h5>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col-md-5 col-lg-5">
+            <h5 class="pull-left text-primary" style="margin-bottom:0;">Age:&nbsp;&nbsp;</h5>
+          </div>
+          <div class="col-md-7 col-lg-7">
+            <h5 class="pull-left" style="margin-bottom:0;">{{animal.age}}</h5>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col-md-5 col-lg-5">
+            <h5 class="pull-left text-primary" style="margin-bottom:0;">Days In Care:&nbsp;&nbsp;</h5>
+          </div>
+          <div class="col-md-7 col-lg-7">
+            <h5 class="pull-left" style="margin-bottom:0;">{{animal.days_under_care}}</h5>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  
+    <hr/>
+  
+    <div class="row">
+      <div class="col-md-2 col-lg-2">
+        <h5 class="pull-left text-primary">Intake Type:&nbsp;&nbsp;</h5>
+      </div>
+      <div class="col-md-4 col-lg-4">
+        <h5 class="pull-left">{{animal.intake_type}}&nbsp;&nbsp;</h5>
+      </div>
+      <div class="col-md-2 col-lg-2">
+        <h5 class="pull-left text-primary">Intake Date:&nbsp;&nbsp;</h5>
+      </div>
+      <div class="col-md-4 col-lg-4">
+        <h5 class="pull-left">{{animal.intake_date | date}}</h5>
+      </div>
     </div>
 
-    <div class="col-md-6 col-lg-6"> 
-
-      <div class="row">
-        <div class="col-md-5 col-lg-5">
-          <p class="pull-left text-primary" style="margin-bottom:0;">Animal Type:&nbsp;&nbsp;</p>
-        </div>
-        <div class="col-md-7 col-lg-7">
-          <p class="pull-left" style="margin-bottom:0;">{{animal.animal_type}}</p>
-        </div>
+    <div class="row">
+      <div class="col-md-10 col-lg-10">
+        <h4 class="text-primary">Notes</h4>
       </div>
-
-      <div class="row">
-        <div class="col-md-5 col-lg-5">
-          <h5 class="pull-left text-primary" style="margin-bottom:0;">Animal Id:&nbsp;&nbsp;</h5>
-        </div>
-        <div class="col-md-7 col-lg-7">
-          <h5 class="pull-left" style="margin-bottom:0;">{{animal.anumber}}</h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-5 col-lg-5">
-          <h5 class="pull-left text-primary" style="margin-bottom:0;">Name:&nbsp;&nbsp;</h5>
-        </div>
-        <div class="col-md-7 col-lg-7">
-          <h5 class="pull-left" style="margin-bottom:0;">{{animal.name}}</h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-5 col-lg-5">
-          <h5 class="pull-left text-primary" style="margin-bottom:0;">Looks Like:&nbsp;&nbsp;</h5>
-        </div>
-        <div class="col-md-7 col-lg-7">
-          <h5 class="pull-left" style="margin-bottom:0;">{{animal.breed}}</h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-5 col-lg-5">
-          <h5 class="pull-left text-primary" style="margin-bottom:0;">Coloring:&nbsp;&nbsp;</h5>
-        </div>
-        <div class="col-md-7 col-lg-7">
-          <h5 class="pull-left" style="margin-bottom:0;">{{animal.coloring}}</h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-5 col-lg-5">
-          <h5 class="pull-left text-primary" style="margin-bottom:0;">Gender:&nbsp;&nbsp;</h5>
-        </div>
-        <div class="col-md-7 col-lg-7">
-          <h5 class="pull-left" style="margin-bottom:0;">{{animal.gender}}</h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-5 col-lg-5">
-          <h5 class="pull-left text-primary" style="margin-bottom:0;">Weight:&nbsp;&nbsp;</h5>
-        </div>
-        <div class="col-md-7 col-lg-7">
-          <h5 class="pull-left" style="margin-bottom:0;">{{animal.weight}}</h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-5 col-lg-5">
-          <h5 class="pull-left text-primary" style="margin-bottom:0;">Age:&nbsp;&nbsp;</h5>
-        </div>
-        <div class="col-md-7 col-lg-7">
-          <h5 class="pull-left" style="margin-bottom:0;">{{animal.age}}</h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-5 col-lg-5">
-          <h5 class="pull-left text-primary" style="margin-bottom:0;">Days In Care:&nbsp;&nbsp;</h5>
-        </div>
-        <div class="col-md-7 col-lg-7">
-          <h5 class="pull-left" style="margin-bottom:0;">{{animal.days_under_care}}</h5>
-        </div>
-      </div>
-
     </div>
-  </div>
-
-  <hr/>
-
-  <div class="row">
-    <div class="col-md-2 col-lg-2">
-      <h5 class="pull-left text-primary">Intake Type:&nbsp;&nbsp;</h5>
+    <div class="row">
+      <div class="col-md-10 col-lg-10">
+        <p ng-bind-html="trustAsHtml(animal.notes)"></p>
+      </div>
     </div>
-    <div class="col-md-4 col-lg-4">
-      <h5 class="pull-left">{{animal.intake_type}}&nbsp;&nbsp;</h5>
-    </div>
-    <div class="col-md-2 col-lg-2">
-      <h5 class="pull-left text-primary">Intake Date:&nbsp;&nbsp;</h5>
-    </div>
-    <div class="col-md-4 col-lg-4">
-      <h5 class="pull-left">{{animal.intake_date | date}}</h5>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-10 col-lg-10">
-      <h4 class="text-primary">Notes</h4>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-10 col-lg-10">
-      <p ng-bind-html="trustAsHtml(animal.notes)"></p>
-    </div>
-  </div>
-
-
   </section>
+
+  <!-- Photo Gallery -->
+  <section>
+    <h3 class="pull-left">Photo Gallery</h3>
+    <dl class="dl-horizontal" >
+      <dd ng-repeat="g in animal.animal_galleries">
+        <img class="img-responsive" src="{{ g.url_thumb }}" alt="Photo"/>
+      </dd>
+    </dl>
+  </section>
+
 <!-- %= link_to 'Edit', edit_animal_path(@animal) % --> 
 <!-- %= link_to 'Back', animals_path % -->
 </article>

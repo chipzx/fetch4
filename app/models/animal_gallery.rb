@@ -1,7 +1,5 @@
 class AnimalGallery < ActiveRecord::Base
 
-  has_one :animal
-
   has_attached_file :photo, 
     storage: :s3,
     s3_credentials: Proc.new { |a| a.instance.s3_credentials },
@@ -30,6 +28,21 @@ class AnimalGallery < ActiveRecord::Base
       access_key_id: Rails.application.secrets.s3_access_key_id,
       secret_access_key: Rails.application.secrets.s3_secret_access_key
     }
+  end
+
+  def as_json(options={})
+    { id: id, 
+      animal_id: animal_id, 
+      primary_image: primary_image, 
+      photo_file_name: photo_file_name, 
+      photo_file_size: photo_file_size, 
+      photo_content_type: photo_content_type, 
+      photo_updated_at: photo_updated_at, 
+      url_original: photo.url, 
+      url_default: photo.url(:default), 
+      url_small: photo.url(:small), 
+      url_thumb: photo.url(:thumb) 
+    }.as_json(options)
   end
 
 end

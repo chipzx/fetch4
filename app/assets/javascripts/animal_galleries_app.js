@@ -1,13 +1,6 @@
 var app = angular.module('galleryUpload', ['ngFileUpload']);
 
 app.controller('AnimalGalleryController', ['$scope', 'Upload', '$timeout', function ($scope, Upload, $timeout) {
-    /*
-    $scope.uploadPic = function(file) {
-    file.upload = Upload.upload({
-      url: 'https://angular-file-upload-cors-srv.appspot.com/upload',
-      data: {file: file, username: $scope.username},
-    });
-    */
     $scope.uploadPic = function(photo) {
       $scope.upload = Upload.upload({
         url: '/animal_galleries.json',

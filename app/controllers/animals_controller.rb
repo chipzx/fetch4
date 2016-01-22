@@ -40,10 +40,11 @@ class AnimalsController < ApplicationController
   def show
     @animal = Animal.find(params[:id])
     logger.debug("Description is #{@animal.description}")
+    logger.debug("Found #{@animal.animal_galleries.size} photos for #{@animal.name}")
     respond_to do |format|
       format.html 
       format.json { render :json => @animal, 
-        :methods => [ :kennel, :age, :days_under_care, :animal_type, :intake_type, :gender, :notes ] }
+        :methods => [ :kennel, :age, :days_under_care, :animal_type, :intake_type, :gender, :notes, :animal_galleries ] }
     end
   end
 
