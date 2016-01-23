@@ -1,27 +1,10 @@
 <article data-ng-app="welcome">
   <header>
-    <h1>Welcome to FetchIT, <%= current_user.email %></h1>
-    <h2>We're using Rails <%= Rails.version %> and AngularJS 1.5 </h2>
-    <h3 data-ng-if="motd">Message of the Day {{motd}}</h3>
+    <h1 class="text-info">Welcome to FetchIT! Analytics</h1>
   </header>
 
   <section>
-    <p>Future home of FetchIT welcome page</p>
-    <section>
-      <form class="form-inline">
-        <div class="form-group">
-          <label for="motd">Message of the Day</label>
-          <input class="form-control"
-                 name="motd"
-                 type="text"
-                 placeholder="Enter a message"
-                 autofocus
-                 data-ng-model="motd">
-          </input>
-        </div>
-      </form>
-    </section>
-
-    <%= link_to "Log Out", destroy_user_session_path, method: :delete %>
+    <hr/>
+    <h4>You are logged in as <span class="text-success"><%=current_user.email %></span></h4>
   </section>
 </article>
