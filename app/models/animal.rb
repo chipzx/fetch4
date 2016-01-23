@@ -30,6 +30,17 @@ class Animal < ActiveRecord::Base
 
   has_many :animal_galleries
 
+  def primary_photo
+    unless animal_galleries.nil?
+      animal_galleries.each do |g|
+        if (g.primary_image)
+          return g.photo.url(:small)
+        end
+      end
+    end
+    return nil
+  end
+
   def notes(to_html: true)
     format_notes(self.description, to_html)
   end
