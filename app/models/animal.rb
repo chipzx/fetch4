@@ -38,7 +38,7 @@ class Animal < ActiveRecord::Base
         end
       end
     end
-    return nil
+    return AnimalGallery::DEFAULT_URL
   end
 
   def notes(to_html: true)

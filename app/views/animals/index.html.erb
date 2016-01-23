@@ -58,15 +58,10 @@
         <section>
         <tr ng-repeat="a in animals">
           <td> 
-            <a href="/animals/{{a.id}}">
-              <div ng-if="a.primary_photo">
-                <img class="img-responsive img-thumbnail" src="{{a.primary_photo}}" alt="Upload a photo" height="140px" width="140px"/>
-              </div>
-              <div ng-if="!a.primary_photo">
-                <%= image_tag("missing.jpg", size: "140x140", alt: "Upload a Photo!", 
-                              class: "img-responsive img-thumbnail") %>
-              </div>
-            </a>
+            <!-- a href="/animals/{{a.id}}" -->
+              <img class="img-responsive img-thumbnail" ng-src="{{a.primary_photo}}" alt="Upload a photo" height="140px" width="140px"/ >
+              
+            <!-- /a -->
           </td>
           <td> <a href="/animals/{{a.id}}">{{ a.anumber }}</a> </td>
           <td> <a href="/animals/{{a.id}}">{{ a.name }} </td>

@@ -1,11 +1,13 @@
 class AnimalGallery < ActiveRecord::Base
 
+  DEFAULT_URL="http://s3.amazonaws.com/fetch4-test/animal_galleries/photos/missing.jpg"
+
   has_attached_file :photo, 
     storage: :s3,
     s3_credentials: Proc.new { |a| a.instance.s3_credentials },
     s3_storage_class: :reduced_redundancy,
     styles: { default: "640x480", small: "320x240", thumb: "140x140"}, 
-    default_url: "images/missing.jpg" 
+    default_url: DEFAULT_URL
 
 #  validates_attachment_content_type :photo, content_type: 
 #    { content_type: ["image/jpeg", 

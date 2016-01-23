@@ -56,11 +56,12 @@ feature 'Search Animals' do
       fill_in "keywords", with: "Bow"
     end
     sleep(4)
+    save_screenshot("/tmp/test_full_text_search.png")
+    print page.html
     expect(page.find("h1")).to have_content("Animals Under Care")
     expect(page.all("tr").count).to eq(3)
     expect(page.all("tr")[1]).to have_content("101")
     expect(page.all("tr")[2]).to have_content("103")
-    save_screenshot("/tmp/test_full_text_search.png")
     within "section.search-results" do
       expect(page.all("tr")[1]).to have_content("Bowzer")
       expect(page.all("tr")[2]).to have_content("Bowser")

@@ -24,9 +24,5 @@ feature 'angular test' do
     click_button "Log in" 
 
     expect(page).to have_content("Welcome")
-    fill_in "motd", with: "Test message of the day"
-    within 'header h3' do
-      expect(page).to have_content('Test message of the day')
-    end    
   end
 end

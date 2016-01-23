@@ -17,12 +17,7 @@
         <div class="row">
       
           <div class="col-md-6 col-lg-6">
-            <% if @animal.primary_photo %>
-              <img class="img-responsive" src="{{animal.primary_photo}}" alt="Upload a photo" height="480px" width="640px"/>
-            <% else %>
-              <%= image_tag("missing.jpg", size: "320x240", alt: "Upload a Photo!", 
-                            class: "img-thumbnail") %>
-            <% end %>
+            <img class="img-responsive" ng-src="{{animal.primary_photo}}" alt="Upload a photo" height="480px" width="640px"/>
           </div>
       
           <div class="col-md-6 col-lg-6"> 
