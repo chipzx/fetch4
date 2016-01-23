@@ -48,6 +48,7 @@ feature 'Search Animals' do
     expect(page.all("tr")[1]).to have_content("101")
     expect(page.all("tr")[2]).to have_content("102")
     expect(page.all("tr")[3]).to have_content("103")
+    
   end
   
   scenario "Test full-text search" do
