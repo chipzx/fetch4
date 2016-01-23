@@ -45,6 +45,16 @@ group :development, :test do
 
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
+
+  # Use Rubber for deployment
+  gem 'amazon-ec2'
+  gem 'aws-s3'
+  gem 'capistrano'
+  gem 'capistrano-passenger'
+  gem 'nettica'
+  gem 'httparty'
+  gem 'rubber'
+
 end
 
 gem 'devise'
