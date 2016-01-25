@@ -22,6 +22,7 @@ solr/
 config/secrets.yml
 config/initializers/devise.rb
 config/aws.yml
+config/rubber/rubber.yml
 
 # ignore production files directory
 production/
@@ -32,3 +33,6 @@ public/system
 Gemfile.lock
 Gemfile.old
 vim-sleuth
+Vagrantfile
+.vagrant/
+config/environments/vagrant.rb

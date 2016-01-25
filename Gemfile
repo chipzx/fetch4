@@ -30,7 +30,7 @@ gem 'aws-sdk', '~>1.6'
 # gem 'unicorn'
 
 # Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+gem 'capistrano-rails', group: :development
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -46,15 +46,6 @@ group :development, :test do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
 
-  # Use Rubber for deployment
-  gem 'amazon-ec2'
-  gem 'aws-s3'
-  gem 'capistrano'
-  gem 'capistrano-passenger'
-  gem 'nettica'
-  gem 'httparty'
-  gem 'rubber'
-
 end
 
 gem 'devise'
@@ -69,6 +60,7 @@ gem 'paperclip', '~> 4.3'
 # Gems for sunspot/solr search engine
 gem 'sunspot_rails'
 gem 'sunspot_solr'
+gem 'progress_bar'
 
 # gem for getting and parsing emails
 gem 'mail'
