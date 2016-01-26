@@ -12,7 +12,6 @@ class AnimalsController < ApplicationController
     @sortby = params["sortby"] || "kennel"
     @sortOrder = params["sortOrder"] || "false"
     @animals = search(@keywords, @page, @pagesize, @sortby, @sortOrder)
-    logger.debug("Primary photo is: #{@animals[0].primary_photo}")
     respond_to do |format|
       format.html 
       format.json { render :json => @animals, 
