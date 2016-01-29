@@ -41,6 +41,14 @@ class Animal < ActiveRecord::Base
     return AnimalGallery::DEFAULT_URL
   end
 
+  def short_description(max_length=500)
+    return self.description if self.description.nil? || 
+                               self.description.length < max_length
+
+    d = description.slice(0, max_length) 
+    return d.slice(0, d.rindex(/\s/)).strip + "..."
+  end
+
   def notes(to_html: true)
     format_notes(self.description, to_html)
   end

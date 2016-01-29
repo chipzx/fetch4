@@ -15,7 +15,7 @@ class AnimalsController < ApplicationController
     respond_to do |format|
       format.html 
       format.json { render :json => @animals, 
-        :methods => [ :kennel, :age, :days_under_care, :animal_type, :intake_type, :gender, :primary_photo ] }
+        :methods => [ :kennel, :age, :days_under_care, :animal_type, :intake_type, :gender, :primary_photo, :short_description ] }
     end
   end
 

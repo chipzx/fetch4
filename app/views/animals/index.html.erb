@@ -42,7 +42,7 @@
     <table id="mainlisting" class="table table-striped">
       <thead>
         <tr>
-          <th>Image</th>
+          <th colspan=4>Image</th>
           <th><a href="" ng-click="sortedBy('anumber');">ID</a></th>
           <th><a href="" ng-click="sortedBy('name');">Name</a></th>
           <th><a href="" ng-click="sortedBy('kennel');">Kennel</a></th>
@@ -54,12 +54,12 @@
         </tr>
       </thead>
   
-      <tbody>
+      <tbody ng-repeat="a in animals">
         <section>
-        <tr ng-repeat="a in animals">
-          <td> 
+        <tr> <!-- ng-repeat="a in animals" -->
+          <td rowspan=2 colspan=4> 
             <!-- a href="/animals/{{a.id}}" -->
-              <img class="img-responsive img-thumbnail" ng-src="{{a.primary_photo}}" alt="Upload a photo" height="140px" width="140px"/ >
+              <img class="img-responsive img-rounded" ng-src="{{a.primary_photo}}" alt="Upload a photo" height="480" width="640">
               
             <!-- /a -->
           </td>
@@ -71,6 +71,9 @@
           <td> {{ a.gender }} </td>
           <td> {{ a.age }} </td>
           <td> {{ a.days_under_care }} </td>
+        </tr>
+        <tr>
+          <td colspan=6> {{ a.short_description }} </td>
         </tr>
         </section>
       </tbody>
