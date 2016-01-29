@@ -1,5 +1,5 @@
-passenger_version: '1:5.0.21-1~`lsb_release -sc`1'
-passenger_ruby: "/home/ubuntu/.rvm/rubies/ruby-2.2.2/bin/ruby"
+passenger_version: '1:5.0.23-1~`lsb_release -sc`1'
+passenger_ruby: "/usr/bin/ruby"
 passenger_listen_port: 80
 passenger_listen_ssl_port: 443
 max_app_connections: 5

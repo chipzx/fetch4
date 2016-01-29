@@ -30,7 +30,7 @@ gem 'aws-sdk', '~>1.6'
 # gem 'unicorn'
 
 # Use Capistrano for deployment
-gem 'capistrano-rails', group: :development
+# gem 'capistrano-rails', group: :development
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -45,8 +45,10 @@ group :development, :test do
 
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
-
 end
+
+gem 'capistrano', '~> 2.15.7'
+gem 'rubber', '~> 3.0.1'
 
 gem 'devise'
 gem 'angular_rails_csrf'

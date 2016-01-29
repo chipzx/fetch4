@@ -23,6 +23,9 @@ config/secrets.yml
 config/initializers/devise.rb
 config/aws.yml
 config/rubber/rubber.yml
+config/rubber/instance-production.yml
+
+config/rubber.test01
 
 # ignore production files directory
 production/
