@@ -11,36 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160119004350) do
+ActiveRecord::Schema.define(version: 20160129170910) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "animal_dump", id: false, force: :cascade do |t|
-    t.integer  "id",                             null: false
-    t.integer  "atype_id",                       null: false
-    t.string   "anumber",            limit: 255, null: false
-    t.string   "name",               limit: 255
-    t.integer  "kennel_id"
-    t.integer  "gender_id"
-    t.string   "breed",              limit: 255
-    t.string   "coloring",           limit: 255
-    t.datetime "dob"
-    t.boolean  "dob_known"
-    t.datetime "intake_date"
-    t.integer  "intake_type_id"
-    t.text     "description"
-    t.integer  "group_id",                       null: false
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.string   "image_file_name",    limit: 255
-    t.string   "image_content_type", limit: 255
-    t.integer  "image_file_size"
-    t.datetime "image_updated_at"
-    t.decimal  "weight"
-    t.datetime "last_modified_time",             null: false
-    t.string   "last_modified_by",   limit: 255, null: false
-  end
 
   create_table "animal_galleries", force: :cascade do |t|
     t.integer  "animal_id",                          null: false
@@ -65,6 +39,14 @@ ActiveRecord::Schema.define(version: 20160119004350) do
 
   add_index "animal_types", ["group_id", "name"], name: "index_animal_types_on_group_id_and_name", unique: true, using: :btree
   add_index "animal_types", ["name"], name: "index_animal_types_on_name", using: :btree
+
+  create_table "animal_types_dump", id: false, force: :cascade do |t|
+    t.integer  "id",                      null: false
+    t.string   "name",        limit: 255, null: false
+    t.string   "description", limit: 255
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
 
   create_table "animals", force: :cascade do |t|
     t.integer  "animal_type_id",               null: false
@@ -94,6 +76,32 @@ ActiveRecord::Schema.define(version: 20160119004350) do
   add_index "animals", ["microchip_number"], name: "index_animals_on_microchip_number", using: :btree
   add_index "animals", ["name"], name: "index_animals_on_name", using: :btree
 
+  create_table "animals_dump", id: false, force: :cascade do |t|
+    t.integer  "id",                             null: false
+    t.integer  "atype_id",                       null: false
+    t.string   "anumber",            limit: 255, null: false
+    t.string   "name",               limit: 255
+    t.integer  "kennel_id"
+    t.integer  "gender_id"
+    t.string   "breed",              limit: 255
+    t.string   "coloring",           limit: 255
+    t.datetime "dob"
+    t.boolean  "dob_known"
+    t.datetime "intake_date"
+    t.integer  "intake_type_id"
+    t.text     "description"
+    t.integer  "group_id",                       null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.string   "image_file_name",    limit: 255
+    t.string   "image_content_type", limit: 255
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+    t.decimal  "weight"
+    t.datetime "last_modified_time",             null: false
+    t.string   "last_modified_by",   limit: 255, null: false
+  end
+
   create_table "genders", force: :cascade do |t|
     t.string   "name",        null: false
     t.text     "description", null: false
@@ -104,6 +112,14 @@ ActiveRecord::Schema.define(version: 20160119004350) do
 
   add_index "genders", ["group_id"], name: "index_genders_on_group_id", using: :btree
   add_index "genders", ["name", "group_id"], name: "index_genders_on_name_and_group_id", unique: true, using: :btree
+
+  create_table "genders_dump", id: false, force: :cascade do |t|
+    t.integer  "id",                      null: false
+    t.string   "indicator",   limit: 1,   null: false
+    t.string   "description", limit: 128, null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
 
   create_table "groups", force: :cascade do |t|
     t.string   "name",        null: false
@@ -125,6 +141,45 @@ ActiveRecord::Schema.define(version: 20160119004350) do
 
   add_index "intake_types", ["group_id", "name"], name: "index_intake_types_on_group_id_and_name", unique: true, using: :btree
   add_index "intake_types", ["name"], name: "index_intake_types_on_name", using: :btree
+
+  create_table "intake_types_dump", id: false, force: :cascade do |t|
+    t.integer  "id",                      null: false
+    t.string   "indicator",   limit: 255, null: false
+    t.string   "description", limit: 255, null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  create_table "intakes", force: :cascade do |t|
+    t.integer  "animal_type_id",    null: false
+    t.string   "animal_id",         null: false
+    t.string   "name"
+    t.integer  "group_id",          null: false
+    t.datetime "intake_date"
+    t.integer  "intake_type_id",    null: false
+    t.string   "found_location"
+    t.string   "postal_code"
+    t.integer  "address_id"
+    t.integer  "gender_id",         null: false
+    t.string   "breed"
+    t.string   "coloring"
+    t.string   "age"
+    t.float    "weight"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.integer  "geo_quality_code"
+    t.boolean  "parseable_address"
+    t.boolean  "valid_address"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "intakes", ["animal_id", "intake_date", "group_id"], name: "index_intakes_on_animal_id_and_intake_date_and_group_id", unique: true, using: :btree
+  add_index "intakes", ["geo_quality_code"], name: "index_intakes_on_geo_quality_code", using: :btree
+  add_index "intakes", ["group_id"], name: "index_intakes_on_group_id", using: :btree
+  add_index "intakes", ["intake_date"], name: "index_intakes_on_intake_date", using: :btree
+  add_index "intakes", ["intake_type_id"], name: "index_intakes_on_intake_type_id", using: :btree
+  add_index "intakes", ["postal_code"], name: "index_intakes_on_postal_code", using: :btree
 
   create_table "kennel_types", force: :cascade do |t|
     t.string   "name",        null: false
@@ -154,6 +209,21 @@ ActiveRecord::Schema.define(version: 20160119004350) do
 
   add_index "kennels", ["group_id"], name: "index_kennels_on_group_id", using: :btree
   add_index "kennels", ["name", "building", "group_id"], name: "index_kennels_on_name_and_building_and_group_id", unique: true, using: :btree
+
+  create_table "kennels_dump", id: false, force: :cascade do |t|
+    t.integer  "id",                                        null: false
+    t.string   "name",          limit: 255,                 null: false
+    t.string   "bldg",          limit: 255
+    t.string   "kennel_type",   limit: 255
+    t.integer  "max_occupancy",             default: 1
+    t.boolean  "full_name",                 default: false
+    t.integer  "group_id",                                  null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.boolean  "is_public",                 default: false
+    t.boolean  "is_onsite",                 default: true
+    t.boolean  "is_permanent",              default: true
+  end
 
   create_table "outcome_types", force: :cascade do |t|
     t.string   "name",        null: false
@@ -259,6 +329,10 @@ ActiveRecord::Schema.define(version: 20160119004350) do
   add_foreign_key "animals", "intake_types", name: "animals_intake_types_fk"
   add_foreign_key "genders", "groups", name: "genders_groups_fk"
   add_foreign_key "intake_types", "groups", name: "intake_types_groups_fk"
+  add_foreign_key "intakes", "animal_types", name: "intakes_animal_type_id_fk"
+  add_foreign_key "intakes", "genders", name: "intakes_gender_id_fk"
+  add_foreign_key "intakes", "groups", name: "intakes_group_id_fk"
+  add_foreign_key "intakes", "intake_types", name: "intakes_intake_type_id_fk"
   add_foreign_key "kennel_types", "groups", name: "kennel_types_groups_fk"
   add_foreign_key "kennels", "groups", name: "kennels_groups"
   add_foreign_key "kennels", "kennel_types", name: "kennels_kennel_types"
