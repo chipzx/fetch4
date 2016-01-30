@@ -33,6 +33,9 @@ production/
 # ignore public/system directory
 public/system
 
+# ignore fwall directory
+fwall/
+
 Gemfile.lock
 Gemfile.old
 vim-sleuth
