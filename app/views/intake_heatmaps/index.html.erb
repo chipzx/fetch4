@@ -1,0 +1,17 @@
+<!-- % title "Intakes" % -->
+
+<section>
+  <%  if @group_id == 4 %>
+    <h1 align="center">Austin Animal Center Intakes FY 2014-2015</h1>
+  <% else %>
+    <h1 align="center">Bastrop County Intakes 2015</h1>
+  <% end %>
+
+
+ <%= render(
+    partial: 'map',
+    locals: { latlngs: @latlngs, center_point: @center_point, max_intensity: @max_intensity, default_zoom: @zoom, hotspots: @hotspots, hs_detail: @hs_detail }
+  ) %>
+
+</section>
+

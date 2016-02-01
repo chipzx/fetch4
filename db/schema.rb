@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160129170910) do
+ActiveRecord::Schema.define(version: 20160201182518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -122,11 +122,14 @@ ActiveRecord::Schema.define(version: 20160129170910) do
   end
 
   create_table "groups", force: :cascade do |t|
-    t.string   "name",        null: false
-    t.string   "time_zone",   null: false
+    t.string   "name",                   null: false
+    t.string   "time_zone",              null: false
     t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.float    "center_point_latitude"
+    t.float    "center_point_longitude"
+    t.integer  "default_zoom_level"
   end
 
   add_index "groups", ["name"], name: "index_groups_on_name", unique: true, using: :btree
@@ -172,6 +175,7 @@ ActiveRecord::Schema.define(version: 20160129170910) do
     t.boolean  "valid_address"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
+    t.integer  "fiscal_year"
   end
 
   add_index "intakes", ["animal_id", "intake_date", "group_id"], name: "index_intakes_on_animal_id_and_intake_date_and_group_id", unique: true, using: :btree

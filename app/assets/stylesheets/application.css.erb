@@ -10,10 +10,19 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_tree .
  *= require_self
  *= require 'bootstrap-sass-official'
+ *= require 'leaflet'
+ *= require_tree .
  */
+//= depend_on_asset "layers.png"
+//= depend_on_asset "layers-2x.png"
+
+#map {
+  height: 768px;
+  width: 1024px;
+}
+
 body { padding-top: 70px; }
 .fetchit-red { color: #C9121B;}
 .fetchit-green { color: #69B36F;}
