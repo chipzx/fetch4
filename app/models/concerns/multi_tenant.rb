@@ -68,7 +68,7 @@ module MultiTenant
   def set_group
     unless Thread.current['current_group'].nil?
       @group_id = Thread.current['current_group']
-      logger.debug("Current group set to #{Thread.current['current_group']} from thread #{Thread.current}")
+      # logger.debug("Current group set to #{Thread.current['current_group']} from thread #{Thread.current}")
     end
   end
 

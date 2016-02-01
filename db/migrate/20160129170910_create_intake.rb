@@ -22,6 +22,7 @@ class CreateIntake < ActiveRecord::Migration
       t.integer :geo_quality_code
       t.boolean :parseable_address
       t.boolean :valid_address
+      t.string :fiscal_year
       t.timestamps null: false
     end
     

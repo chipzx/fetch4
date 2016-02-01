@@ -1,6 +1,6 @@
 module IntakeHeatmapsHelper
 
-  def heatmap(mapId, center_point, max_intensity, default_zoom, latlngs, hotspots, hs_detail)
+  def heatmap(mapId, map_data, max_intensity, latlngs, hotspots, hs_detail)
 
     str = ""
     # str += "var spinner = new Spinner().spin();"
@@ -11,10 +11,8 @@ module IntakeHeatmapsHelper
     str += "  ["
     first = true
     latlngs.each do |ll|
-      if ll[1] <= 100
-        first ? first = false : str += ", "
-        str += "[#{ll[0][0].to_f}, #{ll[0][1].to_f}, #{ll[1]}]"
-      end
+      first ? first = false : str += ", "
+      str += "[#{ll.latitude.to_f}, #{ll.longitude.to_f}, #{ll.total}]"
     end
     str += "  ]; "
 
@@ -22,20 +20,17 @@ module IntakeHeatmapsHelper
     str += "var aac = L.MakiMarkers.icon({icon: 'building', color: '#00ff00', size: 'm'});"
 
     # Create base layer for map
-    logger.info("Center point is #{center_point} #{center_point[0]} #{center_point[1]}")
-    logger.info("Map id is #{mapId}")
-    str += "var #{mapId} = new L.Map('map').setView([#{center_point[0]}, #{center_point[1]},], #{default_zoom}); "
+    str += "var #{mapId} = new L.Map('map').setView([#{map_data.center_point_latitude}, 
+              #{map_data.center_point_longitude},], #{map_data.default_zoom_level}); "
     str += "var tiles = L.tileLayer('https://api.tiles.mapbox.com/v4/fetchsoft.n3kj8dd1/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZmV0Y2hzb2Z0IiwiYSI6IjI2NDExZDY1NTlkMmZkMzVkNTc3YzI1YTU4NWM3ODlmIn0.a9ftht9yIWHeKc1eDWRwzw#9', { attribution: 'Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, geocoding <a href=\"http://geoservices.tamu.edu/Services/Geocode\">Texas A&M Geoservices</a>, Imagery @<a href=\"http://mapbox.com\">Mapbox</a>'}).addTo(#{mapId}); "
     str += "var heat = L.heatLayer(testData, { max : #{max_intensity} }).addTo(#{mapId}); "
-
 
     str += "var htMarkers =  [];"
     hotspots.to_a.each do |h|
       popup = "Stray Hotspot:<br/><u>#{h.found_location}</u><br/>"
       hs_detail.each do |d|
-        s = d.flatten
-        if (s[0].eql?(h.found_location) && s[1] == h.latitude && s[2] == h.longitude)
-          popup += "#{s[3]} #{s[4]}: #{s[5]}<br/>"
+        if (d.found_location.eql?(h.found_location) && d.latitude == h.latitude && d.longitude == h.longitude)
+          popup += "#{d.animal_type} FY #{d.fiscal_year}: #{d.total.to_i}<br/>"
         end
       end
       str += "var htm = L.marker([#{h.latitude},#{h.longitude}], {icon: hotspot}).addTo(#{mapId}).bindPopup('#{popup}');"
@@ -44,6 +39,7 @@ module IntakeHeatmapsHelper
     layerGroup = "var hotspots = L.layerGroup(htMarkers);"
 
     str += layerGroup
+
     str += "var ata = L.marker([30.3090367631705, -97.7092597959172], {icon: aac}).addTo(#{mapId}).bindPopup('Animal Trustees of Austin');"
     str += "var ahs = L.marker([30.3446596859744, -97.7052404308576], {icon: aac}).addTo(#{mapId}).bindPopup('Austin Humane Society');"
     str += "var apa = L.marker([30.269746, -97.7592909], {icon: aac}).addTo(#{mapId}).bindPopup('Austin Pets Alive!');"

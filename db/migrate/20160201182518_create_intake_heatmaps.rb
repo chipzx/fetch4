@@ -2,10 +2,22 @@ class CreateIntakeHeatmaps < ActiveRecord::Migration
   def up
     conn = ActiveRecord::Base.connection
     conn.execute("CREATE VIEW intake_heatmaps AS
-SELECT   found_location, latitude, longitude, count(*) AS total 
-FROM     intakes
-WHERE    latitude != 0.0 AND valid_address 
-GROUP BY found_location, latitude, longitude")
+SELECT   i.group_id, 
+         found_location, 
+         latitude, 
+         longitude, 
+         at.name as animal_type,
+         it.name as intake_type,
+         g.description as gender,
+         fiscal_year,
+         count(*) AS total 
+FROM     intakes i
+JOIN     intake_types it ON (it.id = i.intake_type_id)
+JOIN     animal_types at ON (at.id = i.animal_type_id)
+JOIN     genders g ON (g.id = i.gender_id)
+WHERE    latitude is NOT NULL AND latitude != 0.0 AND valid_address 
+GROUP BY i.group_id, found_location, latitude, longitude, at.name, it.name, g.description, fiscal_year")
+
     conn.execute("CREATE VIEW hotspots AS
 SELECT intakes.found_location,
        intakes.latitude,
@@ -29,7 +41,8 @@ WHERE  ((intakes.found_location)::text IN
                             intakes_1.group_id,
                             count(*) AS count
                    FROM     intakes intakes_1
-                   WHERE    (intakes_1.valid_address)
+                   WHERE    intakes_1.valid_address
+                     AND    latitude IS NOT NULL
                    GROUP BY intakes_1.found_location, 
                             intakes_1.latitude, 
                             intakes_1.longitude, 
@@ -38,19 +51,27 @@ WHERE  ((intakes.found_location)::text IN
                   ) hs
           )
         )
-GROUP BY intakes.found_location, 
-         intakes.latitude, 
-         intakes.longitude, 
-         at.name, 
-         g.name,  
-         it.name, 
-         intakes.fiscal_year, 
-         intakes.group_id;")
+  AND  latitude is NOT NULL
+GROUP  BY intakes.found_location, 
+          intakes.latitude, 
+          intakes.longitude, 
+          at.name, 
+          g.name,  
+          it.name, 
+          intakes.fiscal_year, 
+          intakes.group_id;")
+
+    conn.execute("CREATE VIEW hotspot_details AS
+SELECT   found_location, latitude, longitude, animal_type, fiscal_year, group_id, sum(total) AS total
+FROM     hotspots
+GROUP BY found_location, latitude, longitude, animal_type, fiscal_year, group_id
+ORDER BY group_id, found_location, latitude, longitude, animal_type, fiscal_year")
   end
 
   def down
     conn = ActiveRecord::Base.connection
     conn.execute("DROP VIEW intake_heatmaps")
+    conn.execute("DROP VIEW hotspot_details")
     conn.execute("DROP VIEW hotspots")
   end
 end

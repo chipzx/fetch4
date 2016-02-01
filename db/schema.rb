@@ -130,6 +130,8 @@ ActiveRecord::Schema.define(version: 20160201182518) do
     t.float    "center_point_latitude"
     t.float    "center_point_longitude"
     t.integer  "default_zoom_level"
+    t.float    "max_intensity"
+    t.string   "display_name"
   end
 
   add_index "groups", ["name"], name: "index_groups_on_name", unique: true, using: :btree
@@ -251,6 +253,33 @@ ActiveRecord::Schema.define(version: 20160201182518) do
   add_index "privileges", ["group_id"], name: "index_privileges_on_group_id", using: :btree
   add_index "privileges", ["right_id"], name: "index_privileges_on_right_id", using: :btree
   add_index "privileges", ["user_id", "right_id"], name: "index_privileges_on_user_id_and_right_id", unique: true, using: :btree
+
+  create_table "raw_intakes", force: :cascade do |t|
+    t.string   "animal_id",         limit: 255
+    t.string   "name",              limit: 255
+    t.integer  "group_id",                                      null: false
+    t.datetime "intake_date"
+    t.string   "found_location",    limit: 255
+    t.string   "intake_type",       limit: 255
+    t.string   "animal_type",       limit: 255
+    t.string   "gender",            limit: 255
+    t.string   "breed",             limit: 255
+    t.string   "color",             limit: 255
+    t.boolean  "parseable_address"
+    t.boolean  "valid_address"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.integer  "geo_quality_code"
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
+    t.string   "age"
+    t.string   "postal_code",       limit: 255
+    t.string   "fiscal_year"
+    t.boolean  "intake_location",               default: false, null: false
+    t.integer  "animal_type_id"
+    t.integer  "intake_type_id"
+    t.integer  "gender_id"
+  end
 
   create_table "rights", force: :cascade do |t|
     t.string   "resource",   null: false

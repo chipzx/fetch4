@@ -1,16 +1,13 @@
 <!-- % title "Intakes" % -->
 
 <section>
-  <%  if @group_id == 4 %>
-    <h1 align="center">Austin Animal Center Intakes FY 2014-2015</h1>
-  <% else %>
-    <h1 align="center">Bastrop County Intakes 2015</h1>
-  <% end %>
+  <h1 align="center"><%= @map_data.name %> Intake Heatmap</h1>
 
 
+  <p> Max intensity is <%= @max_intensity %> for <%= @latlngs.size %> records</p>
  <%= render(
     partial: 'map',
-    locals: { latlngs: @latlngs, center_point: @center_point, max_intensity: @max_intensity, default_zoom: @zoom, hotspots: @hotspots, hs_detail: @hs_detail }
+    locals: { latlngs: @latlngs, map_data: @map_data, max_intensity: @max_intensity, hotspots: @hotspots, hs_detail: @hs_detail }
   ) %>
 
 </section>
