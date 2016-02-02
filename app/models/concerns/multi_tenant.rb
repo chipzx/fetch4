@@ -76,7 +76,7 @@ module MultiTenant
   def set_user
     unless Thread.current['current_group'].nil?
       @user = Thread.current['current_user']
-      logger.debug("Current user set to #{Thread.current['current_user']} from thread #{Thread.current}")
+      #logger.debug("Current user set to #{Thread.current['current_user']} from thread #{Thread.current}")
     end
   end
 

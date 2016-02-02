@@ -8,6 +8,8 @@ class ApplicationController < ActionController::Base
 
   # Force authentication using Devise
   before_action :authenticate_user!
+  
+  before_filter :set_current_group
 
   protected
 
@@ -16,4 +18,10 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.for(:sign_up) << :group_name
   end
 
+  def set_current_group
+    unless ENV['RAILS_ENV'] == 'test'
+      Thread.current['current_group'] = current_user.group_id
+      Thread.current['current_user'] = current_user
+    end
+  end
 end

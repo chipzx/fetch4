@@ -9,6 +9,7 @@ class IntakeHeatmapsController < ApplicationController
           gender_type: IntakeHeatmap.options_for_gender_type,
           fy_type:     IntakeHeatmap.options_for_fy_type
         },
+        default_filter_params: {}
     ) or return
     logger.info("params: #{params[:filterrific]}")
     logger.info("Select options: #{@filterrific.select_options}")
@@ -30,9 +31,14 @@ class IntakeHeatmapsController < ApplicationController
     logger.info("atype: #{@atype} itype: #{@itype} gtype: #{@gtype} ftype: #{@ftype}")
 
     @map_data = Group.find(current_user.group_id)
-    @latlngs = IntakeHeatmap.with_animal_type(@atype).with_intake_type(@itype).with_gender_type(@gtype).with_fy_type(@ftype)
+#    @latlngs = IntakeHeatmap.with_animal_type(@atype).with_intake_type(@itype).with_gender_type(@gtype).with_fy_type(@ftype)
+    @latlngs = @filterrific.find()
     
-    @max_intensity = @latlngs.size * @map_data.max_intensity
+    if (@latlngs.size > 1000)
+      @max_intensity = @latlngs.size * @map_data.max_intensity
+    else
+      @max_intensity = 0.05
+    end
 
     @hotspots = Hotspot.select("group_id, found_location, latitude,longitude").where("latitude IS NOT NULL and latitude != 0.0")
 

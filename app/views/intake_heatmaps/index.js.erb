@@ -1,0 +1,8 @@
+<% js = escape_javascript(
+  render(
+    partial: 'map',
+    locals: { latlngs:  @latlngs }
+  )
+) %>
+$("#filterrific_results").html("<%= js %>");
+$("#filterrific_results").load(document.URL + ' #filterrific_results');
