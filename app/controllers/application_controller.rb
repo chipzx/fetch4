@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_group
-    unless ENV['RAILS_ENV'] == 'test'
+    unless ENV['RAILS_ENV'] == 'test' || current_user.nil?
       Thread.current['current_group'] = current_user.group_id
       Thread.current['current_user'] = current_user
     end
