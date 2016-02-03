@@ -16,9 +16,6 @@ class RoleRight < ActiveRecord::Base
         rr.group_id = new_group_id
         rr.save
       end
-    else
-      err_msg = 'No role_rights records found for group id #{root_id}'
-      raise Exception, err_msg
     end
   end
 
