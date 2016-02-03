@@ -20,7 +20,9 @@ solr/
 
 # ignore config files with sensitive data
 config/secrets.yml
+config/environments/production.rb
 config/initializers/devise.rb
+
 config/aws.yml
 config/rubber/rubber.yml
 config/rubber/instance-production.yml
