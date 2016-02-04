@@ -1,6 +1,7 @@
 class CreateIntakeHeatmaps < ActiveRecord::Migration
   def up
     conn = ActiveRecord::Base.connection
+    conn.execute("ALTER TABLE intakes ALTER COLUMN fiscal_year SET DATA TYPE integer USING fiscal_year::integer")
     conn.execute("CREATE VIEW intake_heatmaps AS
 SELECT   i.group_id, 
          found_location, 
@@ -73,5 +74,6 @@ ORDER BY group_id, found_location, latitude, longitude, animal_type, fiscal_year
     conn.execute("DROP VIEW intake_heatmaps")
     conn.execute("DROP VIEW hotspot_details")
     conn.execute("DROP VIEW hotspots")
+    conn.execute("ALTER TABLE intakes ALTER COLUMN fiscal_year SET DATA TYPE varchar")
   end
 end
