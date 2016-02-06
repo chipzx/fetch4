@@ -20,6 +20,7 @@
 //= require angular-tablesort
 //= require angular-leaflet-directive
 //= require ng-file-upload
+//= require bootstrap-sass-official
 //= require_tree .
 
 

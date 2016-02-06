@@ -1,6 +1,6 @@
 module OutcomeHeatmapsHelper
 
-  def heatmap(mapId, map_data, max_intensity, latlngs)
+  def outcome_heatmap(mapId, map_data, max_intensity, latlngs)
 
     str = ""
 

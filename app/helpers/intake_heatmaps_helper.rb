@@ -1,6 +1,6 @@
 module IntakeHeatmapsHelper
 
-  def heatmap(mapId, map_data, max_intensity, latlngs, hotspots, hs_detail)
+  def intake_heatmap(mapId, map_data, max_intensity, latlngs, hotspots, hs_detail)
 
     str = ""
     # str += "var spinner = new Spinner().spin();"
