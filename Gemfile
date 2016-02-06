@@ -66,6 +66,8 @@ gem 'sunspot_solr'
 gem 'progress_bar'
 
 gem 'filterrific'
+
+gem 'geocoder'
 gem 'leaflet-rails'
 
 # gem for getting and parsing emails

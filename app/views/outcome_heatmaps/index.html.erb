@@ -1,0 +1,61 @@
+<!-- % title "Intakes" % -->
+
+<section>
+  <div class="row">
+   <div class="col-md-12 col-lg-12"> 
+     <h1 class="text-center"><%= @map_data.description %> Outcomes Heatmap</h1>
+   </div>
+  </div>
+
+<%= form_for_filterrific @filterrific do |f| %>
+    <div class="well">
+
+      <div class="row">
+        <div class="form-group">
+          <label class="control-label col-lg-3 col-md-3">Animal Type</label>
+          <div class="col-md-3 col-lg-3">
+            <%= f.select(:with_animal_type, @filterrific.select_options[:animal_type], class: 'form-control') %> 
+          </div>
+
+          <label class="control-label col-lg-3 col-md-3">Outcome Type</label>
+          <div class="col-md-3 col-lg-3">
+              <%= f.select(:with_outcome_type, @filterrific.select_options[:outcome_type], :selected => 'Adoption', class: 'form-control') %>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label class="col-md-3 col-lg-3">Gender</label>
+          <div class="col-md-3 col-lg-3">
+            <%= f.select(:with_gender_type, @filterrific.select_options[:gender_type], class: 'form-control') %>
+          </div>
+
+          <label class="control-label col-lg-3 col-md-3">Fiscal Year</label>
+          <div class="col-md-3 col-lg-3">
+            <%= f.select(:with_fy_type, @filterrific.select_options[:fy_type], :selected => "2015", class: 'form-control') %>
+          </div>
+        </div>
+
+      </div>
+
+      <hr/>
+      <div class="row">
+        <div class="col-md-offset-5 col-md-6"/>
+          <%= f.submit 'Apply Filters' %>
+        </div>
+      </div>
+
+      <%= link_to('Reset Filters', reset_filterrific_url) %>
+    </div>
+    
+  <% end %>
+
+  <p> Max intensity is <%= @max_intensity %> for <%= @latlngs.size %> records</p>
+   <%= render(
+       partial: 'map',
+       locals: { latlngs: @latlngs, map_data: @map_data, max_intensity: @max_intensity }
+     ) %>
+
+</section>
+
