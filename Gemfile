@@ -73,5 +73,7 @@ gem 'leaflet-rails'
 # gem for getting and parsing emails
 gem 'mail'
 
-# gem for reporting
+# gems for reporting
+gem 'scenic'
+gem 'lazy_high_charts'
 gem 'thinreports-rails'

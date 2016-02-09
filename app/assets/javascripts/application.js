@@ -12,15 +12,23 @@
 //
 //= require jquery
 //= require jquery_ujs
+
 //= require leaflet
 //= require Leaflet.MakiMarkers
+
 //= require angular
 //= require angular-route
 //= require angular-sanitize
 //= require angular-tablesort
 //= require angular-leaflet-directive
 //= require ng-file-upload
+
 //= require bootstrap-sass-official
+
+//= require highcharts/highcharts
+//= require highcharts/highcharts-more
+//= require highcharts/highstock
+
 //= require_tree .
 
 
