@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160205160420) do
+ActiveRecord::Schema.define(version: 20160209173927) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -149,6 +149,32 @@ ActiveRecord::Schema.define(version: 20160205160420) do
     t.decimal  "weight"
     t.datetime "last_modified_time",             null: false
     t.string   "last_modified_by",   limit: 255, null: false
+  end
+
+  create_table "bastrop_intakes", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "animal_type_id"
+    t.string   "animal_id"
+    t.string   "name"
+    t.integer  "group_id"
+    t.datetime "intake_date"
+    t.integer  "intake_type_id"
+    t.string   "found_location"
+    t.string   "postal_code"
+    t.integer  "address_id"
+    t.integer  "gender_id"
+    t.string   "breed"
+    t.string   "coloring"
+    t.string   "age"
+    t.float    "weight"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.integer  "geo_quality_code"
+    t.boolean  "parseable_address"
+    t.boolean  "valid_address"
+    t.integer  "fiscal_year"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "contact_pks", force: :cascade do |t|
@@ -792,4 +818,110 @@ ActiveRecord::Schema.define(version: 20160205160420) do
   add_foreign_key "roles", "groups", name: "roles_groups_fk"
   add_foreign_key "user_roles", "users", name: "user_roles_users_fk"
   add_foreign_key "users", "groups", name: "users_groups_fk"
+
+  create_view :intake_heatmaps,  sql_definition: <<-SQL
+      SELECT i.group_id,
+      i.found_location,
+      i.latitude,
+      i.longitude,
+      at.name AS animal_type,
+      it.name AS intake_type,
+      g.description AS gender,
+      i.fiscal_year,
+      count(*) AS total
+     FROM (((intakes i
+       JOIN intake_types it ON ((it.id = i.intake_type_id)))
+       JOIN animal_types at ON ((at.id = i.animal_type_id)))
+       JOIN genders g ON ((g.id = i.gender_id)))
+    WHERE (((i.latitude IS NOT NULL) AND (i.latitude <> (0.0)::double precision)) AND i.valid_address)
+    GROUP BY i.group_id, i.found_location, i.latitude, i.longitude, at.name, it.name, g.description, i.fiscal_year;
+  SQL
+
+  create_view :hotspots,  sql_definition: <<-SQL
+      SELECT intakes.found_location,
+      intakes.latitude,
+      intakes.longitude,
+      at.name AS animal_type,
+      g.name AS gender,
+      it.name AS intake_type,
+      intakes.group_id,
+      intakes.fiscal_year,
+      count(*) AS total
+     FROM (((intakes
+       JOIN intake_types it ON ((it.id = intakes.intake_type_id)))
+       JOIN animal_types at ON ((at.id = intakes.animal_type_id)))
+       JOIN genders g ON ((g.id = intakes.gender_id)))
+    WHERE (((intakes.found_location)::text IN ( SELECT hs.found_location
+             FROM ( SELECT intakes_1.found_location,
+                      intakes_1.latitude,
+                      intakes_1.longitude,
+                      intakes_1.group_id,
+                      count(*) AS count
+                     FROM intakes intakes_1
+                    WHERE (intakes_1.valid_address AND (intakes_1.latitude IS NOT NULL))
+                    GROUP BY intakes_1.found_location, intakes_1.latitude, intakes_1.longitude, intakes_1.group_id
+                   HAVING (count(*) >= 20)) hs)) AND (intakes.latitude IS NOT NULL))
+    GROUP BY intakes.found_location, intakes.latitude, intakes.longitude, at.name, g.name, it.name, intakes.fiscal_year, intakes.group_id;
+  SQL
+
+  create_view :hotspot_details,  sql_definition: <<-SQL
+      SELECT hotspots.found_location,
+      hotspots.latitude,
+      hotspots.longitude,
+      hotspots.animal_type,
+      hotspots.fiscal_year,
+      hotspots.group_id,
+      sum(hotspots.total) AS total
+     FROM hotspots
+    GROUP BY hotspots.found_location, hotspots.latitude, hotspots.longitude, hotspots.animal_type, hotspots.fiscal_year, hotspots.group_id
+    ORDER BY hotspots.group_id, hotspots.found_location, hotspots.latitude, hotspots.longitude, hotspots.animal_type, hotspots.fiscal_year;
+  SQL
+
+  create_view :outcome_heatmaps,  sql_definition: <<-SQL
+      SELECT o.group_id,
+      a.full_location AS found_location,
+      a.latitude,
+      a.longitude,
+      at.name AS animal_type,
+      ot.name AS outcome_type,
+      g.description AS gender,
+      o.fiscal_year,
+      count(*) AS total
+     FROM ((((outcomes o
+       JOIN addresses a ON ((o.address_id = a.id)))
+       JOIN outcome_types ot ON ((ot.id = o.outcome_type_id)))
+       JOIN animal_types at ON ((at.id = o.animal_type_id)))
+       JOIN genders g ON ((g.id = o.gender_id)))
+    WHERE (((a.latitude IS NOT NULL) AND (a.latitude <> (0.0)::double precision)) AND a.valid_address)
+    GROUP BY o.group_id, a.full_location, a.latitude, a.longitude, at.name, ot.name, g.description, o.fiscal_year;
+  SQL
+
+  create_view :day_count_during_years,  sql_definition: <<-SQL
+      SELECT ad.fiscal_year,
+      ad.group_id,
+      to_char(ad.outcome_date, 'DY'::text) AS day_of_week,
+      count(*) AS total_days
+     FROM ( SELECT DISTINCT outcomes.fiscal_year,
+              outcomes.group_id,
+              outcomes.outcome_date
+             FROM outcomes) ad
+    GROUP BY ad.fiscal_year, ad.group_id, to_char(ad.outcome_date, 'DY'::text);
+  SQL
+
+  create_view :adoptions_by_days,  sql_definition: <<-SQL
+      SELECT y.fiscal_year,
+      to_char(o.outcome_date, 'D'::text) AS day_index,
+      to_char(o.outcome_date, 'DY'::text) AS day_of_week,
+      y.total_days,
+      y.group_id,
+      count(*) AS number_adoptions,
+      round((((count(*))::numeric * 1.0) / ((y.total_days)::numeric * 1.0)), 2) AS avg_daily_adoptions
+     FROM (outcomes o
+       JOIN day_count_during_years y ON ((((to_char(o.outcome_date, 'DY'::text) = y.day_of_week) AND (o.fiscal_year = y.fiscal_year)) AND (o.group_id = y.group_id))))
+    WHERE (o.outcome_type_id = ( SELECT ot.id
+             FROM outcome_types ot
+            WHERE ((ot.group_id = o.group_id) AND ((ot.name)::text = 'Adoption'::text))))
+    GROUP BY y.fiscal_year, y.group_id, y.total_days, to_char(o.outcome_date, 'DY'::text), to_char(o.outcome_date, 'D'::text);
+  SQL
+
 end
