@@ -1,0 +1,14 @@
+<section>
+  <div class="row">
+   <div class="col-md-12 col-lg-12">
+     <h1 class="text-center">Adoption Metrics</h1>
+   </div>
+  </div>
+
+  <%= high_chart_globals(@chart_globals) %>`
+  <%= render(
+    partial: "by_day", 
+    locals: { id: @by_day_id, chart:  @by_day_chart})
+   %>
+</section>
+
