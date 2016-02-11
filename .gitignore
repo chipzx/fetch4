@@ -35,6 +35,7 @@ production/
 
 # ignore public/system directory
 public/system
+public/assets
 
 # ignore fwall directory
 fwall/

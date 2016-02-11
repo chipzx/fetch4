@@ -1,10 +1,6 @@
 class CreateIntakeHeatmaps < ActiveRecord::Migration
   def up
 
-    add_column :groups, :fiscal_year_start, :string, :null => false, :default => 'January 1'
-    add_column :groups, :fiscal_year_start, :string, :null => false, :default => 'December 31'
-    add_column :outcomes, :fiscal_year, :integer
-
     conn = ActiveRecord::Base.connection
     conn.execute("ALTER TABLE intakes ALTER COLUMN fiscal_year SET DATA TYPE integer USING fiscal_year::integer")
     conn.execute("CREATE VIEW intake_heatmaps AS
