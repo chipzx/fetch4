@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160211182019) do
+ActiveRecord::Schema.define(version: 20160211223121) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,66 @@ ActiveRecord::Schema.define(version: 20160211182019) do
   end
 
   add_index "animal_galleries", ["animal_id"], name: "index_animal_galleries_on_animal_id", using: :btree
+
+  create_table "animal_services_311_calls", force: :cascade do |t|
+    t.string   "service_request_id",             null: false
+    t.integer  "group_id",                       null: false
+    t.integer  "service_request_type_id",        null: false
+    t.string   "owning_department"
+    t.string   "method_received"
+    t.integer  "service_request_status_type_id", null: false
+    t.datetime "status_change_date",             null: false
+    t.datetime "date_opened",                    null: false
+    t.datetime "last_updated",                   null: false
+    t.datetime "date_closed"
+    t.string   "service_request_location"
+    t.integer  "address_id"
+    t.string   "jurisdiction"
+    t.string   "jurisdiction_name"
+    t.string   "map_page"
+    t.string   "map_tile"
+    t.integer  "fiscal_year"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "animal_services_311_calls", ["address_id", "group_id"], name: "anml_srvcs_311_calls_addr_id_group", using: :btree
+  add_index "animal_services_311_calls", ["date_closed"], name: "index_animal_services_311_calls_on_date_closed", using: :btree
+  add_index "animal_services_311_calls", ["date_opened"], name: "index_animal_services_311_calls_on_date_opened", using: :btree
+  add_index "animal_services_311_calls", ["group_id"], name: "index_animal_services_311_calls_on_group_id", using: :btree
+  add_index "animal_services_311_calls", ["jurisdiction"], name: "index_animal_services_311_calls_on_jurisdiction", using: :btree
+  add_index "animal_services_311_calls", ["service_request_id", "group_id"], name: "anml_srvcs_srvc_req_id_group", unique: true, using: :btree
+  add_index "animal_services_311_calls", ["service_request_status_type_id", "group_id"], name: "anml_srvcs_311_calls_sr_status_type_group", using: :btree
+  add_index "animal_services_311_calls", ["service_request_type_id", "group_id"], name: "animal_service_311_calls_sr_type_group", using: :btree
+
+  create_table "animal_services_csr_calls", force: :cascade do |t|
+    t.string   "service_request_number",   limit: 255,                 null: false
+    t.string   "sr_type_code",             limit: 255,                 null: false
+    t.string   "sr_description",           limit: 255,                 null: false
+    t.string   "owning_department",        limit: 255,                 null: false
+    t.string   "method_received",          limit: 255,                 null: false
+    t.string   "sr_status",                limit: 255,                 null: false
+    t.datetime "status_change_date",                                   null: false
+    t.datetime "created_date",                                         null: false
+    t.datetime "last_update_date",                                     null: false
+    t.datetime "close_date"
+    t.string   "sr_location",              limit: 255
+    t.string   "street_number",            limit: 255
+    t.string   "street_name",              limit: 255
+    t.string   "city",                     limit: 255
+    t.string   "zip_code",                 limit: 255
+    t.string   "county",                   limit: 255
+    t.string   "state_plane_x_coordinate", limit: 255
+    t.string   "state_plane_y_coordinate", limit: 255
+    t.float    "latitude"
+    t.float    "longitude"
+    t.string   "latlong",                  limit: 255
+    t.string   "council_district",         limit: 255
+    t.string   "map_page",                 limit: 255
+    t.string   "map_tile",                 limit: 255
+    t.boolean  "excluded_address",                     default: false, null: false
+    t.string   "fiscal_year",              limit: 255
+  end
 
   create_table "animal_types", force: :cascade do |t|
     t.string   "name",        null: false
@@ -580,6 +640,28 @@ ActiveRecord::Schema.define(version: 20160211182019) do
   add_index "roles", ["group_id"], name: "index_roles_on_group_id", using: :btree
   add_index "roles", ["name", "group_id"], name: "index_roles_on_name_and_group_id", unique: true, using: :btree
 
+  create_table "service_request_status_types", force: :cascade do |t|
+    t.string   "name",          null: false
+    t.string   "standard_name", null: false
+    t.string   "description"
+    t.integer  "group_id",      null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "service_request_status_types", ["name", "group_id"], name: "index_service_request_status_types_on_name_and_group_id", unique: true, using: :btree
+
+  create_table "service_request_types", force: :cascade do |t|
+    t.string   "name",          null: false
+    t.string   "standard_name", null: false
+    t.string   "description"
+    t.integer  "group_id",      null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "service_request_types", ["name", "group_id"], name: "index_service_request_types_on_name_and_group_id", unique: true, using: :btree
+
   create_table "user_roles", force: :cascade do |t|
     t.integer  "user_id",    null: false
     t.integer  "role_id",    null: false
@@ -624,6 +706,10 @@ ActiveRecord::Schema.define(version: 20160211182019) do
   add_foreign_key "addresses", "address_types", name: "addresses_address_type_id_fk"
   add_foreign_key "addresses", "party_pks", column: "party_id", primary_key: "party_id", name: "addresses_party_id_fk", on_delete: :cascade
   add_foreign_key "animal_galleries", "animals", name: "animal_animal_galleries_fk"
+  add_foreign_key "animal_services_311_calls", "addresses", name: "animal_services_311_address_id_fk"
+  add_foreign_key "animal_services_311_calls", "groups", name: "animal_services_311_group_id_fk"
+  add_foreign_key "animal_services_311_calls", "service_request_status_types", name: "animal_services_311_sr_status_type_id_fk"
+  add_foreign_key "animal_services_311_calls", "service_request_types", name: "animal_services_311_sr_type_id_fk"
   add_foreign_key "animal_types", "groups", name: "animal_types_groups_fk"
   add_foreign_key "animals", "animal_types", name: "animals_animal_types_fk"
   add_foreign_key "animals", "groups", name: "animals_groups_fk"
@@ -669,6 +755,8 @@ ActiveRecord::Schema.define(version: 20160211182019) do
   add_foreign_key "role_rights", "rights", name: "role_rights_rights_fk"
   add_foreign_key "role_rights", "roles", name: "role_rights_roles_fk"
   add_foreign_key "roles", "groups", name: "roles_groups_fk"
+  add_foreign_key "service_request_status_types", "groups", name: "service_request_status_types_group_id"
+  add_foreign_key "service_request_types", "groups", name: "service_request_types_group_id"
   add_foreign_key "user_roles", "users", name: "user_roles_users_fk"
   add_foreign_key "users", "groups", name: "users_groups_fk"
 
