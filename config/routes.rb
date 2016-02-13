@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'welcome#index'
 
+  resources :animal_services311_heatmaps
   resources :animals
   resources :animal_galleries
   resources :intake_heatmaps

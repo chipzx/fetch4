@@ -28,7 +28,7 @@ class CreateAnimalServices311Calls < ActiveRecord::Migration
     conn.execute("ALTER TABLE service_request_status_types ADD CONSTRAINT service_request_status_types_group_id FOREIGN KEY (group_id) REFERENCES groups(id)")
 
 
-    create_table :animal_services_311_calls do |t|
+    create_table :animal_services311_calls do |t|
       t.string :service_request_id, :null => false
       t.integer :group_id, :null => false
       t.integer :service_request_type_id, :null => false
@@ -49,30 +49,30 @@ class CreateAnimalServices311Calls < ActiveRecord::Migration
       t.timestamps null: false
     end
 
-    add_index :animal_services_311_calls, [ :service_request_id, :group_id ], :name => 'anml_srvcs_srvc_req_id_group', :unique => true
+    add_index :animal_services311_calls, [ :service_request_id, :group_id ], :name => 'anml_srvcs_srvc_req_id_group', :unique => true
 
-    add_index :animal_services_311_calls, :group_id
+    add_index :animal_services311_calls, :group_id
 
-    add_index :animal_services_311_calls, [ :service_request_type_id, :group_id ], :name => 'animal_service_311_calls_sr_type_group'
+    add_index :animal_services311_calls, [ :service_request_type_id, :group_id ], :name => 'animal_service_311_calls_sr_type_group'
 
-    add_index :animal_services_311_calls, [ :service_request_status_type_id, :group_id ], :name => 'anml_srvcs_311_calls_sr_status_type_group'
+    add_index :animal_services311_calls, [ :service_request_status_type_id, :group_id ], :name => 'anml_srvcs_311_calls_sr_status_type_group'
 
-    add_index :animal_services_311_calls, [ :address_id, :group_id ], :name => 'anml_srvcs_311_calls_addr_id_group' 
+    add_index :animal_services311_calls, [ :address_id, :group_id ], :name => 'anml_srvcs_311_calls_addr_id_group' 
 
-    add_index :animal_services_311_calls, :date_opened
+    add_index :animal_services311_calls, :date_opened
 
-    add_index :animal_services_311_calls, :date_closed
+    add_index :animal_services311_calls, :date_closed
 
-    add_index :animal_services_311_calls, :jurisdiction
+    add_index :animal_services311_calls, :jurisdiction
 
 
-    conn.execute("ALTER TABLE animal_services_311_calls ADD CONSTRAINT animal_services_311_group_id_fk FOREIGN KEY (group_id) REFERENCES groups(id)")
+    conn.execute("ALTER TABLE animal_services311_calls ADD CONSTRAINT animal_services311_group_id_fk FOREIGN KEY (group_id) REFERENCES groups(id)")
 
-    conn.execute("ALTER TABLE animal_services_311_calls ADD CONSTRAINT animal_services_311_sr_type_id_fk FOREIGN KEY (service_request_type_id) REFERENCES service_request_types(id)")
+    conn.execute("ALTER TABLE animal_services311_calls ADD CONSTRAINT animal_services311_sr_type_id_fk FOREIGN KEY (service_request_type_id) REFERENCES service_request_types(id)")
 
-    conn.execute("ALTER TABLE animal_services_311_calls ADD CONSTRAINT animal_services_311_sr_status_type_id_fk FOREIGN KEY (service_request_status_type_id) REFERENCES service_request_status_types(id)")
+    conn.execute("ALTER TABLE animal_services311_calls ADD CONSTRAINT animal_services311_sr_status_type_id_fk FOREIGN KEY (service_request_status_type_id) REFERENCES service_request_status_types(id)")
 
-    conn.execute("ALTER TABLE animal_services_311_calls ADD CONSTRAINT animal_services_311_address_id_fk FOREIGN KEY (address_id) REFERENCES addresses(id)")
+    conn.execute("ALTER TABLE animal_services311_calls ADD CONSTRAINT animal_services311_address_id_fk FOREIGN KEY (address_id) REFERENCES addresses(id)")
 
     conn.execute("INSERT INTO service_request_types (name, standard_name, group_id, created_at, updated_at) VALUES ('Dead Bird', 'Dead Bird', 0, now(), now())")
     conn.execute("INSERT INTO service_request_types (name, standard_name, group_id, created_at, updated_at) VALUES ('Animal Roadside Sales', 'Animal Roadside Sales', 0, now(),now())")
@@ -103,7 +103,7 @@ class CreateAnimalServices311Calls < ActiveRecord::Migration
   end
 
   def down
-    drop_table :animal_services_311_calls
+    drop_table :animal_services311_calls
     drop_table :service_request_status_types
     drop_table :service_request_types
   end
