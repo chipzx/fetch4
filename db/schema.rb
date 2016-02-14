@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160213202635) do
+ActiveRecord::Schema.define(version: 20160214145814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -239,6 +239,22 @@ ActiveRecord::Schema.define(version: 20160213202635) do
   add_index "contacts", ["contact_type_id"], name: "index_contacts_on_contact_type_id", using: :btree
   add_index "contacts", ["party_id", "contact_type_id"], name: "index_contacts_on_party_id_and_contact_type_id", using: :btree
 
+  create_table "detail_maps", force: :cascade do |t|
+    t.string   "map_name",                             null: false
+    t.integer  "group_id",                             null: false
+    t.float    "center_point_latitude",                null: false
+    t.float    "center_point_longitude",               null: false
+    t.float    "radius",                               null: false
+    t.float    "max_intensity",          default: 1.0, null: false
+    t.integer  "zoom_level",             default: 11,  null: false
+    t.integer  "map_type_id",                          null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
+
+  add_index "detail_maps", ["group_id"], name: "index_detail_maps_on_group_id", using: :btree
+  add_index "detail_maps", ["map_name", "group_id"], name: "index_detail_maps_on_map_name_and_group_id", unique: true, using: :btree
+
   create_table "dropme", id: false, force: :cascade do |t|
     t.string   "animal_id"
     t.integer  "animal_type_id"
@@ -399,6 +415,15 @@ ActiveRecord::Schema.define(version: 20160213202635) do
     t.boolean  "is_onsite",                 default: true
     t.boolean  "is_permanent",              default: true
   end
+
+  create_table "map_types", force: :cascade do |t|
+    t.string   "name",        null: false
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "map_types", ["name"], name: "index_map_types_on_name", unique: true, using: :btree
 
   create_table "media_contacts", force: :cascade do |t|
     t.integer  "contact_type_id", null: false
@@ -835,6 +860,8 @@ ActiveRecord::Schema.define(version: 20160213202635) do
   add_foreign_key "contact_pks", "party_pks", column: "party_id", primary_key: "party_id", name: "contact_pks_parties_party_id_fk", on_delete: :cascade
   add_foreign_key "contacts", "contact_types", name: "contacts_contact_type_id_fk"
   add_foreign_key "contacts", "party_pks", column: "party_id", primary_key: "party_id", name: "contacts_parties_party_id_fk", on_delete: :cascade
+  add_foreign_key "detail_maps", "groups", column: "map_type_id", name: "detail_maps_map_type_id_fk"
+  add_foreign_key "detail_maps", "groups", name: "detail_maps_group_id_fk"
   add_foreign_key "email_contacts", "contact_pks", column: "id", primary_key: "contact_id", name: "email_contacts_pk_contact_id_fk", on_delete: :cascade
   add_foreign_key "email_contacts", "contact_types", name: "email_contacts_contact_type_id_fk"
   add_foreign_key "genders", "groups", name: "genders_groups_fk"
