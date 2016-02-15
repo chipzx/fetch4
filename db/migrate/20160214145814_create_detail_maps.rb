@@ -18,7 +18,6 @@ class CreateDetailMaps < ActiveRecord::Migration
       t.float :radius, :null => false, :precison => 4, :scale => 2
       t.float :max_intensity, :null => false, :default => 1.0
       t.integer :zoom_level, :null => false, :default => 11
-      t.integer :map_type_id, :null => false
       t.timestamps null: false
     end
 
@@ -31,7 +30,6 @@ class CreateDetailMaps < ActiveRecord::Migration
     conn.execute("ALTER TABLE detail_maps ALTER COLUMN updated_at SET DATA TYPE timestamp with time zone")
 
     conn.execute("ALTER TABLE detail_maps ADD CONSTRAINT detail_maps_group_id_fk FOREIGN KEY (group_id) REFERENCES groups(id)")
-    conn.execute("ALTER TABLE detail_maps ADD CONSTRAINT detail_maps_map_type_id_fk FOREIGN KEY (map_type_id) REFERENCES groups(id)")
   end
 
   def down

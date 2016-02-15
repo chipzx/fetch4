@@ -1,5 +1,20 @@
 class IntakeHeatmapsController < ApplicationController
   def index
+    init_filters()
+    get_map_data()
+    get_detail_map_data()
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  rescue ActiveRecord::RecordNotFound => e
+    # There is an issue with the persisted param_set. Reset it.
+    puts "Had to reset filterrific params: #{ e.message }"
+    redirect_to(reset_filterrific_url(format: :html)) and return
+  end
+
+  private
+  def init_filters
     @filterrific = initialize_filterrific(
         IntakeHeatmap,
         params[:filterrific],
@@ -29,9 +44,10 @@ class IntakeHeatmapsController < ApplicationController
       @ftype = 2015
     end
     logger.info("atype: #{@atype} itype: #{@itype} gtype: #{@gtype} ftype: #{@ftype}")
+  end
 
+  def get_map_data
     @map_data = Group.find(current_user.group_id)
-#    @latlngs = IntakeHeatmap.with_animal_type(@atype).with_intake_type(@itype).with_gender_type(@gtype).with_fy_type(@ftype)
     @latlngs = @filterrific.find()
     
     if (@latlngs.size > 1000)
@@ -46,14 +62,9 @@ class IntakeHeatmapsController < ApplicationController
     @hs_detail = HotspotDetail.all
 
     logger.info("Found #{@hotspots.size} hotspots with #{@hs_detail.length} detail records")
-    respond_to do |format|
-      format.html
-      format.js
-    end
-  rescue ActiveRecord::RecordNotFound => e
-    # There is an issue with the persisted param_set. Reset it.
-    puts "Had to reset filterrific params: #{ e.message }"
-    redirect_to(reset_filterrific_url(format: :html)) and return
   end
 
+  def get_detail_map_data
+    @detail_maps = DetailMap.all
+  end
 end

@@ -33,6 +33,9 @@ config/rubber.test01
 # ignore production files directory
 production/
 
+# ignore customer data directory
+cust_data/
+
 # ignore public/system directory
 public/system
 public/assets

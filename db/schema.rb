@@ -247,7 +247,6 @@ ActiveRecord::Schema.define(version: 20160214145814) do
     t.float    "radius",                               null: false
     t.float    "max_intensity",          default: 1.0, null: false
     t.integer  "zoom_level",             default: 11,  null: false
-    t.integer  "map_type_id",                          null: false
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
   end
@@ -860,7 +859,6 @@ ActiveRecord::Schema.define(version: 20160214145814) do
   add_foreign_key "contact_pks", "party_pks", column: "party_id", primary_key: "party_id", name: "contact_pks_parties_party_id_fk", on_delete: :cascade
   add_foreign_key "contacts", "contact_types", name: "contacts_contact_type_id_fk"
   add_foreign_key "contacts", "party_pks", column: "party_id", primary_key: "party_id", name: "contacts_parties_party_id_fk", on_delete: :cascade
-  add_foreign_key "detail_maps", "groups", column: "map_type_id", name: "detail_maps_map_type_id_fk"
   add_foreign_key "detail_maps", "groups", name: "detail_maps_group_id_fk"
   add_foreign_key "email_contacts", "contact_pks", column: "id", primary_key: "contact_id", name: "email_contacts_pk_contact_id_fk", on_delete: :cascade
   add_foreign_key "email_contacts", "contact_types", name: "email_contacts_contact_type_id_fk"

@@ -50,12 +50,32 @@
     </div>
     
   <% end %>
+</section>
+
+<section>
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="active"><a href="#">Intakes</a></li>
+    <% @detail_maps.to_a.each do |d| %>
+      <li role="presentation"><a href="#detail_maps"><%= d.map_name %></a></li>
+    <% end %>
+  </ul>
 
   <p> Max intensity is <%= @max_intensity %> for <%= @latlngs.size %> records</p>
-   <%= render(
-       partial: 'map',
-       locals: { latlngs: @latlngs, map_data: @map_data, max_intensity: @max_intensity, hotspots: @hotspots, hs_detail: @hs_detail }
-     ) %>
+        <%= render(partial: "map",
+                   locals: { latlngs:       @latlngs, 
+                             map_data:      @map_data,                           
+                             max_intensity: @max_intensity, 
+                             hotspots:      @hotspots,   
+                             hs_detail:     @hs_detail }
+                  ) 
+        %>
+</section>
 
+<section>
+  <div class="container" id="detail_maps">
+    <div class="row"
+    <h2>Detail Map </h2>
+    </div>
+  </div>
 </section>
 
