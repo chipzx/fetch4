@@ -71,8 +71,8 @@ module IntakeHeatmapsHelper
                  :icon_size => [35, 90]}
     str = "#{map_id} = map(:center => { :latlng => #{center_point},
                             :zoom => #{zoom}}, 
-               :markers => [ { :latlng => [ 30.2316037, -97.7175746 ], 
-                               :popup => 'East Riverside' }"
+               :markers => [ { :latlng => [ center_point[0], center_point[1] ], 
+                               :popup => #{map_id} }"
     if (intakes.size > 0)
       intakes.to_a.each do |a|
       str += ","
@@ -81,7 +81,6 @@ module IntakeHeatmapsHelper
           str += ", :icon => dog_icon"
         elsif (a.animal_type.eql?("Cat"))
           str += ", :icon => cat_icon"
-
         else
           str += ", :icon => other_icon"
         end

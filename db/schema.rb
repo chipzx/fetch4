@@ -16,16 +16,6 @@ ActiveRecord::Schema.define(version: 20160214145814) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "addr_to_outcome_map", id: false, force: :cascade do |t|
-    t.integer  "address_id"
-    t.integer  "outcome_id"
-    t.string   "person_id"
-    t.string   "animal_id"
-    t.string   "name"
-    t.datetime "outcome_date"
-    t.text     "full_location"
-  end
-
   create_table "address_types", force: :cascade do |t|
     t.string   "name",                    null: false
     t.text     "description"
@@ -109,6 +99,35 @@ ActiveRecord::Schema.define(version: 20160214145814) do
   add_index "animal_services311_calls", ["service_request_status_type_id", "group_id"], name: "anml_srvcs_311_calls_sr_status_type_group", using: :btree
   add_index "animal_services311_calls", ["service_request_type_id", "group_id"], name: "animal_service_311_calls_sr_type_group", using: :btree
 
+  create_table "animal_services_csr_calls", force: :cascade do |t|
+    t.string   "service_request_number",   limit: 255,                 null: false
+    t.string   "sr_type_code",             limit: 255,                 null: false
+    t.string   "sr_description",           limit: 255,                 null: false
+    t.string   "owning_department",        limit: 255,                 null: false
+    t.string   "method_received",          limit: 255,                 null: false
+    t.string   "sr_status",                limit: 255,                 null: false
+    t.datetime "status_change_date",                                   null: false
+    t.datetime "created_date",                                         null: false
+    t.datetime "last_update_date",                                     null: false
+    t.datetime "close_date"
+    t.string   "sr_location",              limit: 255
+    t.string   "street_number",            limit: 255
+    t.string   "street_name",              limit: 255
+    t.string   "city",                     limit: 255
+    t.string   "zip_code",                 limit: 255
+    t.string   "county",                   limit: 255
+    t.string   "state_plane_x_coordinate", limit: 255
+    t.string   "state_plane_y_coordinate", limit: 255
+    t.float    "latitude"
+    t.float    "longitude"
+    t.string   "latlong",                  limit: 255
+    t.string   "council_district",         limit: 255
+    t.string   "map_page",                 limit: 255
+    t.string   "map_tile",                 limit: 255
+    t.boolean  "excluded_address",                     default: false, null: false
+    t.string   "fiscal_year",              limit: 255
+  end
+
   create_table "animal_types", force: :cascade do |t|
     t.string   "name",        null: false
     t.integer  "group_id",    null: false
@@ -119,14 +138,6 @@ ActiveRecord::Schema.define(version: 20160214145814) do
 
   add_index "animal_types", ["group_id", "name"], name: "index_animal_types_on_group_id_and_name", unique: true, using: :btree
   add_index "animal_types", ["name"], name: "index_animal_types_on_name", using: :btree
-
-  create_table "animal_types_dump", id: false, force: :cascade do |t|
-    t.integer  "id",                      null: false
-    t.string   "name",        limit: 255, null: false
-    t.string   "description", limit: 255
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-  end
 
   create_table "animals", force: :cascade do |t|
     t.integer  "animal_type_id",               null: false
@@ -156,31 +167,35 @@ ActiveRecord::Schema.define(version: 20160214145814) do
   add_index "animals", ["microchip_number"], name: "index_animals_on_microchip_number", using: :btree
   add_index "animals", ["name"], name: "index_animals_on_name", using: :btree
 
-  create_table "animals_dump", id: false, force: :cascade do |t|
-    t.integer  "id",                             null: false
-    t.integer  "atype_id",                       null: false
-    t.string   "anumber",            limit: 255, null: false
-    t.string   "name",               limit: 255
-    t.integer  "kennel_id"
-    t.integer  "gender_id"
-    t.string   "breed",              limit: 255
-    t.string   "coloring",           limit: 255
-    t.datetime "dob"
-    t.boolean  "dob_known"
+  create_table "bastrop_heatmap_data", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.string   "animal_id",         limit: 255
+    t.string   "name",              limit: 255
+    t.integer  "group_id"
     t.datetime "intake_date"
+    t.string   "found_location",    limit: 255
+    t.string   "intake_type",       limit: 255
+    t.string   "animal_type",       limit: 255
+    t.string   "gender",            limit: 255
+    t.string   "breed",             limit: 255
+    t.string   "color",             limit: 255
+    t.boolean  "parseable_address"
+    t.boolean  "valid_address"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.integer  "geo_quality_code"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "age"
+    t.string   "postal_code",       limit: 255
+    t.string   "fiscal_year"
+    t.boolean  "intake_location"
+    t.integer  "animal_type_id"
     t.integer  "intake_type_id"
-    t.text     "description"
-    t.integer  "group_id",                       null: false
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.string   "image_file_name",    limit: 255
-    t.string   "image_content_type", limit: 255
-    t.integer  "image_file_size"
-    t.datetime "image_updated_at"
-    t.decimal  "weight"
-    t.datetime "last_modified_time",             null: false
-    t.string   "last_modified_by",   limit: 255, null: false
+    t.integer  "gender_id"
   end
+
+  add_index "bastrop_heatmap_data", ["animal_id", "intake_date", "intake_type"], name: "bastrop_heatmap_data_uidx", unique: true, using: :btree
 
   create_table "bastrop_intakes", id: false, force: :cascade do |t|
     t.integer  "id"
@@ -254,30 +269,14 @@ ActiveRecord::Schema.define(version: 20160214145814) do
   add_index "detail_maps", ["group_id"], name: "index_detail_maps_on_group_id", using: :btree
   add_index "detail_maps", ["map_name", "group_id"], name: "index_detail_maps_on_map_name_and_group_id", unique: true, using: :btree
 
-  create_table "dropme", id: false, force: :cascade do |t|
-    t.string   "animal_id"
-    t.integer  "animal_type_id"
-    t.string   "name"
-    t.integer  "outcome_type_id"
-    t.date     "outcome_date"
-    t.text     "breed"
-    t.text     "color"
-    t.date     "dob"
-    t.boolean  "bool"
-    t.integer  "?column?"
-    t.string   "microchip_number"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "email_contacts", force: :cascade do |t|
     t.integer  "contact_type_id",                 null: false
     t.integer  "party_id",                        null: false
     t.text     "description"
-    t.string   "email",                           null: false
-    t.boolean  "is_primary",      default: false, null: false
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
+    t.string   "email",                           null: false
+    t.boolean  "is_primary",      default: false, null: false
   end
 
   add_index "email_contacts", ["contact_type_id"], name: "index_email_contacts_on_contact_type_id", using: :btree
@@ -294,14 +293,6 @@ ActiveRecord::Schema.define(version: 20160214145814) do
 
   add_index "genders", ["group_id"], name: "index_genders_on_group_id", using: :btree
   add_index "genders", ["name", "group_id"], name: "index_genders_on_name_and_group_id", unique: true, using: :btree
-
-  create_table "genders_dump", id: false, force: :cascade do |t|
-    t.integer  "id",                      null: false
-    t.string   "indicator",   limit: 1,   null: false
-    t.string   "description", limit: 128, null: false
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-  end
 
   create_table "groups", force: :cascade do |t|
     t.string   "name",                                           null: false
@@ -331,14 +322,6 @@ ActiveRecord::Schema.define(version: 20160214145814) do
   add_index "intake_types", ["group_id", "name"], name: "index_intake_types_on_group_id_and_name", unique: true, using: :btree
   add_index "intake_types", ["name"], name: "index_intake_types_on_name", using: :btree
 
-  create_table "intake_types_dump", id: false, force: :cascade do |t|
-    t.integer  "id",                      null: false
-    t.string   "indicator",   limit: 255, null: false
-    t.string   "description", limit: 255, null: false
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-  end
-
   create_table "intakes", force: :cascade do |t|
     t.integer  "animal_type_id",    null: false
     t.string   "animal_id",         null: false
@@ -359,9 +342,9 @@ ActiveRecord::Schema.define(version: 20160214145814) do
     t.integer  "geo_quality_code"
     t.boolean  "parseable_address"
     t.boolean  "valid_address"
+    t.integer  "fiscal_year"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
-    t.integer  "fiscal_year"
   end
 
   add_index "intakes", ["animal_id", "intake_date", "group_id"], name: "index_intakes_on_animal_id_and_intake_date_and_group_id", unique: true, using: :btree
@@ -370,6 +353,31 @@ ActiveRecord::Schema.define(version: 20160214145814) do
   add_index "intakes", ["intake_date"], name: "index_intakes_on_intake_date", using: :btree
   add_index "intakes", ["intake_type_id"], name: "index_intakes_on_intake_type_id", using: :btree
   add_index "intakes", ["postal_code"], name: "index_intakes_on_postal_code", using: :btree
+
+  create_table "intakes_data", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "animal_type_id"
+    t.string   "animal_id"
+    t.string   "name"
+    t.integer  "group_id"
+    t.datetime "intake_date"
+    t.integer  "intake_type_id"
+    t.string   "found_location"
+    t.string   "postal_code"
+    t.integer  "address_id"
+    t.integer  "gender_id"
+    t.string   "breed"
+    t.string   "coloring"
+    t.string   "age"
+    t.float    "weight"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.integer  "geo_quality_code"
+    t.boolean  "parseable_address"
+    t.boolean  "valid_address"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "kennel_types", force: :cascade do |t|
     t.string   "name",        null: false
@@ -400,21 +408,6 @@ ActiveRecord::Schema.define(version: 20160214145814) do
   add_index "kennels", ["group_id"], name: "index_kennels_on_group_id", using: :btree
   add_index "kennels", ["name", "building", "group_id"], name: "index_kennels_on_name_and_building_and_group_id", unique: true, using: :btree
 
-  create_table "kennels_dump", id: false, force: :cascade do |t|
-    t.integer  "id",                                        null: false
-    t.string   "name",          limit: 255,                 null: false
-    t.string   "bldg",          limit: 255
-    t.string   "kennel_type",   limit: 255
-    t.integer  "max_occupancy",             default: 1
-    t.boolean  "full_name",                 default: false
-    t.integer  "group_id",                                  null: false
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
-    t.boolean  "is_public",                 default: false
-    t.boolean  "is_onsite",                 default: true
-    t.boolean  "is_permanent",              default: true
-  end
-
   create_table "map_types", force: :cascade do |t|
     t.string   "name",        null: false
     t.text     "description"
@@ -428,10 +421,10 @@ ActiveRecord::Schema.define(version: 20160214145814) do
     t.integer  "contact_type_id", null: false
     t.integer  "party_id",        null: false
     t.text     "description"
-    t.integer  "media_type_id",   null: false
-    t.text     "uri",             null: false
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.integer  "media_type_id",   null: false
+    t.text     "uri",             null: false
   end
 
   add_index "media_contacts", ["contact_type_id"], name: "index_media_contacts_on_contact_type_id", using: :btree
@@ -451,23 +444,14 @@ ActiveRecord::Schema.define(version: 20160214145814) do
   create_table "organizations", force: :cascade do |t|
     t.integer  "party_type_id", null: false
     t.integer  "group_id",      null: false
-    t.string   "name",          null: false
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.string   "name",          null: false
   end
 
   add_index "organizations", ["group_id"], name: "index_organizations_on_group_id", using: :btree
   add_index "organizations", ["name"], name: "index_organizations_uidx", unique: true, using: :btree
   add_index "organizations", ["party_type_id"], name: "index_organizations_on_party_type_id", using: :btree
-
-  create_table "outcome_person_map", id: false, force: :cascade do |t|
-    t.string "person_id"
-    t.string "animal_id"
-    t.string "outcome_date"
-    t.string "operation_type"
-    t.string "operation_sub_type"
-    t.string "arn"
-  end
 
   create_table "outcome_types", force: :cascade do |t|
     t.string   "name",        null: false
@@ -510,6 +494,31 @@ ActiveRecord::Schema.define(version: 20160214145814) do
   add_index "outcomes", ["microchip_number"], name: "index_outcomes_on_microchip_number", using: :btree
   add_index "outcomes", ["name"], name: "index_outcomes_on_name", using: :btree
   add_index "outcomes", ["outcome_type_id"], name: "index_outcomes_on_outcome_type_id", using: :btree
+
+  create_table "outcomes_staging", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "animal_type_id"
+    t.string   "animal_id"
+    t.string   "name"
+    t.integer  "outcome_type_id"
+    t.datetime "outcome_date"
+    t.integer  "gender_id"
+    t.integer  "address_id"
+    t.string   "breed"
+    t.string   "coloring"
+    t.decimal  "weight"
+    t.datetime "dob"
+    t.boolean  "dob_known"
+    t.datetime "intake_date"
+    t.integer  "intake_type_id"
+    t.text     "description"
+    t.integer  "group_id"
+    t.string   "microchip_number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "age"
+    t.integer  "fiscal_year"
+  end
 
   create_table "parties", force: :cascade do |t|
     t.integer  "party_type_id", null: false
@@ -568,13 +577,13 @@ ActiveRecord::Schema.define(version: 20160214145814) do
   create_table "people", force: :cascade do |t|
     t.integer  "party_type_id", null: false
     t.integer  "group_id",      null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.string   "first_name",    null: false
     t.string   "middle_name"
     t.string   "last_name",     null: false
     t.string   "salutation"
     t.string   "suffix"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
   end
 
   add_index "people", ["first_name", "last_name"], name: "index_people_on_first_name_and_last_name", using: :btree
@@ -582,22 +591,17 @@ ActiveRecord::Schema.define(version: 20160214145814) do
   add_index "people", ["last_name", "first_name", "middle_name"], name: "index_people_on_last_name_and_first_name_and_middle_name", using: :btree
   add_index "people", ["party_type_id"], name: "index_people_on_party_type_id", using: :btree
 
-  create_table "person_id_map", id: false, force: :cascade do |t|
-    t.string  "person_id"
-    t.integer "party_id",  limit: 8
-  end
-
   create_table "phone_contacts", force: :cascade do |t|
     t.integer  "contact_type_id",                   null: false
     t.integer  "party_id",                          null: false
     t.text     "description"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.string   "country_code",    default: "01",    null: false
     t.string   "phone_number",                      null: false
     t.string   "extension"
     t.string   "phone_type",      default: "other", null: false
     t.boolean  "is_primary",      default: false,   null: false
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
   end
 
   add_index "phone_contacts", ["contact_type_id"], name: "index_phone_contacts_on_contact_type_id", using: :btree
@@ -605,101 +609,6 @@ ActiveRecord::Schema.define(version: 20160214145814) do
   add_index "phone_contacts", ["party_id"], name: "index_phone_contacts_on_party_id", using: :btree
   add_index "phone_contacts", ["phone_number"], name: "index_phone_contacts_on_phone_number", using: :btree
   add_index "phone_contacts", ["phone_type"], name: "index_phone_contacts_on_phone_type", using: :btree
-
-  create_table "pp_extended_outcomes", id: false, force: :cascade do |t|
-    t.string "animal_id"
-    t.string "arn"
-    t.string "microchip_number"
-    t.string "name"
-    t.string "animal_type"
-    t.string "primary_breed"
-    t.string "secondary_breed"
-    t.string "dob"
-    t.string "gender"
-    t.string "spayed_or_neutered"
-    t.string "prealtered"
-    t.string "danger"
-    t.string "danger_reason"
-    t.string "primary_color"
-    t.string "secondary_color"
-    t.string "operation_type"
-    t.string "operation_sub_type"
-    t.string "outcome_date"
-    t.string "outcome_date_time"
-    t.string "outcome_age_as_month"
-    t.string "by"
-    t.string "age_group"
-    t.string "altered"
-    t.string "site_name"
-    t.string "outcome_reason"
-    t.string "jurisdiction_out"
-    t.string "asilomar_status"
-    t.string "full_gender"
-  end
-
-  create_table "pp_person_by_operation", id: false, force: :cascade do |t|
-    t.string "person_id"
-    t.string "first_name"
-    t.string "last_name"
-    t.string "salutation"
-    t.string "date_created"
-    t.string "person_gender"
-    t.string "street_number"
-    t.string "street_name"
-    t.string "street_type"
-    t.string "street_direction"
-    t.string "street_direction2"
-    t.string "unit_number"
-    t.string "city"
-    t.string "city_alias"
-    t.string "province_abbr"
-    t.string "postal_code"
-    t.string "address_combined"
-    t.string "contact_by_address"
-    t.string "jurisdiction"
-    t.string "county"
-    t.string "phone_number"
-    t.string "contact_by_phone"
-    t.string "email"
-    t.string "contact_by_email"
-    t.string "operation_type"
-    t.string "operation_sub_type"
-    t.string "operation_date"
-    t.string "operation_by"
-    t.string "animal_id"
-    t.string "arn"
-    t.string "name"
-    t.string "petid"
-    t.string "animal_type"
-    t.string "dob"
-    t.string "microchip_number"
-    t.string "microchip_issuer"
-    t.string "location"
-    t.string "site"
-    t.string "primary_breed"
-    t.string "secondary_breed"
-    t.string "gender"
-    t.string "primary_color"
-    t.string "spayed_or_neutered"
-    t.string "age_in_months"
-    t.string "weight"
-    t.string "body_weight_unit"
-    t.string "opt_in"
-    t.string "opt_in_consent"
-    t.string "opt_in_created_in"
-    t.string "opt_in_created_by"
-    t.string "opt_in_created_timestamp"
-    t.string "opt_in_email"
-    t.string "opt_in_email_consent"
-    t.string "opt_in_email_created_in"
-    t.string "opt_in_email_created_by"
-    t.string "opt_in_email_created_timestamp"
-    t.string "opt_in_mail"
-    t.string "opt_in_mail_consent"
-    t.string "opt_in_mail_created_in"
-    t.string "opt_in_mail_created_by"
-    t.string "opt_in_mail_created_timestamp"
-  end
 
   create_table "privileges", force: :cascade do |t|
     t.integer  "user_id",    null: false
@@ -712,33 +621,6 @@ ActiveRecord::Schema.define(version: 20160214145814) do
   add_index "privileges", ["group_id"], name: "index_privileges_on_group_id", using: :btree
   add_index "privileges", ["right_id"], name: "index_privileges_on_right_id", using: :btree
   add_index "privileges", ["user_id", "right_id"], name: "index_privileges_on_user_id_and_right_id", unique: true, using: :btree
-
-  create_table "raw_intakes", force: :cascade do |t|
-    t.string   "animal_id",         limit: 255
-    t.string   "name",              limit: 255
-    t.integer  "group_id",                                      null: false
-    t.datetime "intake_date"
-    t.string   "found_location",    limit: 255
-    t.string   "intake_type",       limit: 255
-    t.string   "animal_type",       limit: 255
-    t.string   "gender",            limit: 255
-    t.string   "breed",             limit: 255
-    t.string   "color",             limit: 255
-    t.boolean  "parseable_address"
-    t.boolean  "valid_address"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.integer  "geo_quality_code"
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
-    t.string   "age"
-    t.string   "postal_code",       limit: 255
-    t.string   "fiscal_year"
-    t.boolean  "intake_location",               default: false, null: false
-    t.integer  "animal_type_id"
-    t.integer  "intake_type_id"
-    t.integer  "gender_id"
-  end
 
   create_table "relationship_types", force: :cascade do |t|
     t.string   "name",        null: false
@@ -903,24 +785,6 @@ ActiveRecord::Schema.define(version: 20160214145814) do
   add_foreign_key "user_roles", "users", name: "user_roles_users_fk"
   add_foreign_key "users", "groups", name: "users_groups_fk"
 
-  create_view :intake_heatmaps,  sql_definition: <<-SQL
-      SELECT i.group_id,
-      i.found_location,
-      i.latitude,
-      i.longitude,
-      at.name AS animal_type,
-      it.name AS intake_type,
-      g.description AS gender,
-      i.fiscal_year,
-      count(*) AS total
-     FROM (((intakes i
-       JOIN intake_types it ON ((it.id = i.intake_type_id)))
-       JOIN animal_types at ON ((at.id = i.animal_type_id)))
-       JOIN genders g ON ((g.id = i.gender_id)))
-    WHERE (((i.latitude IS NOT NULL) AND (i.latitude <> (0.0)::double precision)) AND i.valid_address)
-    GROUP BY i.group_id, i.found_location, i.latitude, i.longitude, at.name, it.name, g.description, i.fiscal_year;
-  SQL
-
   create_view :hotspots,  sql_definition: <<-SQL
       SELECT intakes.found_location,
       intakes.latitude,
@@ -959,6 +823,24 @@ ActiveRecord::Schema.define(version: 20160214145814) do
      FROM hotspots
     GROUP BY hotspots.found_location, hotspots.latitude, hotspots.longitude, hotspots.animal_type, hotspots.fiscal_year, hotspots.group_id
     ORDER BY hotspots.group_id, hotspots.found_location, hotspots.latitude, hotspots.longitude, hotspots.animal_type, hotspots.fiscal_year;
+  SQL
+
+  create_view :intake_heatmaps,  sql_definition: <<-SQL
+      SELECT i.group_id,
+      i.found_location,
+      i.latitude,
+      i.longitude,
+      at.name AS animal_type,
+      it.name AS intake_type,
+      g.description AS gender,
+      i.fiscal_year,
+      count(*) AS total
+     FROM (((intakes i
+       JOIN intake_types it ON ((it.id = i.intake_type_id)))
+       JOIN animal_types at ON ((at.id = i.animal_type_id)))
+       JOIN genders g ON ((g.id = i.gender_id)))
+    WHERE (((i.latitude IS NOT NULL) AND (i.latitude <> (0.0)::double precision)) AND i.valid_address)
+    GROUP BY i.group_id, i.found_location, i.latitude, i.longitude, at.name, it.name, g.description, i.fiscal_year;
   SQL
 
   create_view :outcome_heatmaps,  sql_definition: <<-SQL

@@ -54,12 +54,20 @@
 
 <section>
   <ul class="nav nav-tabs">
-    <li role="presentation" class="active"><a href="#">Intakes</a></li>
+    <li class="active"><a data-toggle="tab" href="#main">Intakes</a></li>
     <% @detail_maps.to_a.each do |d| %>
-      <li role="presentation"><a href="#detail_maps"><%= d.map_name %></a></li>
+      <li><a data-toggle="tab" href="#<%= d.map_name.gsub(' ', '_') %>"><%= d.map_name %></a></li>
     <% end %>
   </ul>
 
+<div class="tab-content">
+  <% @detail_maps.to_a.each do |d| %>
+    <div id="<%= d.map_name.gsub(' ', '_') %>" class="tab-pane fade">
+      <h1><%= d.map_name %></h1>
+    </div>
+  <% end %> 
+
+  <div id="main" class="tab-pane fade in active">
   <p> Max intensity is <%= @max_intensity %> for <%= @latlngs.size %> records</p>
         <%= render(partial: "map",
                    locals: { latlngs:       @latlngs, 
@@ -69,13 +77,8 @@
                              hs_detail:     @hs_detail }
                   ) 
         %>
+  </div>
+</div>
 </section>
 
-<section>
-  <div class="container" id="detail_maps">
-    <div class="row"
-    <h2>Detail Map </h2>
-    </div>
-  </div>
-</section>
 
