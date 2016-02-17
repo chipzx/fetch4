@@ -78,7 +78,6 @@ class IntakeHeatmapsController < ApplicationController
   def get_detail_map_data(map_name)
     @detail_map = DetailMap.find_by_map_name(map_name)
     @map_id = @detail_map.map_id
-    center_point = @detail_map.center_point
     box = Geocoder::Calculations.bounding_box(@detail_map.center_point, @detail_map.radius)
     @intakes = Intake.within_bounding_box(box)
   end

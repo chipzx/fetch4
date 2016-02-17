@@ -1,4 +1,6 @@
 class OutcomeHeatmapsController < ApplicationController
+  layout "maps"
+
   def index
     @filterrific = initialize_filterrific(
         OutcomeHeatmap,
@@ -38,6 +40,8 @@ class OutcomeHeatmapsController < ApplicationController
       @max_intensity = 0.05
     end
 
+    @detail_maps = DetailMap.all
+
     #@hotspots = Hotspot.select("group_id, found_location, latitude,longitude").where("latitude IS NOT NULL and latitude != 0.0")
 
 #    @hs_detail = Hotspot.select("found_location, latitude, longitude, animal_type, fiscal_year").group(["found_location", "latitude", "longitude", "animal_type", "fiscal_year"]).order(["found_location", "latitude", "longitude", "fiscal_year","animal_type"]).sum("total").to_a
@@ -53,4 +57,18 @@ class OutcomeHeatmapsController < ApplicationController
     redirect_to(reset_filterrific_url(format: :html)) and return
   end
 
+  def show
+    get_detail_map_data(params[:map_name])
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
+  private
+  def get_detail_map_data(map_name)
+    @detail_map = DetailMap.find_by_map_name(map_name)
+    @map_id = @detail_map.map_id
+    @outcomes = Outcome.within_radius(@detail_map.center_point, @detail_map.radius)
+  end
 end

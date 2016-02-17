@@ -42,4 +42,36 @@ module OutcomeHeatmapsHelper
     raw(str)
   end
 
+  def map_outcomes(map_detail, map_id, outcomes, center_point, zoom)
+    #TODO: duplicate code
+    str =  "var dog1 = L.icon({iconUrl: 'http://api.tiles.mapbox.com/v3/marker/pin-l-dog-park+ff0000.png', shadowUrl: '', iconSize: [35, 90], shadowSize: [], iconAnchor: [0, 0], shadowAnchor: [0, 0], popupAnchor: [0, 0]}); "
+    str += "var cat1 = L.icon({iconUrl: 'http://api.tiles.mapbox.com/v3/marker/pin-l-dog-park+00ff00.png', shadowUrl: '', iconSize: [35, 90], shadowSize: [], iconAnchor: [0, 0], shadowAnchor: [0, 0], popupAnchor: [0, 0]}); "
+    str += "var other1 = L.icon({iconUrl: 'http://api.tiles.mapbox.com/v3/marker/pin-l-dog-park+0000ff.png', shadowUrl: '', iconSize: [35, 90], shadowSize: [], iconAnchor: [0, 0], shadowAnchor: [0, 0], popupAnchor: [0, 0]}); "
+
+    str += "var map = L.map('map'); "
+    str += "map.setView(#{center_point}, #{zoom}); "
+    str += "var center = L.marker(#{center_point}).addTo(map); "
+    str += "center.bindPopup('Center point for #{map_detail.map_name} detail map<br/>Found #{outcomes.size} outcomes within a #{map_detail.radius} mile radius from this point'); "
+
+    outcomes.to_a.each do |o|
+      icon = "other1"
+      if o.animal_type.name.eql?('Dog')
+        icon = "dog1"
+      elsif (o.animal_type.name.eql?("Cat"))
+        icon = "cat1"
+      end
+      id = "#{icon}#{o.id}"
+      str += "#{id} = L.marker([#{o.address.latitude}, #{o.address.longitude}], { icon: #{icon}}).addTo(map); "
+      str += "#{id}.bindPopup('#{o.animal_id}<br/>#{o.animal_type.name} - #{o.outcome_type.name}<br/>#{o.address.full_location}<br/>#{o.outcome_date}<br/>#{o.gender.name} #{o.coloring} #{o.breed}'); "
+    end
+
+    str += "L.tileLayer('https://api.tiles.mapbox.com/v4/fetchsoft.n3kj8dd1/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZmV0Y2hzb2Z0IiwiYSI6IjI2NDExZDY1NTlkMmZkMzVkNTc3YzI1YTU4NWM3ODlmIn0.a9ftht9yIWHeKc1eDWRwzw#9', {
+          attribution: 'Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, geocoding <a href=\"http://geoservices.tamu.edu/Services/Geocode\">Texas A&M Geoservices</a>, Imagery @<a href=\"http://mapbox.com\">Mapbox</a>',
+          maxZoom: 18,
+subdomains: '',
+}).addTo(map);"
+
+    raw(str)
+  end
+
 end

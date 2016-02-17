@@ -53,10 +53,22 @@
 </section>
 
 <section>
+ 
+  <div class="well well-sm">
   <div class="row">
-  <% @detail_maps.to_a.each do |dm| %>
-    <%= link_to "#{dm.map_name}", detail_intake_heatmaps_path(@intakes, :map_name => dm.map_name) %>
-  <% end %>
+    <div class="col-md-4 col-lg-4">
+      <h3 class="text-left text-success">Detailed Intake Maps:</h3>
+    </div>
+    <ul class="nav nav-pills">
+      <% @detail_maps.to_a.each do |dm| %>
+        <li role="presentation">
+          <%= link_to(detail_intake_heatmaps_path(@intakes, :map_name => dm.map_name)) do %>
+            <h4><span class="label label-primary"><%= "#{dm.map_name}"%></span></h4>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
   </div>
   
   <p> Max intensity is <%= @max_intensity %> for <%= @latlngs.size %> records</p>

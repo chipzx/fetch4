@@ -22,7 +22,17 @@ class Address < ActiveRecord::Base
 
   after_validation :geocode, if: ->(obj){ !obj.valid_address }
   
+  has_many :outcomes
+  has_many :intakes
+  has_many :animal_services311_calls
+
   def address
     return "#{street_address_1} #{street_address_2}, #{city}, #{state} #{postal_code} #{country}"
   end
+
+  def self.within_radius(center_point, radius)
+    box = Geocoder::Calculations.bounding_box(center_point, radius)
+    self.within_bounding_box(box)
+  end
+
 end

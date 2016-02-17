@@ -15,6 +15,17 @@ class OutcomeHeatmap < ActiveRecord::Base
     ]
   )
 
+  belongs_to :address
+
+  def self.within_radius(center_point, radius)
+    addrs = Address.within_radius(center_point, radius)
+    addr_ids = Array.new
+    addrs.to_a.each do |a|
+     addr_ids << a.id
+    end
+    self.where("address_id IN (?)", addr_ids)
+  end
+
   def self.options_for_animal_type
     all = [ "All", nil ]
     opts = (AnimalType.all.to_a.map { |t| [t.name, t.name] })
