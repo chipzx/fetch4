@@ -72,10 +72,10 @@ module IntakeHeatmapsHelper
     str = "#{map_id} = map(:center => { :latlng => #{center_point},
                             :zoom => #{zoom}}, 
                :markers => [ { :latlng => [ center_point[0], center_point[1] ], 
-                               :popup => #{map_id} }"
+                               :popup => #{map_id} } "
     if (intakes.size > 0)
       intakes.to_a.each do |a|
-      str += ","
+        str += ","
         str += "{ :latlng => [ #{a.latitude}, #{a.longitude} ] "
         if (a.animal_type.eql?("Dog"))
           str += ", :icon => dog_icon"
@@ -84,14 +84,46 @@ module IntakeHeatmapsHelper
         else
           str += ", :icon => other_icon"
         end
-        str += ", :popup => '#{a.animal_id}<br/>#{a.animal_type} - #{a.intake_type}<br/>#{a.found_location}<br/>#{a.intake_date}<br/>#{a.gender} #{a.color} #{a.breed}'"
+        str += ", :popup => '#{a.animal_id}<br/>#{a.animal_type} - #{a.intake_type}<br/>#{a.found_location}<br/>#{a.intake_date}<br/>#{a.gender} #{a.coloring} #{a.breed}'"
         str += "}"
+       break
       end
     else
       str += ","
     end
-    str += "])"
+    str += "]); "
     logger.info(str)
     eval(str)
   end
+
+  def map_intakes2(map_id, intakes, center_point,  zoom)
+    str =  "var dog1 = L.icon({iconUrl: 'http://api.tiles.mapbox.com/v3/marker/pin-l-dog-park+ff0000.png', shadowUrl: '', iconSize: [35, 90], shadowSize: [], iconAnchor: [0, 0], shadowAnchor: [0, 0], popupAnchor: [0, 0]}); "
+    str += "var cat1 = L.icon({iconUrl: 'http://api.tiles.mapbox.com/v3/marker/pin-l-dog-park+00ff00.png', shadowUrl: '', iconSize: [35, 90], shadowSize: [], iconAnchor: [0, 0], shadowAnchor: [0, 0], popupAnchor: [0, 0]}); "
+    str += "var other1 = L.icon({iconUrl: 'http://api.tiles.mapbox.com/v3/marker/pin-l-dog-park+0000ff.png', shadowUrl: '', iconSize: [35, 90], shadowSize: [], iconAnchor: [0, 0], shadowAnchor: [0, 0], popupAnchor: [0, 0]}); "
+
+    str += "var map = L.map('map'); "
+    str += "map.setView([30.110728, -97.312537], 15); "
+    str += "L.marker([30.110728, -97.312537]).addTo(map); "
+
+    intakes.to_a.each do |a|
+      icon = "other1"
+      if a.animal_type.eql?('Dog')
+        icon = "dog1"
+      elsif (a.animal_type.eql?("Cat"))
+        icon = "cat1"
+      end
+      id = "#{icon}#{a.id}"
+      str += "#{id} = L.marker([#{a.latitude}, #{a.longitude}], { icon: #{icon}}).addTo(map); "
+      str += "#{id}.bindPopup('#{a.animal_id}<br/>#{a.animal_type} - #{a.intake_type}<br/>#{a.found_location}<br/>#{a.intake_date}<br/>#{a.gender} #{a.coloring} #{a.breed}'); "
+    end
+
+    str += "L.tileLayer('https://api.tiles.mapbox.com/v4/fetchsoft.n3kj8dd1/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZmV0Y2hzb2Z0IiwiYSI6IjI2NDExZDY1NTlkMmZkMzVkNTc3YzI1YTU4NWM3ODlmIn0.a9ftht9yIWHeKc1eDWRwzw#9', {
+          attribution: 'Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, geocoding <a href=\"http://geoservices.tamu.edu/Services/Geocode\">Texas A&M Geoservices</a>, Imagery @<a href=\"http://mapbox.com\">Mapbox</a>',
+          maxZoom: 18,
+subdomains: '',
+}).addTo(map);"
+
+    raw(str)
+  end
+
 end

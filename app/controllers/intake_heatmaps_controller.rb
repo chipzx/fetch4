@@ -1,8 +1,9 @@
 class IntakeHeatmapsController < ApplicationController
+  layout "maps"
+
   def index
     init_filters()
     get_map_data()
-    get_detail_map_data()
     respond_to do |format|
       format.html
       format.js
@@ -11,6 +12,14 @@ class IntakeHeatmapsController < ApplicationController
     # There is an issue with the persisted param_set. Reset it.
     puts "Had to reset filterrific params: #{ e.message }"
     redirect_to(reset_filterrific_url(format: :html)) and return
+  end
+
+  def show
+    get_detail_map_data()
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   private
@@ -66,5 +75,12 @@ class IntakeHeatmapsController < ApplicationController
 
   def get_detail_map_data
     @detail_maps = DetailMap.all
+    @intakes = Hash.new
+    @detail_maps.to_a.each do |d|
+      center_point = [ d.center_point_latitude, d.center_point_longitude ]
+      box = Geocoder::Calculations.bounding_box(center_point, d.radius)
+      @intakes[d.map_name.gsub(' ', '_').downcase] = Intake.within_bounding_box(box)
+    end
+    return @intakes
   end
 end
