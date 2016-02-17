@@ -28,6 +28,8 @@ class AnimalServices311HeatmapsController < ApplicationController
     logger.info("rtype: #{@rtype} stype: #{@stype} gtype: #{@gtype} ftype: #{@ftype}")
 
     @map_data = Group.find(current_user.group_id)
+    @detail_maps = DetailMap.all
+
     @latlngs = @filterrific.find()
     
     if (@latlngs.size > 1000)
@@ -50,4 +52,18 @@ class AnimalServices311HeatmapsController < ApplicationController
     redirect_to(reset_filterrific_url(format: :html)) and return
   end
 
+  def show
+    get_detail_map_data(params[:map_name])
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
+  private
+  def get_detail_map_data(map_name)
+    @detail_map = DetailMap.find_by_map_name(map_name)
+    @map_id = @detail_map.map_id
+    @animal_services311_calls = AnimalServices311Call.within_radius(@detail_map.center_point, @detail_map.radius)
+  end
 end
