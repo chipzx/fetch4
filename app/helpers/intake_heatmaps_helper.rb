@@ -96,14 +96,15 @@ module IntakeHeatmapsHelper
     eval(str)
   end
 
-  def map_intakes2(map_id, intakes, center_point,  zoom)
+  def map_intakes2(map_detail, map_id, intakes, center_point, zoom)
     str =  "var dog1 = L.icon({iconUrl: 'http://api.tiles.mapbox.com/v3/marker/pin-l-dog-park+ff0000.png', shadowUrl: '', iconSize: [35, 90], shadowSize: [], iconAnchor: [0, 0], shadowAnchor: [0, 0], popupAnchor: [0, 0]}); "
     str += "var cat1 = L.icon({iconUrl: 'http://api.tiles.mapbox.com/v3/marker/pin-l-dog-park+00ff00.png', shadowUrl: '', iconSize: [35, 90], shadowSize: [], iconAnchor: [0, 0], shadowAnchor: [0, 0], popupAnchor: [0, 0]}); "
     str += "var other1 = L.icon({iconUrl: 'http://api.tiles.mapbox.com/v3/marker/pin-l-dog-park+0000ff.png', shadowUrl: '', iconSize: [35, 90], shadowSize: [], iconAnchor: [0, 0], shadowAnchor: [0, 0], popupAnchor: [0, 0]}); "
 
     str += "var map = L.map('map'); "
-    str += "map.setView([30.110728, -97.312537], 15); "
-    str += "L.marker([30.110728, -97.312537]).addTo(map); "
+    str += "map.setView(#{center_point}, #{zoom}); "
+    str += "var center = L.marker(#{center_point}).addTo(map); "
+    str += "center.bindPopup('Center point for #{map_detail.map_name} detail map<br/>Found #{@intakes.size} intakes within a #{map_detail.radius} mile radius from this point'); " 
 
     intakes.to_a.each do |a|
       icon = "other1"

@@ -1,13 +1,14 @@
  <div class="row">
    <div class="col-md-12 col-lg-12">
-     <h1 class="text-center">Bastrop Detail Map</h1>
+     <h1 class="text-center"><%= "#{@detail_map.map_name}" %> Intakes Detail Map</h1>
    </div>
   </div>
 
   <%= render(partial: "detail_map",
-             locals: { map_id: "map1",
-                       intakes: @intakes["bastrop"],
-                       center_point: [30.110728, -97.312537],
-                       zoom: 13 
+             locals: { map_detail: @detail_map,
+                       map_id: @map_id,
+                       intakes: @intakes,
+                       center_point: @detail_map.center_point,
+                       zoom: @detail_map.zoom_level
                      }
             ) %>

@@ -15,7 +15,7 @@ class IntakeHeatmapsController < ApplicationController
   end
 
   def show
-    get_detail_map_data()
+    get_detail_map_data(params[:map_name])
     respond_to do |format|
       format.html
       format.js
@@ -69,18 +69,17 @@ class IntakeHeatmapsController < ApplicationController
 
 #    @hs_detail = Hotspot.select("found_location, latitude, longitude, animal_type, fiscal_year").group(["found_location", "latitude", "longitude", "animal_type", "fiscal_year"]).order(["found_location", "latitude", "longitude", "fiscal_year","animal_type"]).sum("total").to_a
     @hs_detail = HotspotDetail.all
-
     logger.info("Found #{@hotspots.size} hotspots with #{@hs_detail.length} detail records")
+
+    @detail_maps = DetailMap.all
+    logger.info("Found #{@detail_maps.size} detail maps")
   end
 
-  def get_detail_map_data
-    @detail_maps = DetailMap.all
-    @intakes = Hash.new
-    @detail_maps.to_a.each do |d|
-      center_point = [ d.center_point_latitude, d.center_point_longitude ]
-      box = Geocoder::Calculations.bounding_box(center_point, d.radius)
-      @intakes[d.map_name.gsub(' ', '_').downcase] = Intake.within_bounding_box(box)
-    end
-    return @intakes
+  def get_detail_map_data(map_name)
+    @detail_map = DetailMap.find_by_map_name(map_name)
+    @map_id = @detail_map.map_id
+    center_point = @detail_map.center_point
+    box = Geocoder::Calculations.bounding_box(@detail_map.center_point, @detail_map.radius)
+    @intakes = Intake.within_bounding_box(box)
   end
 end
