@@ -65,5 +65,6 @@ class AnimalServices311HeatmapsController < ApplicationController
     @detail_map = DetailMap.find_by_map_name(map_name)
     @map_id = @detail_map.map_id
     @animal_services311_calls = AnimalServices311Call.within_radius(@detail_map.center_point, @detail_map.radius)
+    logger.info("311 Calls: Found #{@animal_services311_calls.size}")
   end
 end

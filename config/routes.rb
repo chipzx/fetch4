@@ -24,6 +24,11 @@ Rails.application.routes.draw do
         get :detail
       end
     end
+    resources :animal_services311_heatmaps do
+      collection do
+        get :detail
+      end
+    end
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

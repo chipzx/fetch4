@@ -40,27 +40,41 @@ module AnimalServices311HeatmapsHelper
     raw(str)
   end
 
-  def map_animal_services_311_calls(map_detail, map_id, animal_services_311_calls, center_point, zoom)
-    #TODO: duplicate code
-    str =  "var dog1 = L.icon({iconUrl: 'http://api.tiles.mapbox.com/v3/marker/pin-l-dog-park+ff0000.png', shadowUrl: '', iconSize: [35, 90], shadowSize: [], iconAnchor: [0, 0], shadowAnchor: [0, 0], popupAnchor: [0, 0]}); "
-    str += "var cat1 = L.icon({iconUrl: 'http://api.tiles.mapbox.com/v3/marker/pin-l-dog-park+00ff00.png', shadowUrl: '', iconSize: [35, 90], shadowSize: [], iconAnchor: [0, 0], shadowAnchor: [0, 0], popupAnchor: [0, 0]}); "
-    str += "var other1 = L.icon({iconUrl: 'http://api.tiles.mapbox.com/v3/marker/pin-l-dog-park+0000ff.png', shadowUrl: '', iconSize: [35, 90], shadowSize: [], iconAnchor: [0, 0], shadowAnchor: [0, 0], popupAnchor: [0, 0]}); "
+  def map_animal_services_311_calls(map_detail, map_id, animal_services311_calls, center_point, zoom)
+    str = ""
+    iconColors = [ "DC3912", "3366CC", "FF9900", "109618", "990099", "66AA00", "DD4477", "B82E2E", "316395", "994499", "22AA99", "AAAA11", "6633CC", "E67300", "000000", "FFFFFF", "FF0000", "00FF00", "0000FF", "CC0000", "00CC00", "0000CC" ]
+
+    i = 0
+    srIcons = Hash.new
+    ServiceRequestType.all.to_a.each do |t|
+      icon_url = "'http://api.tiles.mapbox.com/v3/marker/pin-l-emergency-telephone+" + iconColors[i] + ".png'"  
+      icon = "L.icon({iconUrl: #{icon_url}, shadowUrl: '', iconSize: [35,90], shadowSize: [], iconAnchor: [0,0], shadowAnchor: [0, 0], popupAnchor: [0, 0]})"
+      name = t.name.gsub(/\W+/,'_')
+logger.info("Added #{name} to icons hash")
+      srIcons["#{name}"] =  icon
+      str += "var #{name}Icon = #{icon}; "
+      i += 1
+    end
 
     str += "var map = L.map('map'); "
     str += "map.setView(#{center_point}, #{zoom}); "
     str += "var center = L.marker(#{center_point}).addTo(map); "
-    str += "center.bindPopup('Center point for #{map_detail.map_name} detail map<br/>Found #{outcomes.size} outcomes within a #{map_detail.radius} mile radius from this point'); "
+    str += "center.bindPopup('Center point for #{map_detail.map_name} detail map<br/>Found #{animal_services311_calls.size} 311 service calls within a #{map_detail.radius} mile radius from this point'); "
 
-    animal_services_311_calls.to_a.each do |o|
-      icon = "other1"
-      if o.animal_type.name.eql?('Dog')
-        icon = "dog1"
-      elsif (o.animal_type.name.eql?("Cat"))
-        icon = "cat1"
+    j = 0
+    animal_services311_calls.to_a.each do |o|
+      srName = o.service_request_type.name.gsub(/\W+/,'_')
+logger.info("Looking up #{srName} in icon hash")
+      icon = srIcons[srName]
+      if (icon.nil?) 
+        logger.error("Unable to find icon for #{srName}")
+        break
       end
-      id = "#{icon}#{o.id}"
+      id = "#{srName}#{o.id}"
       str += "#{id} = L.marker([#{o.address.latitude}, #{o.address.longitude}], { icon: #{icon}}).addTo(map); "
-      str += "#{id}.bindPopup('#{o.service_request_id}<br/>#{o.service_request_type.name} - #{o.service_request_status_type.name}<br/>#{o.service_location}<br/>#{o.date_opened}'); "
+      str += "#{id}.bindPopup('#{o.service_request_id}<br/>#{o.service_request_type.name} - #{o.service_request_status_type.name}<br/>#{o.service_request_location}<br/>#{o.date_opened}'); "
+      break if j == 1500
+      j += 1
     end
 
     str += "L.tileLayer('https://api.tiles.mapbox.com/v4/fetchsoft.n3kj8dd1/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZmV0Y2hzb2Z0IiwiYSI6IjI2NDExZDY1NTlkMmZkMzVkNTc3YzI1YTU4NWM3ODlmIn0.a9ftht9yIWHeKc1eDWRwzw#9', {

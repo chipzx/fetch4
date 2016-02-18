@@ -47,6 +47,23 @@
     
   <% end %>
 
+  <div class="well well-sm">
+    <div class="row">
+      <div class="col-md-4 col-lg-4">
+        <h3 class="text-left text-success">Detailed 311 Calls Maps:</h3>
+      </div>
+      <ul class="nav nav-pills">
+        <% @detail_maps.to_a.each do |dm| %>
+          <li role="presentation">
+            <%= link_to(detail_animal_services311_heatmaps_path(@animal_services311_calls, :map_name => dm.map_name)) do %>
+              <h4><span class="label label-primary"><%= "#{dm.map_name}"%></span></h4>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+
   <p> Max intensity is <%= @max_intensity %> for <%= @latlngs.size %> records</p>
    <%= render(
        partial: 'map',

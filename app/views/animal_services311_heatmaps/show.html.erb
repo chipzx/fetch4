@@ -1,0 +1,24 @@
+ <div class="row">
+   <div class="col-md-12 col-lg-12">
+     <h1 class="text-center"><%= "#{@detail_map.map_name}" %> Animal Services 311 Calls Detail Map</h1>
+   </div>
+ </div>
+
+  <div class="row">
+    <div class="col-lg-offset-1 col-md-offset-1 col-md-4 col-lg-4 pull-left">
+      <%= link_to(:back) do %>
+        <h4><span class="label label-primary">Back to 311 Calls Heatmap</span></h4>
+      <% end %>
+    </div>
+  </div>
+
+  <div id="animal_services_311_calls_detail">
+    <%= render(partial: "detail_map",
+               locals: { map_detail: @detail_map,
+                         map_id: @map_id,
+                         animal_services311_calls: @animal_services311_calls,
+                         center_point: @detail_map.center_point,
+                         zoom: @detail_map.zoom_level
+                       }
+            ) %>
+  </div>
