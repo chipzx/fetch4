@@ -62,7 +62,8 @@ module OutcomeHeatmapsHelper
       end
       id = "#{icon}#{o.id}"
       str += "#{id} = L.marker([#{o.address.latitude}, #{o.address.longitude}], { icon: #{icon}}).addTo(map); "
-      str += "#{id}.bindPopup('#{o.animal_id}<br/>#{o.animal_type.name} - #{o.outcome_type.name}<br/>#{o.address.full_location}<br/>#{o.outcome_date}<br/>#{o.gender.name} #{o.coloring} #{o.breed}'); "
+      # escape javascript on address full_location
+      str += "#{id}.bindPopup('#{o.animal_id}<br/>#{o.animal_type.name} - #{o.outcome_type.name}<br/>#{j(o.address.full_location)}<br/>#{o.outcome_date}<br/>#{o.gender.name} #{o.coloring} #{o.breed}'); "
     end
 
     str += "L.tileLayer('https://api.tiles.mapbox.com/v4/fetchsoft.n3kj8dd1/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZmV0Y2hzb2Z0IiwiYSI6IjI2NDExZDY1NTlkMmZkMzVkNTc3YzI1YTU4NWM3ODlmIn0.a9ftht9yIWHeKc1eDWRwzw#9', {

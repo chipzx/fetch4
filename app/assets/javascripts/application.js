@@ -20,7 +20,6 @@
 //= require angular-route
 //= require angular-sanitize
 //= require angular-tablesort
-//= require angular-leaflet-directive
 //= require ng-file-upload
 
 //= require bootstrap-sass-official
@@ -30,7 +29,6 @@
 //= require chartkick
 
 //= require_tree .
-
 
 /*
  (c) 2014, Vladimir Agafonkin
