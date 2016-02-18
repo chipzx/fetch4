@@ -27,6 +27,7 @@
 
 //= require highcharts/highcharts
 //= require highcharts/highcharts-more
+//= require chartkick
 
 //= require_tree .
 

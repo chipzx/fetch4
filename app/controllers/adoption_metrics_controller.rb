@@ -1,5 +1,3 @@
-require 'lazy_high_charts/high_chart_globals'
-
 class AdoptionMetricsController < ApplicationController
 
   def index
