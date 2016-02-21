@@ -7,6 +7,7 @@ class Intake < ActiveRecord::Base
         obj.latitude = geo.latitude
         obj.longitude = geo.longitude
         obj.valid_address = true 
+        obj.postal_code = geo.postal_code if obj.postal_code.nil?
         obj.found_location = geo.address
         obj.geo_quality_code = geo.geometry['location_type']
       end

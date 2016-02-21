@@ -12,7 +12,7 @@ class Address < ActiveRecord::Base
           obj.valid_address = true 
           obj.full_location = geo.address
           obj.city = geo.city unless geo.city.nil?
-#          obj.postal_code = geo.postal_code unless geo.postal_code.nil?
+          obj.postal_code = geo.postal_code if obj.postal_code.nil?
           obj.geo_quality_code = geo.geometry['location_type']
           obj.feature_type = geo.data['types'].compact.join(",")
           obj.partial_match = geo.data['partial_match']
