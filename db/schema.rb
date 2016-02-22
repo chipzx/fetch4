@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160218223623) do
+ActiveRecord::Schema.define(version: 20160222183127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,28 @@ ActiveRecord::Schema.define(version: 20160218223623) do
   add_index "addresses", ["postal_code"], name: "index_addresses_on_postal_code", using: :btree
   add_index "addresses", ["state"], name: "index_addresses_on_state", using: :btree
 
+  create_table "addresses_save", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "party_id"
+    t.integer  "address_type_id"
+    t.string   "street_address_1"
+    t.string   "street_address_2"
+    t.string   "city"
+    t.string   "county"
+    t.string   "state"
+    t.string   "postal_code"
+    t.string   "country"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "geo_quality_code"
+    t.string   "feature_type"
+    t.boolean  "partial_match"
+    t.boolean  "valid_address"
+    t.text     "full_location"
+  end
+
   create_table "animal_galleries", force: :cascade do |t|
     t.integer  "animal_id",                          null: false
     t.boolean  "primary_image",      default: false, null: false
@@ -101,10 +123,10 @@ ActiveRecord::Schema.define(version: 20160218223623) do
   end
 
   add_index "animal_services311_calls", ["address_id", "group_id"], name: "anml_srvcs_311_calls_addr_id_group", using: :btree
-  add_index "animal_services311_calls", ["date_closed"], name: "index_animal_services_311_calls_on_date_closed", using: :btree
-  add_index "animal_services311_calls", ["date_opened"], name: "index_animal_services_311_calls_on_date_opened", using: :btree
-  add_index "animal_services311_calls", ["group_id"], name: "index_animal_services_311_calls_on_group_id", using: :btree
-  add_index "animal_services311_calls", ["jurisdiction"], name: "index_animal_services_311_calls_on_jurisdiction", using: :btree
+  add_index "animal_services311_calls", ["date_closed"], name: "index_animal_services311_calls_on_date_closed", using: :btree
+  add_index "animal_services311_calls", ["date_opened"], name: "index_animal_services311_calls_on_date_opened", using: :btree
+  add_index "animal_services311_calls", ["group_id"], name: "index_animal_services311_calls_on_group_id", using: :btree
+  add_index "animal_services311_calls", ["jurisdiction"], name: "index_animal_services311_calls_on_jurisdiction", using: :btree
   add_index "animal_services311_calls", ["service_request_id", "group_id"], name: "anml_srvcs_srvc_req_id_group", unique: true, using: :btree
   add_index "animal_services311_calls", ["service_request_status_type_id", "group_id"], name: "anml_srvcs_311_calls_sr_status_type_group", using: :btree
   add_index "animal_services311_calls", ["service_request_type_id", "group_id"], name: "animal_service_311_calls_sr_type_group", using: :btree
@@ -469,6 +491,31 @@ ActiveRecord::Schema.define(version: 20160218223623) do
     t.string "arn"
   end
 
+  create_table "outcome_save", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "animal_type_id"
+    t.string   "animal_id"
+    t.string   "name"
+    t.integer  "outcome_type_id"
+    t.datetime "outcome_date"
+    t.integer  "gender_id"
+    t.integer  "address_id"
+    t.string   "breed"
+    t.string   "coloring"
+    t.decimal  "weight"
+    t.datetime "dob"
+    t.boolean  "dob_known"
+    t.datetime "intake_date"
+    t.integer  "intake_type_id"
+    t.text     "description"
+    t.integer  "group_id"
+    t.string   "microchip_number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "age"
+    t.integer  "fiscal_year"
+  end
+
   create_table "outcome_types", force: :cascade do |t|
     t.string   "name",        null: false
     t.text     "description"
@@ -581,6 +628,19 @@ ActiveRecord::Schema.define(version: 20160218223623) do
   add_index "people", ["group_id"], name: "index_people_on_group_id", using: :btree
   add_index "people", ["last_name", "first_name", "middle_name"], name: "index_people_on_last_name_and_first_name_and_middle_name", using: :btree
   add_index "people", ["party_type_id"], name: "index_people_on_party_type_id", using: :btree
+
+  create_table "people_save", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "party_type_id"
+    t.integer  "group_id"
+    t.string   "first_name"
+    t.string   "middle_name"
+    t.string   "last_name"
+    t.string   "salutation"
+    t.string   "suffix"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "person_id_map", id: false, force: :cascade do |t|
     t.string  "person_id"
@@ -852,10 +912,10 @@ ActiveRecord::Schema.define(version: 20160218223623) do
   add_foreign_key "addresses", "address_types", name: "addresses_address_type_id_fk"
   add_foreign_key "addresses", "party_pks", column: "party_id", primary_key: "party_id", name: "addresses_party_id_fk", on_delete: :cascade
   add_foreign_key "animal_galleries", "animals", name: "animal_animal_galleries_fk"
-  add_foreign_key "animal_services311_calls", "addresses", name: "animal_services_311_address_id_fk"
-  add_foreign_key "animal_services311_calls", "groups", name: "animal_services_311_group_id_fk"
-  add_foreign_key "animal_services311_calls", "service_request_status_types", name: "animal_services_311_sr_status_type_id_fk"
-  add_foreign_key "animal_services311_calls", "service_request_types", name: "animal_services_311_sr_type_id_fk"
+  add_foreign_key "animal_services311_calls", "addresses", name: "animal_services311_address_id_fk"
+  add_foreign_key "animal_services311_calls", "groups", name: "animal_services311_group_id_fk"
+  add_foreign_key "animal_services311_calls", "service_request_status_types", name: "animal_services311_sr_status_type_id_fk"
+  add_foreign_key "animal_services311_calls", "service_request_types", name: "animal_services311_sr_type_id_fk"
   add_foreign_key "animal_types", "groups", name: "animal_types_groups_fk"
   add_foreign_key "animals", "animal_types", name: "animals_animal_types_fk"
   add_foreign_key "animals", "groups", name: "animals_groups_fk"
@@ -984,43 +1044,6 @@ ActiveRecord::Schema.define(version: 20160218223623) do
     GROUP BY o.group_id, a.full_location, a.latitude, a.longitude, at.name, ot.name, g.description, o.fiscal_year;
   SQL
 
-  create_view :day_count_during_years,  sql_definition: <<-SQL
-      SELECT ad.fiscal_year,
-      ad.group_id,
-      to_char(ad.outcome_date, 'DY'::text) AS day_of_week,
-      count(*) AS total_days
-     FROM ( SELECT DISTINCT outcomes.fiscal_year,
-              outcomes.group_id,
-              outcomes.outcome_date
-             FROM outcomes) ad
-    GROUP BY ad.fiscal_year, ad.group_id, to_char(ad.outcome_date, 'DY'::text);
-  SQL
-
-  create_view :adoptions_by_days,  sql_definition: <<-SQL
-      SELECT y.fiscal_year,
-      to_char(o.outcome_date, 'D'::text) AS day_index,
-      (
-          CASE (to_number(to_char(o.outcome_date, 'D'::text), '9'::text) - (1)::numeric)
-              WHEN 0 THEN (7)::numeric
-              ELSE (to_number(to_char(o.outcome_date, 'D'::text), '9'::text) - (1)::numeric)
-          END)::integer AS sort_order,
-      to_char(o.outcome_date, 'DY'::text) AS day_of_week,
-      y.total_days,
-      y.group_id,
-      count(*) AS number_adoptions,
-      round((((count(*))::numeric * 1.0) / ((y.total_days)::numeric * 1.0)), 2) AS avg_daily_adoptions
-     FROM (outcomes o
-       JOIN day_count_during_years y ON ((((to_char(o.outcome_date, 'DY'::text) = y.day_of_week) AND (o.fiscal_year = y.fiscal_year)) AND (o.group_id = y.group_id))))
-    WHERE (o.outcome_type_id = ( SELECT ot.id
-             FROM outcome_types ot
-            WHERE ((ot.group_id = o.group_id) AND ((ot.name)::text = 'Adoption'::text))))
-    GROUP BY y.fiscal_year, y.group_id, y.total_days, to_char(o.outcome_date, 'DY'::text),
-          CASE (to_number(to_char(o.outcome_date, 'D'::text), '9'::text) - (1)::numeric)
-              WHEN 0 THEN (7)::numeric
-              ELSE (to_number(to_char(o.outcome_date, 'D'::text), '9'::text) - (1)::numeric)
-          END, to_char(o.outcome_date, 'D'::text);
-  SQL
-
   create_view :animal_services311_heatmaps,  sql_definition: <<-SQL
       SELECT r.name AS service_request_type,
       s.name AS service_request_status_type,
@@ -1072,6 +1095,56 @@ ActiveRecord::Schema.define(version: 20160218223623) do
      FROM (intakes i
        JOIN intake_types it ON ((i.intake_type_id = it.id)))
     GROUP BY i.group_id, i.postal_code, it.name;
+  SQL
+
+  create_view :adoptions_by_hours,  sql_definition: <<-SQL
+      SELECT o.group_id,
+      to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'HH24'::text), '99'::text) AS hour,
+      ot.name AS outcome_type,
+      count(*) AS total
+     FROM ((outcomes o
+       JOIN outcome_types ot ON (((o.outcome_type_id = ot.id) AND (o.group_id = ot.group_id))))
+       JOIN groups g ON ((o.group_id = g.id)))
+    GROUP BY o.group_id, to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'HH24'::text), '99'::text), ot.name;
+  SQL
+
+  create_view :day_count_during_years,  sql_definition: <<-SQL
+      SELECT ad.fiscal_year,
+      ad.group_id,
+      to_char(ad.outcome_date, 'DY'::text) AS day_of_week,
+      count(*) AS total_days
+     FROM ( SELECT DISTINCT o.fiscal_year,
+              o.group_id,
+              date_trunc('Day'::text, timezone((g.time_zone)::text, o.outcome_date)) AS outcome_date
+             FROM (outcomes o
+               JOIN groups g ON ((o.group_id = g.id)))) ad
+    GROUP BY ad.fiscal_year, ad.group_id, to_char(ad.outcome_date, 'DY'::text);
+  SQL
+
+  create_view :adoptions_by_days,  sql_definition: <<-SQL
+      SELECT y.fiscal_year,
+      to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text) AS day_index,
+      (
+          CASE (to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text), '9'::text) - (1)::numeric)
+              WHEN 0 THEN (7)::numeric
+              ELSE (to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text), '9'::text) - (1)::numeric)
+          END)::integer AS sort_order,
+      to_char(timezone((g.time_zone)::text, o.outcome_date), 'DY'::text) AS day_of_week,
+      y.total_days,
+      y.group_id,
+      count(*) AS number_adoptions,
+      round((((count(*))::numeric * 1.0) / ((y.total_days)::numeric * 1.0)), 2) AS avg_daily_adoptions
+     FROM ((outcomes o
+       JOIN groups g ON ((o.group_id = g.id)))
+       JOIN day_count_during_years y ON ((((to_char(timezone((g.time_zone)::text, o.outcome_date), 'DY'::text) = y.day_of_week) AND (o.fiscal_year = y.fiscal_year)) AND (o.group_id = y.group_id))))
+    WHERE (o.outcome_type_id = ( SELECT ot.id
+             FROM outcome_types ot
+            WHERE ((ot.group_id = o.group_id) AND ((ot.name)::text = 'Adoption'::text))))
+    GROUP BY y.fiscal_year, y.group_id, y.total_days, to_char(timezone((g.time_zone)::text, o.outcome_date), 'DY'::text),
+          CASE (to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text), '9'::text) - (1)::numeric)
+              WHEN 0 THEN (7)::numeric
+              ELSE (to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text), '9'::text) - (1)::numeric)
+          END, to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text);
   SQL
 
 end

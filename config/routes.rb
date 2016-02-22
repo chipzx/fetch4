@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   resources :intake_metrics
   resources :outcome_metrics
   resources :service_request_metrics
+  resources :population_metrics
 
   Rails.application.routes.draw do
     resources :intake_heatmaps do
