@@ -24,12 +24,20 @@
           <li><%= link_to "Animals", animals_path %></li>
           <li class= "dropdown">
               <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Visualizations<span class="caret"></span></a>
-                <ul class="dropdown-menu" aria-labelledby="vis-menu">
-                  <li role="presentation"><%= link_to "Intakes Heatmap", intake_heatmaps_path %></li>
-                  <li role="presentation"><%= link_to "Outcomes Heatmap", outcome_heatmaps_path %></li>
-                  <li role="presentation"><%= link_to "Animal Services 311 Calls Heatmap", animal_services311_heatmaps_path %></li>
-                </ul>
-              </a>
+              <ul class="dropdown-menu" aria-labelledby="vis-menu">
+                <li role="presentation"><%= link_to "Intakes Heatmap", intake_heatmaps_path %></li>
+                <li role="presentation"><%= link_to "Outcomes Heatmap", outcome_heatmaps_path %></li>
+                <li role="presentation"><%= link_to "Animal Services 311 Calls Heatmap", animal_services311_heatmaps_path %></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Metrics<span class="caret"></span></a>
+              <ul class="dropdown-menu" aria-labelledby="vis-menu">
+                <li role="presentation"><%= link_to "Intake Metrics", intake_metrics_path %></li>
+                <li role="presentation"><%= link_to "Outcome Metrics", outcome_metrics_path %></li>
+                <li role="presentation"><%= link_to "Adoption Metrics", adoption_metrics_path %></li>
+                <li role="presentation"><%= link_to "311 Call Metrics", service_request_metrics_path %></li>
+              </ul>
           </li>
           <li role="separator" class="divider"></li>
         </ul>

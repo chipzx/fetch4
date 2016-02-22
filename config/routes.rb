@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   resources :outcome_heatmaps
   resources :adoption_metrics
   resources :intake_metrics
+  resources :outcome_metrics
+  resources :service_request_metrics
 
   Rails.application.routes.draw do
     resources :intake_heatmaps do
