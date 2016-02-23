@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160222183127) do
+ActiveRecord::Schema.define(version: 20160222204920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -666,6 +666,19 @@ ActiveRecord::Schema.define(version: 20160222183127) do
   add_index "phone_contacts", ["phone_number"], name: "index_phone_contacts_on_phone_number", using: :btree
   add_index "phone_contacts", ["phone_type"], name: "index_phone_contacts_on_phone_type", using: :btree
 
+  create_table "population_by_days", force: :cascade do |t|
+    t.datetime "calendar_date",    null: false
+    t.integer  "group_id",         null: false
+    t.integer  "total_intakes"
+    t.integer  "total_outcomes"
+    t.integer  "total_population"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "population_by_days", ["calendar_date", "group_id"], name: "index_population_by_days_on_calendar_date_and_group_id", unique: true, using: :btree
+  add_index "population_by_days", ["group_id"], name: "index_population_by_days_on_group_id", using: :btree
+
   create_table "pp_extended_outcomes", id: false, force: :cascade do |t|
     t.string "animal_id"
     t.string "arn"
@@ -953,6 +966,7 @@ ActiveRecord::Schema.define(version: 20160222183127) do
   add_foreign_key "people", "groups", name: "people_group_id_fk"
   add_foreign_key "phone_contacts", "contact_pks", column: "id", primary_key: "contact_id", name: "phone_contacts_pk_contact_id_fk", on_delete: :cascade
   add_foreign_key "phone_contacts", "contact_types", name: "phone_contacts_contact_type_id_fk"
+  add_foreign_key "population_by_days", "groups", name: "population_by_days_group_id_fk"
   add_foreign_key "privileges", "groups", name: "privileges_groups_fk"
   add_foreign_key "privileges", "groups", name: "user_roles_groups_fk"
   add_foreign_key "privileges", "rights", name: "privileges_rights_fk"
