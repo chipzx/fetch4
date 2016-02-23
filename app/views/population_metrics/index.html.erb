@@ -1,0 +1,25 @@
+<section>
+  <div class="row">
+   <div class="col-md-12 col-lg-12">
+     <h1 class="text-center">Animal Population Metrics</h1>
+   </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <hr/>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+        <%= render(
+              partial: "population_by_day",
+              locals: { population_by_days: @population_by_days, id: "population_by_day" })
+        %>
+      </div>
+      <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+
+      </div>
+    </div>
+  </div>
+</section>
+
