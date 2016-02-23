@@ -1,0 +1,20 @@
+  <div class="row">
+   <div class="col-md-12 col-lg-12">
+     <h1 class="text-center">Intake Metrics</h1>
+   </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <hr/>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+        <%= render(
+              partial: "by_zip_code",
+              locals: { by_zip_code: @by_zip_code, id: 'strays_by_zip_code' }
+            )
+        %>
+      </div>
+    </div>
+  </div>
