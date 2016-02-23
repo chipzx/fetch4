@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160222204920) do
+ActiveRecord::Schema.define(version: 20160223033045) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -204,6 +204,59 @@ ActiveRecord::Schema.define(version: 20160222204920) do
     t.string   "last_modified_by",   limit: 255, null: false
   end
 
+  create_table "bastrop_intake_data", id: false, force: :cascade do |t|
+    t.string  "animal_id"
+    t.string  "arn"
+    t.string  "name"
+    t.string  "species"
+    t.string  "primary_breed"
+    t.string  "secondary_breed"
+    t.string  "sex"
+    t.string  "age"
+    t.string  "altered"
+    t.string  "danger"
+    t.string  "danger_reason"
+    t.string  "primary_color"
+    t.string  "secondary_color"
+    t.string  "third_color"
+    t.string  "color_pattern"
+    t.string  "second_color_pattern"
+    t.string  "size"
+    t.string  "pre_altered"
+    t.string  "spayed_neutered"
+    t.string  "spayed_neutered_by"
+    t.string  "record_owner"
+    t.string  "intake_date"
+    t.string  "operation_type"
+    t.string  "operation_sub_type"
+    t.string  "pet_id"
+    t.string  "pet_id_type"
+    t.string  "location_found"
+    t.string  "jurisdiction"
+    t.string  "condition"
+    t.string  "age_group"
+    t.string  "doa"
+    t.string  "site_name"
+    t.string  "source"
+    t.string  "intake_reason"
+    t.string  "length_owned"
+    t.string  "unit"
+    t.string  "injury_type"
+    t.string  "cause"
+    t.string  "agency_name"
+    t.string  "location"
+    t.string  "sub_location"
+    t.string  "asilomar_status"
+    t.string  "intake_type"
+    t.string  "gender"
+    t.string  "color"
+    t.string  "breed"
+    t.string  "found_location"
+    t.string  "postal_code"
+    t.boolean "parseable",            default: false
+    t.integer "group_id",             default: 17
+  end
+
   create_table "bastrop_intakes", id: false, force: :cascade do |t|
     t.integer  "id"
     t.integer  "animal_type_id"
@@ -343,11 +396,12 @@ ActiveRecord::Schema.define(version: 20160222204920) do
   add_index "groups", ["name"], name: "index_groups_on_name", unique: true, using: :btree
 
   create_table "intake_types", force: :cascade do |t|
-    t.string   "name",        null: false
-    t.integer  "group_id",    null: false
+    t.string   "name",                           null: false
+    t.integer  "group_id",                       null: false
     t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.boolean  "count_as_intake", default: true, null: false
   end
 
   add_index "intake_types", ["group_id", "name"], name: "index_intake_types_on_group_id_and_name", unique: true, using: :btree
@@ -517,11 +571,12 @@ ActiveRecord::Schema.define(version: 20160222204920) do
   end
 
   create_table "outcome_types", force: :cascade do |t|
-    t.string   "name",        null: false
+    t.string   "name",                            null: false
     t.text     "description"
-    t.integer  "group_id",    null: false
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.integer  "group_id",                        null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.boolean  "count_as_outcome", default: true, null: false
   end
 
   add_index "outcome_types", ["group_id", "name"], name: "index_outcome_types_on_group_id_and_name", unique: true, using: :btree
@@ -1159,6 +1214,15 @@ ActiveRecord::Schema.define(version: 20160222204920) do
               WHEN 0 THEN (7)::numeric
               ELSE (to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text), '9'::text) - (1)::numeric)
           END, to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text);
+  SQL
+
+  create_view :outcomes_by_days,  sql_definition: <<-SQL
+      SELECT (date_trunc('Day'::text, timezone((g.time_zone)::text, o.outcome_date)))::timestamp with time zone AS outcome_date,
+      o.group_id,
+      count(*) AS total_outcomes
+     FROM (outcomes o
+       JOIN groups g ON ((o.group_id = g.id)))
+    GROUP BY date_trunc('Day'::text, timezone((g.time_zone)::text, o.outcome_date)), o.group_id;
   SQL
 
 end
