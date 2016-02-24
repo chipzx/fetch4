@@ -37,6 +37,13 @@
             )
         %>
       </div>
+      <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+        <%= render(
+              partial: "by_age_groups",
+              locals: { by_age_groups: @by_age_groups, id: "age_groups" }
+            )
+        %>
+      </div>
     </div>
   </div>
 </section>

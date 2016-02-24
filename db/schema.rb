@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160223211257) do
+ActiveRecord::Schema.define(version: 20160224011154) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1289,9 +1289,27 @@ ActiveRecord::Schema.define(version: 20160223211257) do
       SELECT length_of_stays.animal_type,
       length_of_stays.outcome_type,
       length_of_stays.group_id,
-      round(((((sum(length_of_stays.length_of_stay))::numeric * 1.0) / (count(*))::numeric) * 1.0), 2) AS avg_length_of_stay
+      sum(length_of_stays.length_of_stay) AS total_length,
+      count(*) AS total_animals,
+      round((((sum(length_of_stays.length_of_stay))::numeric * 1.0) / ((count(*))::numeric * 1.0)), 2) AS avg_length_of_stay
      FROM length_of_stays
+    WHERE (length_of_stays.length_of_stay IS NOT NULL)
     GROUP BY length_of_stays.animal_type, length_of_stays.outcome_type, length_of_stays.group_id;
+  SQL
+
+  create_view :length_of_stay_by_age_groups,  sql_definition: <<-SQL
+      SELECT l.group_id,
+      l.animal_type,
+      l.outcome_type,
+      l.age_group,
+      a.id AS sort_order,
+      sum(l.length_of_stay) AS total_length,
+      count(*) AS total_animals,
+      round((((sum(l.length_of_stay))::numeric * 1.0) / ((count(*))::numeric * 1.0)), 2) AS avg_length_of_stay
+     FROM (length_of_stays l
+       JOIN age_groups a ON (((a.name)::text = (l.age_group)::text)))
+    WHERE (l.age_group IS NOT NULL)
+    GROUP BY l.group_id, l.animal_type, l.outcome_type, l.age_group, a.id;
   SQL
 
 end
