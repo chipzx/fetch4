@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160223033045) do
+ActiveRecord::Schema.define(version: 20160223211257) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,6 +86,15 @@ ActiveRecord::Schema.define(version: 20160223033045) do
     t.boolean  "valid_address"
     t.text     "full_location"
   end
+
+  create_table "age_groups", force: :cascade do |t|
+    t.string   "name",        null: false
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "age_groups", ["name"], name: "index_age_groups_on_name", unique: true, using: :btree
 
   create_table "animal_galleries", force: :cascade do |t|
     t.integer  "animal_id",                          null: false
@@ -282,6 +291,24 @@ ActiveRecord::Schema.define(version: 20160223033045) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "breed_groups", force: :cascade do |t|
+    t.string   "name",        null: false
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "breed_groups", ["name"], name: "index_breed_groups_on_name", unique: true, using: :btree
+
+  create_table "color_groups", force: :cascade do |t|
+    t.string   "name",        null: false
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "color_groups", ["name"], name: "index_color_groups_on_name", unique: true, using: :btree
 
   create_table "contact_pks", force: :cascade do |t|
     t.integer  "contact_id"
@@ -490,6 +517,37 @@ ActiveRecord::Schema.define(version: 20160223033045) do
     t.boolean  "is_onsite",                 default: true
     t.boolean  "is_permanent",              default: true
   end
+
+  create_table "length_of_stays", force: :cascade do |t|
+    t.integer  "outcome_id",     null: false
+    t.string   "animal_id",      null: false
+    t.integer  "group_id",       null: false
+    t.string   "animal_type",    null: false
+    t.string   "gender",         null: false
+    t.string   "breed_group"
+    t.string   "color_group"
+    t.string   "weight_group"
+    t.string   "age_group"
+    t.datetime "intake_date"
+    t.datetime "outcome_date"
+    t.integer  "length_of_stay"
+    t.string   "intake_type",    null: false
+    t.string   "outcome_type",   null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "length_of_stays", ["age_group"], name: "index_length_of_stays_on_age_group", using: :btree
+  add_index "length_of_stays", ["animal_id", "outcome_date", "intake_date", "group_id"], name: "length_of_stays_uidx", unique: true, using: :btree
+  add_index "length_of_stays", ["animal_type"], name: "index_length_of_stays_on_animal_type", using: :btree
+  add_index "length_of_stays", ["breed_group"], name: "index_length_of_stays_on_breed_group", using: :btree
+  add_index "length_of_stays", ["color_group"], name: "index_length_of_stays_on_color_group", using: :btree
+  add_index "length_of_stays", ["gender"], name: "index_length_of_stays_on_gender", using: :btree
+  add_index "length_of_stays", ["group_id"], name: "index_length_of_stays_on_group_id", using: :btree
+  add_index "length_of_stays", ["intake_type"], name: "index_length_of_stays_on_intake_type", using: :btree
+  add_index "length_of_stays", ["outcome_id"], name: "index_length_of_stays_on_outcome_id", unique: true, using: :btree
+  add_index "length_of_stays", ["outcome_type"], name: "index_length_of_stays_on_outcome_type", using: :btree
+  add_index "length_of_stays", ["weight_group"], name: "index_length_of_stays_on_weight_group", using: :btree
 
   create_table "map_types", force: :cascade do |t|
     t.string   "name",        null: false
@@ -977,6 +1035,15 @@ ActiveRecord::Schema.define(version: 20160223033045) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
+  create_table "weight_groups", force: :cascade do |t|
+    t.string   "name",        null: false
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "weight_groups", ["name"], name: "index_weight_groups_on_name", unique: true, using: :btree
+
   add_foreign_key "addresses", "address_types", name: "addresses_address_type_id_fk"
   add_foreign_key "addresses", "party_pks", column: "party_id", primary_key: "party_id", name: "addresses_party_id_fk", on_delete: :cascade
   add_foreign_key "animal_galleries", "animals", name: "animal_animal_galleries_fk"
@@ -1003,6 +1070,8 @@ ActiveRecord::Schema.define(version: 20160223033045) do
   add_foreign_key "kennel_types", "groups", name: "kennel_types_groups_fk"
   add_foreign_key "kennels", "groups", name: "kennels_groups"
   add_foreign_key "kennels", "kennel_types", name: "kennels_kennel_types"
+  add_foreign_key "length_of_stays", "groups", name: "length_of_stays_group_id_fk"
+  add_foreign_key "length_of_stays", "outcomes", name: "length_of_stays_outcome_id_fk"
   add_foreign_key "media_contacts", "contact_pks", column: "id", primary_key: "contact_id", name: "media_contacts_pk_contact_id_fk", on_delete: :cascade
   add_foreign_key "media_contacts", "contact_types", name: "media_contacts_contact_type_id_fk"
   add_foreign_key "media_contacts", "media_types", name: "media_contacts_media_type_fk"
@@ -1216,13 +1285,13 @@ ActiveRecord::Schema.define(version: 20160223033045) do
           END, to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text);
   SQL
 
-  create_view :outcomes_by_days,  sql_definition: <<-SQL
-      SELECT (date_trunc('Day'::text, timezone((g.time_zone)::text, o.outcome_date)))::timestamp with time zone AS outcome_date,
-      o.group_id,
-      count(*) AS total_outcomes
-     FROM (outcomes o
-       JOIN groups g ON ((o.group_id = g.id)))
-    GROUP BY date_trunc('Day'::text, timezone((g.time_zone)::text, o.outcome_date)), o.group_id;
+  create_view :overall_length_of_stays,  sql_definition: <<-SQL
+      SELECT length_of_stays.animal_type,
+      length_of_stays.outcome_type,
+      length_of_stays.group_id,
+      round(((((sum(length_of_stays.length_of_stay))::numeric * 1.0) / (count(*))::numeric) * 1.0), 2) AS avg_length_of_stay
+     FROM length_of_stays
+    GROUP BY length_of_stays.animal_type, length_of_stays.outcome_type, length_of_stays.group_id;
   SQL
 
 end

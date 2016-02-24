@@ -9,6 +9,7 @@
     <div class="row">
       <hr/>
     </div>
+
     <div class="row">
       <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
         <%= render(
@@ -20,6 +21,20 @@
         <%= render(
             partial: "by_hour",
             locals: { by_hour_totals: @by_hour_totals, id: 'adoptions_by_hour' }) 
+        %>
+      </div>
+    </div>
+ 
+    <div class="row">
+      <hr/>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+        <%= render(
+              partial: "by_overall_los",
+              locals: { by_length_of_stay: @by_length_of_stay, id: "overall_los" }
+            )
         %>
       </div>
     </div>
