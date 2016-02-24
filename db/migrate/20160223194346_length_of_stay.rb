@@ -39,10 +39,10 @@ class LengthOfStay < ActiveRecord::Migration
       t.integer   :group_id, :null => false
       t.string    :animal_type, :null => false
       t.string    :gender, :null => false
-      t.string    :breed_group
-      t.string    :color_group
-      t.string    :weight_group
-      t.string    :age_group
+      t.integer   :breed_group_id
+      t.integer   :color_group_id
+      t.integer   :weight_group_id
+      t.integer   :age_group_id
       t.timestamp :intake_date
       t.timestamp :outcome_date
       t.integer   :length_of_stay
@@ -58,10 +58,10 @@ class LengthOfStay < ActiveRecord::Migration
     add_index :length_of_stays, :intake_type
     add_index :length_of_stays, :outcome_type
     add_index :length_of_stays, :gender
-    add_index :length_of_stays, :breed_group
-    add_index :length_of_stays, :color_group
-    add_index :length_of_stays, :weight_group
-    add_index :length_of_stays, :age_group
+    add_index :length_of_stays, :breed_group_id
+    add_index :length_of_stays, :color_group_id
+    add_index :length_of_stays, :weight_group_id
+    add_index :length_of_stays, :age_group_id
 
     conn.execute("ALTER TABLE length_of_stays ADD CONSTRAINT length_of_stays_outcome_id_fk FOREIGN KEY (outcome_id) REFERENCES outcomes(id)")
     conn.execute("ALTER TABLE length_of_stays ADD CONSTRAINT length_of_stays_group_id_fk FOREIGN KEY (group_id) REFERENCES groups(id)")
@@ -78,18 +78,18 @@ class LengthOfStay < ActiveRecord::Migration
     conn.execute("INSERT INTO breed_groups (name, description, created_at, updated_at) VALUES ('Terriers', 'Terrier breeds', now(), now())")
     conn.execute("INSERT INTO breed_groups (name, description, created_at, updated_at) VALUES ('Retrievers', 'Retriever-type dogs, e.g., Labrador Retrievers, Golden Retrievers, Irish Setters, etc.', now(), now())")
 
-    conn.execute("INSERT INTO age_groups (name, description, created_at, updated_at) VALUES ('5 Months and Under', 'Animals under 5 months of age', now(), now())")
-    conn.execute("INSERT INTO age_groups (name, description, created_at, updated_at) VALUES ('5 Months to 1 year', 'Adolescent animals between 5 months and 1 year', now(), now())")
+    conn.execute("INSERT INTO age_groups (name, description, created_at, updated_at) VALUES ('0-5 Months', 'Animals under 5 months of age', now(), now())")
+    conn.execute("INSERT INTO age_groups (name, description, created_at, updated_at) VALUES ('5 Mos-1 yr', 'Adolescent animals between 5 months and 1 year', now(), now())")
     conn.execute("INSERT INTO age_groups (name, description, created_at, updated_at) VALUES ('1-2 years', 'Animals between 1 and 2 years old', now(), now())")
     conn.execute("INSERT INTO age_groups (name, description, created_at, updated_at) VALUES ('2-7 years', 'Mature animals from 2 years to 7 years old', now(), now())")
     conn.execute("INSERT INTO age_groups (name, description, created_at, updated_at) VALUES ('7-10 years', 'Older animals from 7 years to 10 years old', now(), now())")
-    conn.execute("INSERT INTO age_groups (name, description, created_at, updated_at) VALUES ('10 years and over', 'Senior animals over 10 years old', now(), now())")
+    conn.execute("INSERT INTO age_groups (name, description, created_at, updated_at) VALUES ('10+ years', 'Senior animals over 10 years old', now(), now())")
 
-    conn.execute("INSERT INTO weight_groups (name, description, created_at, updated_at) VALUES ('Under 15 pounds', 'Animals under 15 pounds', now(), now())")
-    conn.execute("INSERT INTO weight_groups (name, description, created_at, updated_at) VALUES ('15-30 pounds', 'Animals between 15 and 30 pounds', now(), now())")
-    conn.execute("INSERT INTO weight_groups (name, description, created_at, updated_at) VALUES ('30-50 pounds', 'Animals between 30 and 50 pounds', now(), now())")
-    conn.execute("INSERT INTO weight_groups (name, description, created_at, updated_at) VALUES ('50-80 pounds', 'Animals between 50 and 80 pounds', now(), now())")
-    conn.execute("INSERT INTO weight_groups (name, description, created_at, updated_at) VALUES ('80+ pounds', 'Animals 80 pounds or more', now(), now())")
+    conn.execute("INSERT INTO weight_groups (name, description, created_at, updated_at) VALUES ('1-15 lbs', 'Animals under 15 pounds', now(), now())")
+    conn.execute("INSERT INTO weight_groups (name, description, created_at, updated_at) VALUES ('15-30 lbs', 'Animals between 15 and 30 pounds', now(), now())")
+    conn.execute("INSERT INTO weight_groups (name, description, created_at, updated_at) VALUES ('30-50 lbs', 'Animals between 30 and 50 pounds', now(), now())")
+    conn.execute("INSERT INTO weight_groups (name, description, created_at, updated_at) VALUES ('50-80 lbs', 'Animals between 50 and 80 pounds', now(), now())")
+    conn.execute("INSERT INTO weight_groups (name, description, created_at, updated_at) VALUES ('80+ lbs', 'Animals 80 pounds or more', now(), now())")
 
     conn.execute("INSERT INTO color_groups (name, description, created_at, updated_at) VALUES ('Black', 'Animals of predominately black coloring', now(), now())")
     conn.execute("INSERT INTO color_groups (name, description, created_at, updated_at) VALUES ('White', 'Animals of predominately white coloring', now(), now())")

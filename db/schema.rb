@@ -519,35 +519,35 @@ ActiveRecord::Schema.define(version: 20160224011154) do
   end
 
   create_table "length_of_stays", force: :cascade do |t|
-    t.integer  "outcome_id",     null: false
-    t.string   "animal_id",      null: false
-    t.integer  "group_id",       null: false
-    t.string   "animal_type",    null: false
-    t.string   "gender",         null: false
-    t.string   "breed_group"
-    t.string   "color_group"
-    t.string   "weight_group"
-    t.string   "age_group"
+    t.integer  "outcome_id",      null: false
+    t.string   "animal_id",       null: false
+    t.integer  "group_id",        null: false
+    t.string   "animal_type",     null: false
+    t.string   "gender",          null: false
+    t.integer  "breed_group_id"
+    t.integer  "color_group_id"
+    t.integer  "weight_group_id"
+    t.integer  "age_group_id"
     t.datetime "intake_date"
     t.datetime "outcome_date"
     t.integer  "length_of_stay"
-    t.string   "intake_type",    null: false
-    t.string   "outcome_type",   null: false
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.string   "intake_type",     null: false
+    t.string   "outcome_type",    null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
-  add_index "length_of_stays", ["age_group"], name: "index_length_of_stays_on_age_group", using: :btree
+  add_index "length_of_stays", ["age_group_id"], name: "index_length_of_stays_on_age_group_id", using: :btree
   add_index "length_of_stays", ["animal_id", "outcome_date", "intake_date", "group_id"], name: "length_of_stays_uidx", unique: true, using: :btree
   add_index "length_of_stays", ["animal_type"], name: "index_length_of_stays_on_animal_type", using: :btree
-  add_index "length_of_stays", ["breed_group"], name: "index_length_of_stays_on_breed_group", using: :btree
-  add_index "length_of_stays", ["color_group"], name: "index_length_of_stays_on_color_group", using: :btree
+  add_index "length_of_stays", ["breed_group_id"], name: "index_length_of_stays_on_breed_group_id", using: :btree
+  add_index "length_of_stays", ["color_group_id"], name: "index_length_of_stays_on_color_group_id", using: :btree
   add_index "length_of_stays", ["gender"], name: "index_length_of_stays_on_gender", using: :btree
   add_index "length_of_stays", ["group_id"], name: "index_length_of_stays_on_group_id", using: :btree
   add_index "length_of_stays", ["intake_type"], name: "index_length_of_stays_on_intake_type", using: :btree
   add_index "length_of_stays", ["outcome_id"], name: "index_length_of_stays_on_outcome_id", unique: true, using: :btree
   add_index "length_of_stays", ["outcome_type"], name: "index_length_of_stays_on_outcome_type", using: :btree
-  add_index "length_of_stays", ["weight_group"], name: "index_length_of_stays_on_weight_group", using: :btree
+  add_index "length_of_stays", ["weight_group_id"], name: "index_length_of_stays_on_weight_group_id", using: :btree
 
   create_table "map_types", force: :cascade do |t|
     t.string   "name",        null: false
@@ -1301,15 +1301,15 @@ ActiveRecord::Schema.define(version: 20160224011154) do
       SELECT l.group_id,
       l.animal_type,
       l.outcome_type,
-      l.age_group,
+      a.name AS age_group,
       a.id AS sort_order,
       sum(l.length_of_stay) AS total_length,
       count(*) AS total_animals,
       round((((sum(l.length_of_stay))::numeric * 1.0) / ((count(*))::numeric * 1.0)), 2) AS avg_length_of_stay
      FROM (length_of_stays l
-       JOIN age_groups a ON (((a.name)::text = (l.age_group)::text)))
-    WHERE (l.age_group IS NOT NULL)
-    GROUP BY l.group_id, l.animal_type, l.outcome_type, l.age_group, a.id;
+       JOIN age_groups a ON ((a.id = l.age_group_id)))
+    WHERE (l.age_group_id IS NOT NULL)
+    GROUP BY l.group_id, l.animal_type, l.outcome_type, a.name, a.id;
   SQL
 
 end
