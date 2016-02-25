@@ -1,0 +1,29 @@
+<section>
+  <%= column_chart( outcomes_by_zip_code,
+id: id,
+xtitle: "Zip Code",
+ytitle: "Total Outcomes",
+library:
+  {
+    title: {
+      text: 'Outcomes By Zip Code',
+      align: 'center'
+    },
+    chart: {
+      borderWidth: 2,
+      plotBackgroundColor: 'rgba(255,255,255,.9)',
+      plotShadow: true,
+      plotBorderWidth: 1,
+      backgroundColor: '#eee'
+    },
+    legend: {
+      align: 'right',
+      verticalAlign: 'top',
+      y: 75,
+      x: -50,
+      layout: 'vertical'
+    }
+  }
+ 
+) %>
+</section>

@@ -2,6 +2,8 @@ class IntakeMetricsController < ApplicationController
 
   def index
     @by_zip_code = StraysByZipCode.stray_totals
+    @by_intake_gender = IntakeGender.by_intake_gender
+    @intake_by_days = PopulationByDay.intake_by_days
     @width="100%"
   end
 

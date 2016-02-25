@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160224011154) do
+ActiveRecord::Schema.define(version: 20160225145839) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -517,6 +517,66 @@ ActiveRecord::Schema.define(version: 20160224011154) do
     t.boolean  "is_onsite",                 default: true
     t.boolean  "is_permanent",              default: true
   end
+
+  create_table "latlong_addrs", force: :cascade do |t|
+    t.integer  "party_id",         null: false
+    t.integer  "address_type_id",  null: false
+    t.string   "street_address_1", null: false
+    t.string   "street_address_2"
+    t.string   "city",             null: false
+    t.string   "county"
+    t.string   "state",            null: false
+    t.string   "postal_code",      null: false
+    t.string   "country",          null: false
+    t.float    "latitude"
+    t.float    "longitude"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.string   "geo_quality_code"
+    t.string   "feature_type"
+    t.boolean  "partial_match"
+    t.boolean  "valid_address"
+    t.text     "full_location"
+  end
+
+  add_index "latlong_addrs", ["address_type_id"], name: "index_latlong_addrs_on_address_type_id", using: :btree
+  add_index "latlong_addrs", ["city"], name: "index_latlong_addrs_on_city", using: :btree
+  add_index "latlong_addrs", ["full_location"], name: "index_latlong_addrs_on_full_location", using: :btree
+  add_index "latlong_addrs", ["geo_quality_code"], name: "index_latlong_addrs_on_geo_quality_code", using: :btree
+  add_index "latlong_addrs", ["party_id", "street_address_1", "street_address_2", "city", "state", "postal_code", "country", "address_type_id"], name: "index_latlong_addrs_uidx", unique: true, using: :btree
+  add_index "latlong_addrs", ["postal_code"], name: "index_latlong_addrs_on_postal_code", using: :btree
+  add_index "latlong_addrs", ["state"], name: "index_latlong_addrs_on_state", using: :btree
+
+  create_table "latlong_outcomes", force: :cascade do |t|
+    t.integer  "animal_type_id",   null: false
+    t.string   "animal_id",        null: false
+    t.string   "name"
+    t.integer  "outcome_type_id",  null: false
+    t.datetime "outcome_date",     null: false
+    t.integer  "gender_id",        null: false
+    t.integer  "address_id"
+    t.string   "breed"
+    t.string   "coloring"
+    t.decimal  "weight"
+    t.datetime "dob"
+    t.boolean  "dob_known"
+    t.datetime "intake_date"
+    t.integer  "intake_type_id"
+    t.text     "description"
+    t.integer  "group_id",         null: false
+    t.string   "microchip_number"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.string   "age"
+    t.integer  "fiscal_year"
+  end
+
+  add_index "latlong_outcomes", ["animal_id", "outcome_type_id", "outcome_date", "group_id"], name: "latlong_outcomes_unique_idx", unique: true, using: :btree
+  add_index "latlong_outcomes", ["group_id"], name: "index_latlong_outcomes_on_group_id", using: :btree
+  add_index "latlong_outcomes", ["intake_type_id"], name: "index_latlong_outcomes_on_intake_type_id", using: :btree
+  add_index "latlong_outcomes", ["microchip_number"], name: "index_latlong_outcomes_on_microchip_number", using: :btree
+  add_index "latlong_outcomes", ["name"], name: "index_latlong_outcomes_on_name", using: :btree
+  add_index "latlong_outcomes", ["outcome_type_id"], name: "index_latlong_outcomes_on_outcome_type_id", using: :btree
 
   create_table "length_of_stays", force: :cascade do |t|
     t.integer  "outcome_id",      null: false
@@ -1070,6 +1130,8 @@ ActiveRecord::Schema.define(version: 20160224011154) do
   add_foreign_key "kennel_types", "groups", name: "kennel_types_groups_fk"
   add_foreign_key "kennels", "groups", name: "kennels_groups"
   add_foreign_key "kennels", "kennel_types", name: "kennels_kennel_types"
+  add_foreign_key "latlong_addrs", "address_types", name: "latlong_addrs_address_type_id_fk"
+  add_foreign_key "latlong_addrs", "party_pks", column: "party_id", primary_key: "party_id", name: "latlong_addrs_party_id_fk", on_delete: :cascade
   add_foreign_key "length_of_stays", "groups", name: "length_of_stays_group_id_fk"
   add_foreign_key "length_of_stays", "outcomes", name: "length_of_stays_outcome_id_fk"
   add_foreign_key "media_contacts", "contact_pks", column: "id", primary_key: "contact_id", name: "media_contacts_pk_contact_id_fk", on_delete: :cascade
@@ -1310,6 +1372,43 @@ ActiveRecord::Schema.define(version: 20160224011154) do
        JOIN age_groups a ON ((a.id = l.age_group_id)))
     WHERE (l.age_group_id IS NOT NULL)
     GROUP BY l.group_id, l.animal_type, l.outcome_type, a.name, a.id;
+  SQL
+
+  create_view :intake_genders,  sql_definition: <<-SQL
+      SELECT at.name AS animal_type,
+      g.description AS gender,
+      it.name AS intake_type,
+      i.group_id,
+      i.fiscal_year,
+      count(*) AS total
+     FROM (((intakes i
+       JOIN intake_types it ON ((i.intake_type_id = it.id)))
+       JOIN animal_types at ON ((i.animal_type_id = at.id)))
+       JOIN genders g ON ((i.gender_id = g.id)))
+    GROUP BY at.name, g.description, it.name, i.group_id, i.fiscal_year;
+  SQL
+
+  create_view :outcome_genders,  sql_definition: <<-SQL
+      SELECT at.name AS animal_type,
+      ot.name AS outcome_type,
+      g.description AS gender,
+      o.group_id,
+      o.fiscal_year,
+      count(*) AS total
+     FROM (((outcomes o
+       JOIN animal_types at ON ((o.animal_type_id = at.id)))
+       JOIN outcome_types ot ON ((o.outcome_type_id = ot.id)))
+       JOIN genders g ON ((o.gender_id = g.id)))
+    GROUP BY at.name, ot.name, g.description, o.group_id, o.fiscal_year;
+  SQL
+
+  create_view :outcomes_by_zip_codes,  sql_definition: <<-SQL
+      SELECT o.group_id,
+      a.postal_code,
+      count(*) AS total_outcomes
+     FROM (outcomes o
+       JOIN addresses a ON ((o.address_id = a.id)))
+    GROUP BY o.group_id, a.postal_code;
   SQL
 
 end

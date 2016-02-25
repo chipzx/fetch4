@@ -12,4 +12,23 @@ class PopulationByDay < ActiveRecord::Base
     end
     return data
   end
+
+  def self.outcome_by_days
+    outcomes = PopulationByDay.all
+    series = Array.new
+    outcomes.to_a.each do |o|
+      series << [ o.calendar_date, o.total_outcomes ]
+    end
+    return series
+  end
+
+  def self.intake_by_days
+    intakes = PopulationByDay.all
+    series = Array.new
+    intakes.to_a.each do |i|
+      series << [ i.calendar_date, i.total_intakes]
+    end
+    return series
+  end
+
 end
