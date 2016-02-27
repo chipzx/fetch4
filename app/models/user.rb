@@ -9,6 +9,10 @@ class User < ActiveRecord::Base
   has_many :roles, :join_table => 'user_roles'
   has_many :rights, :join_table => 'privileges'
 
+  def self.is_user
+    true
+  end
+
   def group_name
     g = Group.find(self.group_id) unless self.group_id.nil?  
     g.nil? ? nil : g.name

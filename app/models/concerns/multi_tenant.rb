@@ -9,8 +9,12 @@ module MultiTenant
   end
 
   module ClassMethods
+    def is_user
+      false
+    end
+
     def group_id_scope
-       if (self.current)
+      unless (is_user || self.current.nil?)
         s = "#{table_name}.group_id = ?"
         where(s, self.current)
       else
