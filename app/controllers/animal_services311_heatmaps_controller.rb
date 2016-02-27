@@ -22,7 +22,7 @@ class AnimalServices311HeatmapsController < ApplicationController
       @ftype = nil if @ftype.blank?
     else
       @rtype = 'Loose Dog'
-      @stype = 'Open'
+      @stype = 'Closed'
       @ftype = 2015
     end
     logger.info("rtype: #{@rtype} stype: #{@stype} gtype: #{@gtype} ftype: #{@ftype}")
@@ -31,6 +31,7 @@ class AnimalServices311HeatmapsController < ApplicationController
     @detail_maps = DetailMap.all
 
     @latlngs = @filterrific.find()
+logger.info("Found #{@latlngs.size} records for 311 calls");
     
     if (@latlngs.size > 1000)
       # @max_intensity = @latlngs.size * @map_data.max_intensity
