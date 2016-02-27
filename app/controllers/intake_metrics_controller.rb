@@ -4,6 +4,7 @@ class IntakeMetricsController < ApplicationController
     @by_zip_code = StraysByZipCode.stray_totals
     @by_intake_gender = IntakeGender.by_intake_gender
     @intake_by_days = PopulationByDay.intake_by_days
+    @intake_by_months = IntakeByMonth.by_month
     @width="100%"
   end
 

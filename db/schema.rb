@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160225183631) do
+ActiveRecord::Schema.define(version: 20160227215820) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -139,6 +139,37 @@ ActiveRecord::Schema.define(version: 20160225183631) do
   add_index "animal_services311_calls", ["service_request_id", "group_id"], name: "anml_srvcs_srvc_req_id_group", unique: true, using: :btree
   add_index "animal_services311_calls", ["service_request_status_type_id", "group_id"], name: "anml_srvcs_311_calls_sr_status_type_group", using: :btree
   add_index "animal_services311_calls", ["service_request_type_id", "group_id"], name: "animal_service_311_calls_sr_type_group", using: :btree
+
+  create_table "animal_services_csr_calls", force: :cascade do |t|
+    t.string   "service_request_number",         limit: 255,                 null: false
+    t.string   "sr_type_code",                   limit: 255,                 null: false
+    t.string   "sr_description",                 limit: 255,                 null: false
+    t.string   "owning_department",              limit: 255,                 null: false
+    t.string   "method_received",                limit: 255,                 null: false
+    t.string   "sr_status",                      limit: 255,                 null: false
+    t.datetime "status_change_date",                                         null: false
+    t.datetime "created_date",                                               null: false
+    t.datetime "last_update_date",                                           null: false
+    t.datetime "close_date"
+    t.string   "sr_location",                    limit: 255
+    t.string   "street_number",                  limit: 255
+    t.string   "street_name",                    limit: 255
+    t.string   "city",                           limit: 255
+    t.string   "zip_code",                       limit: 255
+    t.string   "county",                         limit: 255
+    t.string   "state_plane_x_coordinate",       limit: 255
+    t.string   "state_plane_y_coordinate",       limit: 255
+    t.float    "latitude"
+    t.float    "longitude"
+    t.string   "latlong",                        limit: 255
+    t.string   "council_district",               limit: 255
+    t.string   "map_page",                       limit: 255
+    t.string   "map_tile",                       limit: 255
+    t.boolean  "excluded_address",                           default: false, null: false
+    t.string   "fiscal_year",                    limit: 255
+    t.integer  "service_request_type_id"
+    t.integer  "service_request_status_type_id"
+  end
 
   create_table "animal_types", force: :cascade do |t|
     t.string   "name",        null: false
@@ -423,12 +454,14 @@ ActiveRecord::Schema.define(version: 20160225183631) do
   add_index "groups", ["name"], name: "index_groups_on_name", unique: true, using: :btree
 
   create_table "intake_types", force: :cascade do |t|
-    t.string   "name",                           null: false
-    t.integer  "group_id",                       null: false
+    t.string   "name",                            null: false
+    t.integer  "group_id",                        null: false
     t.text     "description"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.boolean  "count_as_intake", default: true, null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.boolean  "count_as_intake",  default: true, null: false
+    t.boolean  "trackable_intake", default: true, null: false
+    t.boolean  "live_intake",      default: true, null: false
   end
 
   add_index "intake_types", ["group_id", "name"], name: "index_intake_types_on_group_id_and_name", unique: true, using: :btree
@@ -702,12 +735,14 @@ ActiveRecord::Schema.define(version: 20160225183631) do
   end
 
   create_table "outcome_types", force: :cascade do |t|
-    t.string   "name",                            null: false
+    t.string   "name",                             null: false
     t.text     "description"
-    t.integer  "group_id",                        null: false
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.boolean  "count_as_outcome", default: true, null: false
+    t.integer  "group_id",                         null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.boolean  "count_as_outcome",  default: true, null: false
+    t.boolean  "trackable_outcome", default: true, null: false
+    t.boolean  "live_outcome",      default: true, null: false
   end
 
   add_index "outcome_types", ["group_id", "name"], name: "index_outcome_types_on_group_id_and_name", unique: true, using: :btree
@@ -1067,6 +1102,19 @@ ActiveRecord::Schema.define(version: 20160225183631) do
 
   add_index "service_request_types", ["name", "group_id"], name: "index_service_request_types_on_name_and_group_id", unique: true, using: :btree
 
+  create_table "time_dimension", force: :cascade do |t|
+    t.date    "calendar_date", null: false
+    t.integer "calendar_year", null: false
+    t.integer "month",         null: false
+    t.integer "day_of_month",  null: false
+    t.integer "day_of_week",   null: false
+    t.integer "day_of_year",   null: false
+    t.integer "week",          null: false
+    t.integer "quarter",       null: false
+  end
+
+  add_index "time_dimension", ["calendar_date"], name: "index_time_dimension_on_calendar_date", unique: true, using: :btree
+
   create_table "user_roles", force: :cascade do |t|
     t.integer  "user_id",    null: false
     t.integer  "role_id",    null: false
@@ -1422,6 +1470,40 @@ ActiveRecord::Schema.define(version: 20160225183631) do
      FROM (outcomes o
        JOIN addresses a ON ((o.address_id = a.id)))
     GROUP BY o.group_id, a.postal_code;
+  SQL
+
+  create_view :intake_metrics,  sql_definition: <<-SQL
+      SELECT i.group_id,
+      at.name AS animal_type,
+      it.name AS intake_type,
+      s.name AS gender,
+      i.weight,
+      i.age,
+      i.breed,
+      i.coloring,
+      i.address_id,
+      i.fiscal_year,
+      it.trackable_intake,
+      it.live_intake,
+      i.latitude,
+      i.longitude,
+      i.geo_quality_code,
+      i.postal_code,
+      t.calendar_date,
+      t.calendar_year,
+      t.quarter,
+      t.month,
+      t.week,
+      t.day_of_month,
+      t.day_of_week,
+      t.day_of_year,
+      to_number(to_char(timezone((g.time_zone)::text, i.intake_date), 'HH24'::text), '99'::text) AS intake_hour
+     FROM (((((intakes i
+       JOIN groups g ON ((i.group_id = g.id)))
+       JOIN animal_types at ON ((i.animal_type_id = at.id)))
+       JOIN intake_types it ON ((i.intake_type_id = it.id)))
+       JOIN genders s ON ((i.gender_id = s.id)))
+       JOIN time_dimension t ON ((timezone((g.time_zone)::text, ((i.intake_date)::date)::timestamp with time zone) = t.calendar_date)));
   SQL
 
 end
