@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160225145839) do
+ActiveRecord::Schema.define(version: 20160225183631) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -641,6 +641,19 @@ ActiveRecord::Schema.define(version: 20160225145839) do
   end
 
   add_index "media_types", ["name", "media_uri"], name: "index_media_types_uidx", unique: true, using: :btree
+
+  create_table "news", force: :cascade do |t|
+    t.datetime "published",                   null: false
+    t.string   "headline",                    null: false
+    t.text     "lead"
+    t.string   "article_link"
+    t.boolean  "visible",      default: true, null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "news", ["headline"], name: "index_news_on_headline", using: :btree
+  add_index "news", ["published", "headline"], name: "index_news_on_published_and_headline", unique: true, using: :btree
 
   create_table "organizations", force: :cascade do |t|
     t.integer  "party_type_id", null: false

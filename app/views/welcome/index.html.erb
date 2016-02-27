@@ -1,10 +1,24 @@
-<article data-ng-app="welcome">
+<article data-ng-app="welcome" ng-controller="WelcomeController">
+
   <header>
     <h1 class="text-info">Welcome to FetchIT! Analytics</h1>
   </header>
 
   <section>
     <hr/>
-    <h4>You are logged in as <span class="text-success"><%=current_user.email %></span></h4>
+    <div class="row">
+    <h6 class="pull-right">You are logged in as <span class="text-success"><%=current_user.email %></span></h6>
+    </div>
+
+    <div class="row">
+      <div class="col-md-10 col-lg-10">
+        <h2 class="text-primary">What's New</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10 col-lg-10">
+        <h3 class="text-info"><em>{{latest.published | date : 'yyyy/MM/dd' }}</em>: <u>{{latest.headline}}</u></h3>
+      </div>
+    </div>
   </section>
 </article>
