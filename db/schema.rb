@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160227215820) do
+ActiveRecord::Schema.define(version: 20160228061834) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1472,8 +1472,9 @@ ActiveRecord::Schema.define(version: 20160227215820) do
     GROUP BY o.group_id, a.postal_code;
   SQL
 
-  create_view :intake_metrics,  sql_definition: <<-SQL
-      SELECT i.group_id,
+  create_view :intake_metrics, materialized: true,  sql_definition: <<-SQL
+      SELECT i.id,
+      i.group_id,
       at.name AS animal_type,
       it.name AS intake_type,
       s.name AS gender,
