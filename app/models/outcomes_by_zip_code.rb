@@ -3,7 +3,7 @@ class OutcomesByZipCode < ActiveRecord::Base
 
   def self.by_zip_code
     series = Array.new
-    outcomes = OutcomesByZipCode.all
+    outcomes = OutcomesByZipCode.order("total_outcomes DESC").limit(10)
     outcomes.to_a.each do |o|
       series << [ o.postal_code, o.total_outcomes ]
     end

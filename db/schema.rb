@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160228061834) do
+ActiveRecord::Schema.define(version: 20160301221900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1673,6 +1673,56 @@ ActiveRecord::Schema.define(version: 20160228061834) do
        JOIN intake_types it ON ((i.intake_type_id = it.id)))
        JOIN genders s ON ((i.gender_id = s.id)))
        JOIN time_dimension t ON ((timezone((g.time_zone)::text, ((i.intake_date)::date)::timestamp with time zone) = t.calendar_date)));
+  SQL
+
+  create_view :outcome_metrics, materialized: true,  sql_definition: <<-SQL
+      SELECT o.id,
+      o.group_id,
+      o.animal_type_id,
+      o.animal_id,
+      o.name,
+      at.name AS animal_type,
+      at.trackable_animal,
+      o.outcome_type_id,
+      ot.name AS outcome_type,
+      o.outcome_date,
+      o.intake_type_id,
+      ot.trackable_outcome,
+      ot.live_outcome,
+      it.name AS intake_type,
+      o.intake_date,
+      it.trackable_intake,
+      o.gender_id,
+      g.description AS gender,
+      o.breed,
+      o.coloring,
+      o.weight,
+      o.age,
+      o.fiscal_year,
+      t.calendar_year,
+      t.month,
+      t.day_of_month,
+      t.day_of_week,
+      t.day_of_year,
+      t.week,
+      t.quarter,
+      date_part('hour'::text, timezone((g.time_zone)::text, o.outcome_date)) AS outcome_hour,
+      o.address_id,
+      a.postal_code,
+      a.latitude,
+      a.longitude,
+      a.geo_quality_code,
+      a.feature_type,
+      a.full_location,
+      a.valid_address
+     FROM (((((((outcomes o
+       JOIN groups g ON ((o.group_id = g.id)))
+       JOIN animal_types at ON ((o.animal_type_id = at.id)))
+       JOIN outcome_types ot ON ((o.outcome_type_id = ot.id)))
+       LEFT JOIN intake_types it ON ((o.intake_type_id = it.id)))
+       JOIN genders s ON ((o.gender_id = s.id)))
+       LEFT JOIN addresses a ON ((o.address_id = a.id)))
+       JOIN time_dimension t ON ((timezone((g.time_zone)::text, ((o.outcome_date)::date)::timestamp with time zone) = t.calendar_date)));
   SQL
 
 end

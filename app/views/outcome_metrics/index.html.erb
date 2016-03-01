@@ -18,6 +18,25 @@
       </div>
       <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
         <%= render(
+             partial: "outcomes_by_week",
+             locals: { outcomes_by_week: @outcomes_by_week, id: 'outcomes_by_week' }
+            )
+        %>
+      </div>
+    </div>
+    <div class="row">
+      <hr/>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+        <%= render(
+             partial: "outcomes_by_month",
+             locals: { outcomes_by_month: @outcomes_by_month, id: 'outcomes_by_month' }
+            )
+        %>
+      </div>
+      <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+        <%= render(
              partial: "outcomes_by_zip_code",
              locals: { outcomes_by_zip_code: @outcomes_by_zip_code, id: 'outcomes_by_zip_code' }
             )
