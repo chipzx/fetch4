@@ -18,6 +18,7 @@ class IntakeMetric < ActiveRecord::Base
     return create_series(by_month)
   end
 
+
   private
   def readonly?
     true
