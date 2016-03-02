@@ -1672,7 +1672,7 @@ ActiveRecord::Schema.define(version: 20160301221900) do
        JOIN animal_types at ON ((i.animal_type_id = at.id)))
        JOIN intake_types it ON ((i.intake_type_id = it.id)))
        JOIN genders s ON ((i.gender_id = s.id)))
-       JOIN time_dimension t ON ((timezone((g.time_zone)::text, ((i.intake_date)::date)::timestamp with time zone) = t.calendar_date)));
+       JOIN time_dimension t ON (((i.intake_date)::date = t.calendar_date)));
   SQL
 
   create_view :outcome_metrics, materialized: true,  sql_definition: <<-SQL
@@ -1722,7 +1722,7 @@ ActiveRecord::Schema.define(version: 20160301221900) do
        LEFT JOIN intake_types it ON ((o.intake_type_id = it.id)))
        JOIN genders s ON ((o.gender_id = s.id)))
        LEFT JOIN addresses a ON ((o.address_id = a.id)))
-       JOIN time_dimension t ON ((timezone((g.time_zone)::text, ((o.outcome_date)::date)::timestamp with time zone) = t.calendar_date)));
+       JOIN time_dimension t ON (((o.outcome_date)::date = t.calendar_date)));
   SQL
 
 end

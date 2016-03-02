@@ -44,4 +44,4 @@ JOIN   outcome_types ot ON (o.outcome_type_id = ot.id)
 LEFT OUTER JOIN intake_types it ON (o.intake_type_id = it.id)
 JOIN   genders s ON (o.gender_id = s.id)
 LEFT OUTER JOIN addresses a ON (o.address_id = a.id)
-JOIN   time_dimension t ON (o.outcome_date::DATE AT TIME ZONE g.time_zone = t.calendar_date);
+JOIN   time_dimension t ON (o.outcome_date::DATE = t.calendar_date);

@@ -30,5 +30,5 @@ JOIN   groups g ON (i.group_id = g.id)
 JOIN   animal_types at ON (i.animal_type_id = at.id)
 JOIN   intake_types it ON (i.intake_type_id = it.id)
 JOIN   genders s ON (i.gender_id = s.id)
-JOIN   time_dimension t ON (i.intake_date::DATE AT TIME ZONE g.time_zone = t.calendar_date)
+JOIN   time_dimension t ON (i.intake_date::DATE = t.calendar_date)
 
