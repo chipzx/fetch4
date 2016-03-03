@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resources :outcome_metrics
   resources :service_request_metrics
   resources :population_metrics
+  resources :imports
 
   Rails.application.routes.draw do
     resources :intake_heatmaps do
@@ -32,6 +33,11 @@ Rails.application.routes.draw do
     resources :animal_services311_heatmaps do
       collection do
         get :detail
+      end
+    end
+    resources :imports do
+      collection do
+        get :import
       end
     end
   end

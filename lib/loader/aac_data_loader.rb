@@ -1,0 +1,3 @@
+class AacDataLoader < CsvLoader
+
+end

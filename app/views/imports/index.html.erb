@@ -1,0 +1,45 @@
+<article>
+  <div class="row">
+    <h1 class="text-primary text-center">Imports for <%= @group.name %></h1>
+  </div>
+  
+  <hr/>
+
+  <section>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h2 class="text-info text-center">Ready for import</h2>
+      </div>
+      <div class="panel-body">
+        <% @to_import.each do |import| %>
+          <% import["files"].each do |file| %>
+            <div class="row">
+              <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">
+                <%= file.path.split("/").last %>
+              </div>
+              <div class="col-md-5 col-lg-5 col-sm-5 col-xs-5">
+                <%= file.mtime.strftime("%Y-%m-%d %H:%M:%S") %>
+              </div>
+              <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4 pull-right">
+                <!-- div class="btn btn-primary" href="#" role="button" type="submit">Import</button -->  
+<%= link_to "Import", { :controller => :imports, :action => :import }, { class: "btn btn-primary" } %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h2 class="text-muted text-center">Previously Imported</h2>
+      </div>
+      <div class="panel-body">
+        
+      </div>
+    </div>
+  </section>
+
+</article>

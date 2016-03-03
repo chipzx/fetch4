@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160301221900) do
+ActiveRecord::Schema.define(version: 20160302194959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,6 +108,36 @@ ActiveRecord::Schema.define(version: 20160301221900) do
   end
 
   add_index "animal_galleries", ["animal_id"], name: "index_animal_galleries_on_animal_id", using: :btree
+
+  create_table "animal_imports", force: :cascade do |t|
+    t.integer  "group_id",       null: false
+    t.string   "animal_type",    null: false
+    t.integer  "animal_type_id"
+    t.integer  "animal_id",      null: false
+    t.string   "name"
+    t.string   "kennel"
+    t.integer  "kennel_id"
+    t.datetime "intake_date"
+    t.string   "intake_type"
+    t.integer  "intake_type_id"
+    t.string   "gender"
+    t.integer  "gender_id"
+    t.string   "breed"
+    t.string   "coloring"
+    t.float    "weight"
+    t.datetime "dob"
+    t.boolean  "dob_known"
+    t.text     "description"
+    t.datetime "date_imported",  null: false
+    t.datetime "data_as_of",     null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.string   "age"
+  end
+
+  add_index "animal_imports", ["animal_id", "group_id"], name: "index_animal_imports_on_animal_id_and_group_id", unique: true, using: :btree
+  add_index "animal_imports", ["data_as_of"], name: "index_animal_imports_on_data_as_of", using: :btree
+  add_index "animal_imports", ["group_id"], name: "index_animal_imports_on_group_id", using: :btree
 
   create_table "animal_services311_calls", force: :cascade do |t|
     t.string   "service_request_id",             null: false
@@ -402,6 +432,50 @@ ActiveRecord::Schema.define(version: 20160301221900) do
 
   add_index "contacts", ["contact_type_id"], name: "index_contacts_on_contact_type_id", using: :btree
   add_index "contacts", ["party_id", "contact_type_id"], name: "index_contacts_on_party_id_and_contact_type_id", using: :btree
+
+  create_table "data_load_logs", force: :cascade do |t|
+    t.integer  "data_load_id",               null: false
+    t.integer  "group_id",                   null: false
+    t.datetime "date_loaded",                null: false
+    t.datetime "data_as_of",                 null: false
+    t.integer  "total_rows",     default: 0
+    t.integer  "total_added",    default: 0
+    t.integer  "total_updated",  default: 0
+    t.integer  "total_outcomes", default: 0
+    t.integer  "total_errors",   default: 0
+    t.boolean  "was_successful"
+    t.datetime "start_time",                 null: false
+    t.datetime "end_time"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "data_load_logs", ["data_load_id", "group_id"], name: "index_data_load_logs_on_data_load_id_and_group_id", unique: true, using: :btree
+  add_index "data_load_logs", ["date_loaded"], name: "index_data_load_logs_on_date_loaded", using: :btree
+  add_index "data_load_logs", ["group_id"], name: "index_data_load_logs_on_group_id", using: :btree
+  add_index "data_load_logs", ["start_time"], name: "index_data_load_logs_on_start_time", using: :btree
+
+  create_table "data_load_types", force: :cascade do |t|
+    t.string   "name",        null: false
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "data_load_types", ["name"], name: "index_data_load_types_on_name", unique: true, using: :btree
+
+  create_table "data_loads", force: :cascade do |t|
+    t.integer  "group_id",          null: false
+    t.string   "data_path",         null: false
+    t.string   "archive_dir_path"
+    t.integer  "data_load_type_id", null: false
+    t.string   "load_class",        null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "data_loads", ["data_load_type_id", "group_id"], name: "index_data_loads_on_data_load_type_id_and_group_id", unique: true, using: :btree
+  add_index "data_loads", ["group_id"], name: "index_data_loads_on_group_id", using: :btree
 
   create_table "detail_maps", force: :cascade do |t|
     t.string   "map_name",                             null: false
@@ -1335,6 +1409,11 @@ ActiveRecord::Schema.define(version: 20160301221900) do
   add_foreign_key "addresses", "address_types", name: "addresses_address_type_id_fk"
   add_foreign_key "addresses", "party_pks", column: "party_id", primary_key: "party_id", name: "addresses_party_id_fk", on_delete: :cascade
   add_foreign_key "animal_galleries", "animals", name: "animal_animal_galleries_fk"
+  add_foreign_key "animal_imports", "animal_types", name: "animal_imports_animal_type_id_fk"
+  add_foreign_key "animal_imports", "genders", name: "animal_imports_gender_id_fk"
+  add_foreign_key "animal_imports", "groups", name: "animal_imports_group_id_fk"
+  add_foreign_key "animal_imports", "intake_types", name: "animal_imports_intake_type_id_fk"
+  add_foreign_key "animal_imports", "kennels", name: "animal_imports_kennel_id_fk"
   add_foreign_key "animal_services311_calls", "addresses", name: "animal_services311_address_id_fk"
   add_foreign_key "animal_services311_calls", "groups", name: "animal_services311_group_id_fk"
   add_foreign_key "animal_services311_calls", "service_request_status_types", name: "animal_services311_sr_status_type_id_fk"
@@ -1346,6 +1425,10 @@ ActiveRecord::Schema.define(version: 20160301221900) do
   add_foreign_key "contact_pks", "party_pks", column: "party_id", primary_key: "party_id", name: "contact_pks_parties_party_id_fk", on_delete: :cascade
   add_foreign_key "contacts", "contact_types", name: "contacts_contact_type_id_fk"
   add_foreign_key "contacts", "party_pks", column: "party_id", primary_key: "party_id", name: "contacts_parties_party_id_fk", on_delete: :cascade
+  add_foreign_key "data_load_logs", "data_loads", name: "data_load_logs_data_load_id_fk"
+  add_foreign_key "data_load_logs", "groups", name: "data_load_logs_group_id_fk"
+  add_foreign_key "data_loads", "data_load_types", name: "data_load_data_load_type_id_fk"
+  add_foreign_key "data_loads", "groups", name: "data_load_group_id_fk"
   add_foreign_key "detail_maps", "groups", name: "detail_maps_group_id_fk"
   add_foreign_key "email_contacts", "contact_pks", column: "id", primary_key: "contact_id", name: "email_contacts_pk_contact_id_fk", on_delete: :cascade
   add_foreign_key "email_contacts", "contact_types", name: "email_contacts_contact_type_id_fk"
