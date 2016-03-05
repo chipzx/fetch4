@@ -46,10 +46,13 @@ class PopulationMetric < ActiveRecord::Base
       idata = intakes[key]
       odata = outcomes[key]
       idata.each_key do |period|
+        next if odata[period].nil?
         itotal = idata[period]
         ototal = odata[period]
-        counts_for_period = [ period, ototal-itotal ]
-        data << counts_for_period
+        unless itotal.nil? || ototal.nil?
+          counts_for_period = [ period, ototal-itotal ] unless itotal.nil? || ototal.nil?
+          data << counts_for_period
+        end
       end
       dataset = Hash.new
       dataset["name"] = key

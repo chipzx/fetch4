@@ -31,5 +31,9 @@ module Fetch4
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    # this is to load in files in the lib directory 
+    # (see http://stackoverflow.com/questions/19098663/auto-loading-lib-files-in-rails-4)
+    config.autoload_paths << Rails.root.join('lib')
   end
 end

@@ -5,7 +5,7 @@ DECLARE
 BEGIN
   the_date := start_date;
   LOOP
-RAISE NOTICE 'Inserting date %', the_date;
+    RAISE NOTICE 'Inserting date %', the_date;
     INSERT INTO time_dimension
       (calendar_date, 
        calendar_year, 

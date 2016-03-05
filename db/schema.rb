@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160302194959) do
+ActiveRecord::Schema.define(version: 20160305165825) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -450,7 +450,7 @@ ActiveRecord::Schema.define(version: 20160302194959) do
     t.datetime "updated_at",                 null: false
   end
 
-  add_index "data_load_logs", ["data_load_id", "group_id"], name: "index_data_load_logs_on_data_load_id_and_group_id", unique: true, using: :btree
+  add_index "data_load_logs", ["data_load_id", "start_time", "group_id"], name: "data_load_logs_uidx", unique: true, using: :btree
   add_index "data_load_logs", ["date_loaded"], name: "index_data_load_logs_on_date_loaded", using: :btree
   add_index "data_load_logs", ["group_id"], name: "index_data_load_logs_on_group_id", using: :btree
   add_index "data_load_logs", ["start_time"], name: "index_data_load_logs_on_start_time", using: :btree
@@ -612,18 +612,17 @@ ActiveRecord::Schema.define(version: 20160302194959) do
   end
 
   create_table "groups", force: :cascade do |t|
-    t.string   "name",                                           null: false
-    t.string   "time_zone",                                      null: false
+    t.string   "name",                                  null: false
+    t.string   "time_zone",                             null: false
     t.text     "description"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.float    "center_point_latitude"
     t.float    "center_point_longitude"
     t.integer  "default_zoom_level"
     t.float    "max_intensity"
     t.string   "display_name"
-    t.string   "fiscal_year_start",      default: "January 1",   null: false
-    t.string   "fiscal_year_end",        default: "December 31", null: false
+    t.integer  "fiscal_year_start_quarter", default: 1, null: false
   end
 
   add_index "groups", ["name"], name: "index_groups_on_name", unique: true, using: :btree
@@ -986,17 +985,44 @@ ActiveRecord::Schema.define(version: 20160302194959) do
     t.datetime "updated_at",       null: false
     t.string   "age"
     t.integer  "fiscal_year"
+    t.integer  "kennel_id"
   end
 
   add_index "outcomes", ["animal_id", "outcome_type_id", "outcome_date", "group_id"], name: "outcomes_unique_idx", unique: true, using: :btree
   add_index "outcomes", ["group_id"], name: "index_outcomes_on_group_id", using: :btree
   add_index "outcomes", ["intake_type_id"], name: "index_outcomes_on_intake_type_id", using: :btree
+  add_index "outcomes", ["kennel_id"], name: "index_outcomes_on_kennel_id", using: :btree
   add_index "outcomes", ["microchip_number"], name: "index_outcomes_on_microchip_number", using: :btree
   add_index "outcomes", ["name"], name: "index_outcomes_on_name", using: :btree
   add_index "outcomes", ["outcome_type_id"], name: "index_outcomes_on_outcome_type_id", using: :btree
 
-  create_table "outcomes_staging", id: false, force: :cascade do |t|
-    t.integer  "id"
+  create_table "outcomes_import", force: :cascade do |t|
+    t.integer  "atype_id",                    null: false
+    t.integer  "outcome_type_id",             null: false
+    t.datetime "outcome_date",                null: false
+    t.string   "anumber",         limit: 255, null: false
+    t.string   "name",            limit: 255
+    t.integer  "gender_id"
+    t.string   "breed",           limit: 255
+    t.string   "coloring",        limit: 255
+    t.datetime "dob"
+    t.boolean  "dob_known"
+    t.datetime "intake_date"
+    t.integer  "intake_type_id"
+    t.text     "description"
+    t.integer  "group_id",                    null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.decimal  "weight"
+    t.string   "outcome_name"
+  end
+
+  add_index "outcomes_import", ["anumber", "group_id", "outcome_date"], name: "index_outcomes_import_uidx", unique: true, using: :btree
+  add_index "outcomes_import", ["breed"], name: "index_outcomes_import_on_breed", using: :btree
+  add_index "outcomes_import", ["group_id"], name: "index_outcomes_import_on_group_id", using: :btree
+  add_index "outcomes_import", ["name"], name: "index_outcomes_import_on_name", using: :btree
+
+  create_table "outcomes_staging", force: :cascade do |t|
     t.integer  "animal_type_id"
     t.string   "animal_id"
     t.string   "name"
@@ -1019,6 +1045,10 @@ ActiveRecord::Schema.define(version: 20160302194959) do
     t.string   "age"
     t.integer  "fiscal_year"
   end
+
+  add_index "outcomes_staging", ["breed"], name: "index_outcomes_staging_on_breed", using: :btree
+  add_index "outcomes_staging", ["group_id"], name: "index_outcomes_staging_on_group_id", using: :btree
+  add_index "outcomes_staging", ["name"], name: "index_outcomes_staging_on_name", using: :btree
 
   create_table "parties", force: :cascade do |t|
     t.integer  "party_type_id", null: false
@@ -1611,20 +1641,6 @@ ActiveRecord::Schema.define(version: 20160302194959) do
     ORDER BY hotspots.group_id, hotspots.found_location, hotspots.latitude, hotspots.longitude, hotspots.animal_type, hotspots.fiscal_year;
   SQL
 
-  create_view :intake_genders,  sql_definition: <<-SQL
-      SELECT at.name AS animal_type,
-      g.description AS gender,
-      it.name AS intake_type,
-      i.group_id,
-      i.fiscal_year,
-      count(*) AS total
-     FROM (((intakes i
-       JOIN intake_types it ON ((i.intake_type_id = it.id)))
-       JOIN animal_types at ON ((i.animal_type_id = at.id)))
-       JOIN genders g ON ((i.gender_id = g.id)))
-    GROUP BY at.name, g.description, it.name, i.group_id, i.fiscal_year;
-  SQL
-
   create_view :intake_heatmaps,  sql_definition: <<-SQL
       SELECT i.group_id,
       i.found_location,
@@ -1656,20 +1672,6 @@ ActiveRecord::Schema.define(version: 20160302194959) do
        JOIN age_groups a ON ((a.id = l.age_group_id)))
     WHERE (l.age_group_id IS NOT NULL)
     GROUP BY l.group_id, l.animal_type, l.outcome_type, a.name, a.id;
-  SQL
-
-  create_view :outcome_genders,  sql_definition: <<-SQL
-      SELECT at.name AS animal_type,
-      ot.name AS outcome_type,
-      g.description AS gender,
-      o.group_id,
-      o.fiscal_year,
-      count(*) AS total
-     FROM (((outcomes o
-       JOIN animal_types at ON ((o.animal_type_id = at.id)))
-       JOIN outcome_types ot ON ((o.outcome_type_id = ot.id)))
-       JOIN genders g ON ((o.gender_id = g.id)))
-    GROUP BY at.name, ot.name, g.description, o.group_id, o.fiscal_year;
   SQL
 
   create_view :outcome_heatmaps,  sql_definition: <<-SQL
@@ -1712,16 +1714,6 @@ ActiveRecord::Schema.define(version: 20160302194959) do
     GROUP BY length_of_stays.animal_type, length_of_stays.outcome_type, length_of_stays.group_id;
   SQL
 
-  create_view :strays_by_zip_codes,  sql_definition: <<-SQL
-      SELECT i.group_id,
-      i.postal_code,
-      it.name AS intake_type,
-      count(*) AS total
-     FROM (intakes i
-       JOIN intake_types it ON ((i.intake_type_id = it.id)))
-    GROUP BY i.group_id, i.postal_code, it.name;
-  SQL
-
   create_view :intake_metrics, materialized: true,  sql_definition: <<-SQL
       SELECT i.id,
       i.group_id,
@@ -1752,9 +1744,9 @@ ActiveRecord::Schema.define(version: 20160302194959) do
       to_number(to_char(timezone((g.time_zone)::text, i.intake_date), 'HH24'::text), '99'::text) AS intake_hour
      FROM (((((intakes i
        JOIN groups g ON ((i.group_id = g.id)))
-       JOIN animal_types at ON ((i.animal_type_id = at.id)))
-       JOIN intake_types it ON ((i.intake_type_id = it.id)))
-       JOIN genders s ON ((i.gender_id = s.id)))
+       JOIN animal_types at ON (((i.animal_type_id = at.id) AND (i.group_id = at.group_id))))
+       JOIN intake_types it ON (((i.intake_type_id = it.id) AND (i.group_id = it.group_id))))
+       JOIN genders s ON (((i.gender_id = s.id) AND (i.group_id = s.group_id))))
        JOIN time_dimension t ON (((i.intake_date)::date = t.calendar_date)));
   SQL
 
@@ -1800,12 +1792,50 @@ ActiveRecord::Schema.define(version: 20160302194959) do
       a.valid_address
      FROM (((((((outcomes o
        JOIN groups g ON ((o.group_id = g.id)))
-       JOIN animal_types at ON ((o.animal_type_id = at.id)))
-       JOIN outcome_types ot ON ((o.outcome_type_id = ot.id)))
-       LEFT JOIN intake_types it ON ((o.intake_type_id = it.id)))
-       JOIN genders s ON ((o.gender_id = s.id)))
+       JOIN animal_types at ON (((o.animal_type_id = at.id) AND (o.group_id = at.group_id))))
+       JOIN outcome_types ot ON (((o.outcome_type_id = ot.id) AND (o.group_id = ot.group_id))))
+       LEFT JOIN intake_types it ON (((o.intake_type_id = it.id) AND (o.group_id = it.group_id))))
+       JOIN genders s ON (((o.gender_id = s.id) AND (o.group_id = s.group_id))))
        LEFT JOIN addresses a ON ((o.address_id = a.id)))
        JOIN time_dimension t ON (((o.outcome_date)::date = t.calendar_date)));
+  SQL
+
+  create_view :intake_genders,  sql_definition: <<-SQL
+      SELECT at.name AS animal_type,
+      g.description AS gender,
+      it.name AS intake_type,
+      i.group_id,
+      i.fiscal_year,
+      count(*) AS total
+     FROM (((intakes i
+       JOIN intake_types it ON (((i.intake_type_id = it.id) AND (i.group_id = it.group_id))))
+       JOIN animal_types at ON (((i.animal_type_id = at.id) AND (i.group_id = at.group_id))))
+       JOIN genders g ON (((i.gender_id = g.id) AND (i.group_id = g.group_id))))
+    GROUP BY at.name, g.description, it.name, i.group_id, i.fiscal_year;
+  SQL
+
+  create_view :outcome_genders,  sql_definition: <<-SQL
+      SELECT at.name AS animal_type,
+      ot.name AS outcome_type,
+      g.description AS gender,
+      o.group_id,
+      o.fiscal_year,
+      count(*) AS total
+     FROM (((outcomes o
+       JOIN animal_types at ON (((o.animal_type_id = at.id) AND (o.group_id = at.group_id))))
+       JOIN outcome_types ot ON (((o.outcome_type_id = ot.id) AND (o.group_id = ot.group_id))))
+       JOIN genders g ON (((o.gender_id = g.id) AND (o.group_id = g.group_id))))
+    GROUP BY at.name, ot.name, g.description, o.group_id, o.fiscal_year;
+  SQL
+
+  create_view :strays_by_zip_codes,  sql_definition: <<-SQL
+      SELECT i.group_id,
+      i.postal_code,
+      it.name AS intake_type,
+      count(*) AS total
+     FROM (intakes i
+       JOIN intake_types it ON (((i.intake_type_id = it.id) AND (i.group_id = it.group_id))))
+    GROUP BY i.group_id, i.postal_code, it.name;
   SQL
 
 end
