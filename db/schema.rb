@@ -11,19 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160305165825) do
+ActiveRecord::Schema.define(version: 20160305203237) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "addr_to_outcome_map", id: false, force: :cascade do |t|
-    t.integer  "address_id"
-    t.integer  "outcome_id"
-    t.string   "person_id"
-    t.string   "animal_id"
-    t.string   "name"
-    t.datetime "outcome_date"
-    t.text     "full_location"
+  create_table "aac_outcomes", id: false, force: :cascade do |t|
+    t.string "animal_id"
+    t.string "name"
+    t.string "datetime"
+    t.string "monthyear"
+    t.string "outcome_type"
+    t.string "outcome_subtype"
+    t.string "animal_type"
+    t.string "gender"
+    t.string "age"
+    t.string "breed"
+    t.string "color"
   end
 
   create_table "address_types", force: :cascade do |t|
@@ -64,28 +68,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   add_index "addresses", ["party_id", "street_address_1", "street_address_2", "city", "state", "postal_code", "country", "address_type_id"], name: "index_addresses_uidx", unique: true, using: :btree
   add_index "addresses", ["postal_code"], name: "index_addresses_on_postal_code", using: :btree
   add_index "addresses", ["state"], name: "index_addresses_on_state", using: :btree
-
-  create_table "addresses_save", id: false, force: :cascade do |t|
-    t.integer  "id"
-    t.integer  "party_id"
-    t.integer  "address_type_id"
-    t.string   "street_address_1"
-    t.string   "street_address_2"
-    t.string   "city"
-    t.string   "county"
-    t.string   "state"
-    t.string   "postal_code"
-    t.string   "country"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "geo_quality_code"
-    t.string   "feature_type"
-    t.boolean  "partial_match"
-    t.boolean  "valid_address"
-    t.text     "full_location"
-  end
 
   create_table "age_groups", force: :cascade do |t|
     t.string   "name",        null: false
@@ -162,43 +144,41 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   end
 
   add_index "animal_services311_calls", ["address_id", "group_id"], name: "anml_srvcs_311_calls_addr_id_group", using: :btree
-  add_index "animal_services311_calls", ["date_closed"], name: "index_animal_services311_calls_on_date_closed", using: :btree
-  add_index "animal_services311_calls", ["date_opened"], name: "index_animal_services311_calls_on_date_opened", using: :btree
-  add_index "animal_services311_calls", ["group_id"], name: "index_animal_services311_calls_on_group_id", using: :btree
-  add_index "animal_services311_calls", ["jurisdiction"], name: "index_animal_services311_calls_on_jurisdiction", using: :btree
+  add_index "animal_services311_calls", ["date_closed"], name: "index_animal_services_311_calls_on_date_closed", using: :btree
+  add_index "animal_services311_calls", ["date_opened"], name: "index_animal_services_311_calls_on_date_opened", using: :btree
+  add_index "animal_services311_calls", ["group_id"], name: "index_animal_services_311_calls_on_group_id", using: :btree
+  add_index "animal_services311_calls", ["jurisdiction"], name: "index_animal_services_311_calls_on_jurisdiction", using: :btree
   add_index "animal_services311_calls", ["service_request_id", "group_id"], name: "anml_srvcs_srvc_req_id_group", unique: true, using: :btree
   add_index "animal_services311_calls", ["service_request_status_type_id", "group_id"], name: "anml_srvcs_311_calls_sr_status_type_group", using: :btree
   add_index "animal_services311_calls", ["service_request_type_id", "group_id"], name: "animal_service_311_calls_sr_type_group", using: :btree
 
   create_table "animal_services_csr_calls", force: :cascade do |t|
-    t.string   "service_request_number",         limit: 255,                 null: false
-    t.string   "sr_type_code",                   limit: 255,                 null: false
-    t.string   "sr_description",                 limit: 255,                 null: false
-    t.string   "owning_department",              limit: 255,                 null: false
-    t.string   "method_received",                limit: 255,                 null: false
-    t.string   "sr_status",                      limit: 255,                 null: false
-    t.datetime "status_change_date",                                         null: false
-    t.datetime "created_date",                                               null: false
-    t.datetime "last_update_date",                                           null: false
+    t.string   "service_request_number",   limit: 255,                 null: false
+    t.string   "sr_type_code",             limit: 255,                 null: false
+    t.string   "sr_description",           limit: 255,                 null: false
+    t.string   "owning_department",        limit: 255,                 null: false
+    t.string   "method_received",          limit: 255,                 null: false
+    t.string   "sr_status",                limit: 255,                 null: false
+    t.datetime "status_change_date",                                   null: false
+    t.datetime "created_date",                                         null: false
+    t.datetime "last_update_date",                                     null: false
     t.datetime "close_date"
-    t.string   "sr_location",                    limit: 255
-    t.string   "street_number",                  limit: 255
-    t.string   "street_name",                    limit: 255
-    t.string   "city",                           limit: 255
-    t.string   "zip_code",                       limit: 255
-    t.string   "county",                         limit: 255
-    t.string   "state_plane_x_coordinate",       limit: 255
-    t.string   "state_plane_y_coordinate",       limit: 255
+    t.string   "sr_location",              limit: 255
+    t.string   "street_number",            limit: 255
+    t.string   "street_name",              limit: 255
+    t.string   "city",                     limit: 255
+    t.string   "zip_code",                 limit: 255
+    t.string   "county",                   limit: 255
+    t.string   "state_plane_x_coordinate", limit: 255
+    t.string   "state_plane_y_coordinate", limit: 255
     t.float    "latitude"
     t.float    "longitude"
-    t.string   "latlong",                        limit: 255
-    t.string   "council_district",               limit: 255
-    t.string   "map_page",                       limit: 255
-    t.string   "map_tile",                       limit: 255
-    t.boolean  "excluded_address",                           default: false, null: false
-    t.string   "fiscal_year",                    limit: 255
-    t.integer  "service_request_type_id"
-    t.integer  "service_request_status_type_id"
+    t.string   "latlong",                  limit: 255
+    t.string   "council_district",         limit: 255
+    t.string   "map_page",                 limit: 255
+    t.string   "map_tile",                 limit: 255
+    t.boolean  "excluded_address",                     default: false, null: false
+    t.string   "fiscal_year",              limit: 255
   end
 
   create_table "animal_types", force: :cascade do |t|
@@ -212,14 +192,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
 
   add_index "animal_types", ["group_id", "name"], name: "index_animal_types_on_group_id_and_name", unique: true, using: :btree
   add_index "animal_types", ["name"], name: "index_animal_types_on_name", using: :btree
-
-  create_table "animal_types_dump", id: false, force: :cascade do |t|
-    t.integer  "id",                      null: false
-    t.string   "name",        limit: 255, null: false
-    t.string   "description", limit: 255
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-  end
 
   create_table "animals", force: :cascade do |t|
     t.integer  "animal_type_id",               null: false
@@ -248,32 +220,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   add_index "animals", ["kennel_id"], name: "index_animals_on_kennel_id", using: :btree
   add_index "animals", ["microchip_number"], name: "index_animals_on_microchip_number", using: :btree
   add_index "animals", ["name"], name: "index_animals_on_name", using: :btree
-
-  create_table "animals_dump", id: false, force: :cascade do |t|
-    t.integer  "id",                             null: false
-    t.integer  "atype_id",                       null: false
-    t.string   "anumber",            limit: 255, null: false
-    t.string   "name",               limit: 255
-    t.integer  "kennel_id"
-    t.integer  "gender_id"
-    t.string   "breed",              limit: 255
-    t.string   "coloring",           limit: 255
-    t.datetime "dob"
-    t.boolean  "dob_known"
-    t.datetime "intake_date"
-    t.integer  "intake_type_id"
-    t.text     "description"
-    t.integer  "group_id",                       null: false
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.string   "image_file_name",    limit: 255
-    t.string   "image_content_type", limit: 255
-    t.integer  "image_file_size"
-    t.datetime "image_updated_at"
-    t.decimal  "weight"
-    t.datetime "last_modified_time",             null: false
-    t.string   "last_modified_by",   limit: 255, null: false
-  end
 
   create_table "bastrop_heatmap_data", id: false, force: :cascade do |t|
     t.integer  "id"
@@ -304,59 +250,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   end
 
   add_index "bastrop_heatmap_data", ["animal_id", "intake_date", "intake_type"], name: "bastrop_heatmap_data_uidx", unique: true, using: :btree
-
-  create_table "bastrop_intake_data", id: false, force: :cascade do |t|
-    t.string  "animal_id"
-    t.string  "arn"
-    t.string  "name"
-    t.string  "species"
-    t.string  "primary_breed"
-    t.string  "secondary_breed"
-    t.string  "sex"
-    t.string  "age"
-    t.string  "altered"
-    t.string  "danger"
-    t.string  "danger_reason"
-    t.string  "primary_color"
-    t.string  "secondary_color"
-    t.string  "third_color"
-    t.string  "color_pattern"
-    t.string  "second_color_pattern"
-    t.string  "size"
-    t.string  "pre_altered"
-    t.string  "spayed_neutered"
-    t.string  "spayed_neutered_by"
-    t.string  "record_owner"
-    t.string  "intake_date"
-    t.string  "operation_type"
-    t.string  "operation_sub_type"
-    t.string  "pet_id"
-    t.string  "pet_id_type"
-    t.string  "location_found"
-    t.string  "jurisdiction"
-    t.string  "condition"
-    t.string  "age_group"
-    t.string  "doa"
-    t.string  "site_name"
-    t.string  "source"
-    t.string  "intake_reason"
-    t.string  "length_owned"
-    t.string  "unit"
-    t.string  "injury_type"
-    t.string  "cause"
-    t.string  "agency_name"
-    t.string  "location"
-    t.string  "sub_location"
-    t.string  "asilomar_status"
-    t.string  "intake_type"
-    t.string  "gender"
-    t.string  "color"
-    t.string  "breed"
-    t.string  "found_location"
-    t.string  "postal_code"
-    t.boolean "parseable",            default: false
-    t.integer "group_id",             default: 17
-  end
 
   create_table "bastrop_intakes", id: false, force: :cascade do |t|
     t.integer  "id"
@@ -492,92 +385,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   add_index "detail_maps", ["group_id"], name: "index_detail_maps_on_group_id", using: :btree
   add_index "detail_maps", ["map_name", "group_id"], name: "index_detail_maps_on_map_name_and_group_id", unique: true, using: :btree
 
-  create_table "dev_intakes", force: :cascade do |t|
-    t.integer  "animal_type_id",    null: false
-    t.string   "animal_id",         null: false
-    t.string   "name"
-    t.integer  "group_id",          null: false
-    t.datetime "intake_date"
-    t.integer  "intake_type_id",    null: false
-    t.string   "found_location"
-    t.string   "postal_code"
-    t.integer  "address_id"
-    t.integer  "gender_id",         null: false
-    t.string   "breed"
-    t.string   "coloring"
-    t.string   "age"
-    t.float    "weight"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.integer  "geo_quality_code"
-    t.boolean  "parseable_address"
-    t.boolean  "valid_address"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.integer  "fiscal_year"
-  end
-
-  add_index "dev_intakes", ["animal_id", "intake_date", "group_id"], name: "index_dev_intakes_on_animal_id_and_intake_date_and_group_id", unique: true, using: :btree
-  add_index "dev_intakes", ["geo_quality_code"], name: "index_dev_intakes_on_geo_quality_code", using: :btree
-  add_index "dev_intakes", ["group_id"], name: "index_dev_intakes_on_group_id", using: :btree
-  add_index "dev_intakes", ["intake_date"], name: "index_dev_intakes_on_intake_date", using: :btree
-  add_index "dev_intakes", ["intake_type_id"], name: "index_dev_intakes_on_intake_type_id", using: :btree
-  add_index "dev_intakes", ["postal_code"], name: "index_dev_intakes_on_postal_code", using: :btree
-
-  create_table "dev_outcomes", force: :cascade do |t|
-    t.integer  "animal_type_id",   null: false
-    t.string   "animal_id",        null: false
-    t.string   "name"
-    t.integer  "outcome_type_id",  null: false
-    t.datetime "outcome_date",     null: false
-    t.integer  "gender_id",        null: false
-    t.integer  "address_id"
-    t.string   "breed"
-    t.string   "coloring"
-    t.decimal  "weight"
-    t.datetime "dob"
-    t.boolean  "dob_known"
-    t.datetime "intake_date"
-    t.integer  "intake_type_id"
-    t.text     "description"
-    t.integer  "group_id",         null: false
-    t.string   "microchip_number"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.string   "age"
-    t.integer  "fiscal_year"
-  end
-
-  add_index "dev_outcomes", ["animal_id", "outcome_type_id", "outcome_date", "group_id"], name: "dev_outcomes_unique_idx", unique: true, using: :btree
-  add_index "dev_outcomes", ["group_id"], name: "index_dev_outcomes_on_group_id", using: :btree
-  add_index "dev_outcomes", ["intake_type_id"], name: "index_dev_outcomes_on_intake_type_id", using: :btree
-  add_index "dev_outcomes", ["microchip_number"], name: "index_dev_outcomes_on_microchip_number", using: :btree
-  add_index "dev_outcomes", ["name"], name: "index_dev_outcomes_on_name", using: :btree
-  add_index "dev_outcomes", ["outcome_type_id"], name: "index_dev_outcomes_on_outcome_type_id", using: :btree
-
-  create_table "dropme", id: false, force: :cascade do |t|
-    t.string   "animal_id"
-    t.integer  "animal_type_id"
-    t.string   "name"
-    t.integer  "outcome_type_id"
-    t.date     "outcome_date"
-    t.text     "breed"
-    t.text     "color"
-    t.date     "dob"
-    t.boolean  "bool"
-    t.integer  "?column?"
-    t.string   "microchip_number"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "dup_dates", id: false, force: :cascade do |t|
-    t.integer  "id"
-    t.string   "animal_id"
-    t.datetime "intake_date"
-    t.integer  "count",       limit: 8
-  end
-
   create_table "email_contacts", force: :cascade do |t|
     t.integer  "contact_type_id",                 null: false
     t.integer  "party_id",                        null: false
@@ -602,14 +409,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
 
   add_index "genders", ["group_id"], name: "index_genders_on_group_id", using: :btree
   add_index "genders", ["name", "group_id"], name: "index_genders_on_name_and_group_id", unique: true, using: :btree
-
-  create_table "genders_dump", id: false, force: :cascade do |t|
-    t.integer  "id",                      null: false
-    t.string   "indicator",   limit: 1,   null: false
-    t.string   "description", limit: 128, null: false
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-  end
 
   create_table "groups", force: :cascade do |t|
     t.string   "name",                                  null: false
@@ -641,14 +440,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   add_index "intake_types", ["group_id", "name"], name: "index_intake_types_on_group_id_and_name", unique: true, using: :btree
   add_index "intake_types", ["name"], name: "index_intake_types_on_name", using: :btree
 
-  create_table "intake_types_dump", id: false, force: :cascade do |t|
-    t.integer  "id",                      null: false
-    t.string   "indicator",   limit: 255, null: false
-    t.string   "description", limit: 255, null: false
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-  end
-
   create_table "intakes", force: :cascade do |t|
     t.integer  "animal_type_id",    null: false
     t.string   "animal_id",         null: false
@@ -669,9 +460,9 @@ ActiveRecord::Schema.define(version: 20160305165825) do
     t.integer  "geo_quality_code"
     t.boolean  "parseable_address"
     t.boolean  "valid_address"
+    t.integer  "fiscal_year"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
-    t.integer  "fiscal_year"
   end
 
   add_index "intakes", ["animal_id", "intake_date", "group_id"], name: "index_intakes_on_animal_id_and_intake_date_and_group_id", unique: true, using: :btree
@@ -735,81 +526,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   add_index "kennels", ["group_id"], name: "index_kennels_on_group_id", using: :btree
   add_index "kennels", ["name", "building", "group_id"], name: "index_kennels_on_name_and_building_and_group_id", unique: true, using: :btree
 
-  create_table "kennels_dump", id: false, force: :cascade do |t|
-    t.integer  "id",                                        null: false
-    t.string   "name",          limit: 255,                 null: false
-    t.string   "bldg",          limit: 255
-    t.string   "kennel_type",   limit: 255
-    t.integer  "max_occupancy",             default: 1
-    t.boolean  "full_name",                 default: false
-    t.integer  "group_id",                                  null: false
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
-    t.boolean  "is_public",                 default: false
-    t.boolean  "is_onsite",                 default: true
-    t.boolean  "is_permanent",              default: true
-  end
-
-  create_table "latlong_addrs", force: :cascade do |t|
-    t.integer  "party_id",         null: false
-    t.integer  "address_type_id",  null: false
-    t.string   "street_address_1", null: false
-    t.string   "street_address_2"
-    t.string   "city",             null: false
-    t.string   "county"
-    t.string   "state",            null: false
-    t.string   "postal_code",      null: false
-    t.string   "country",          null: false
-    t.float    "latitude"
-    t.float    "longitude"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.string   "geo_quality_code"
-    t.string   "feature_type"
-    t.boolean  "partial_match"
-    t.boolean  "valid_address"
-    t.text     "full_location"
-  end
-
-  add_index "latlong_addrs", ["address_type_id"], name: "index_latlong_addrs_on_address_type_id", using: :btree
-  add_index "latlong_addrs", ["city"], name: "index_latlong_addrs_on_city", using: :btree
-  add_index "latlong_addrs", ["full_location"], name: "index_latlong_addrs_on_full_location", using: :btree
-  add_index "latlong_addrs", ["geo_quality_code"], name: "index_latlong_addrs_on_geo_quality_code", using: :btree
-  add_index "latlong_addrs", ["party_id", "street_address_1", "street_address_2", "city", "state", "postal_code", "country", "address_type_id"], name: "index_latlong_addrs_uidx", unique: true, using: :btree
-  add_index "latlong_addrs", ["postal_code"], name: "index_latlong_addrs_on_postal_code", using: :btree
-  add_index "latlong_addrs", ["state"], name: "index_latlong_addrs_on_state", using: :btree
-
-  create_table "latlong_outcomes", force: :cascade do |t|
-    t.integer  "animal_type_id",   null: false
-    t.string   "animal_id",        null: false
-    t.string   "name"
-    t.integer  "outcome_type_id",  null: false
-    t.datetime "outcome_date",     null: false
-    t.integer  "gender_id",        null: false
-    t.integer  "address_id"
-    t.string   "breed"
-    t.string   "coloring"
-    t.decimal  "weight"
-    t.datetime "dob"
-    t.boolean  "dob_known"
-    t.datetime "intake_date"
-    t.integer  "intake_type_id"
-    t.text     "description"
-    t.integer  "group_id",         null: false
-    t.string   "microchip_number"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.string   "age"
-    t.integer  "fiscal_year"
-  end
-
-  add_index "latlong_outcomes", ["animal_id", "outcome_type_id", "outcome_date", "group_id"], name: "latlong_outcomes_unique_idx", unique: true, using: :btree
-  add_index "latlong_outcomes", ["group_id"], name: "index_latlong_outcomes_on_group_id", using: :btree
-  add_index "latlong_outcomes", ["intake_type_id"], name: "index_latlong_outcomes_on_intake_type_id", using: :btree
-  add_index "latlong_outcomes", ["microchip_number"], name: "index_latlong_outcomes_on_microchip_number", using: :btree
-  add_index "latlong_outcomes", ["name"], name: "index_latlong_outcomes_on_name", using: :btree
-  add_index "latlong_outcomes", ["outcome_type_id"], name: "index_latlong_outcomes_on_outcome_type_id", using: :btree
-
   create_table "length_of_stays", force: :cascade do |t|
     t.integer  "outcome_id",      null: false
     t.string   "animal_id",       null: false
@@ -840,12 +556,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   add_index "length_of_stays", ["outcome_id"], name: "index_length_of_stays_on_outcome_id", unique: true, using: :btree
   add_index "length_of_stays", ["outcome_type"], name: "index_length_of_stays_on_outcome_type", using: :btree
   add_index "length_of_stays", ["weight_group_id"], name: "index_length_of_stays_on_weight_group_id", using: :btree
-
-  create_table "map2", id: false, force: :cascade do |t|
-    t.integer  "id"
-    t.string   "animal_id"
-    t.datetime "intake_date"
-  end
 
   create_table "map_types", force: :cascade do |t|
     t.string   "name",        null: false
@@ -880,16 +590,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
 
   add_index "media_types", ["name", "media_uri"], name: "index_media_types_uidx", unique: true, using: :btree
 
-  create_table "missing_dates", id: false, force: :cascade do |t|
-    t.string   "animal_id"
-    t.datetime "intake_date"
-  end
-
-  create_table "missing_dates_map", id: false, force: :cascade do |t|
-    t.integer "id"
-    t.string  "animal_id"
-  end
-
   create_table "news", force: :cascade do |t|
     t.datetime "published",                   null: false
     t.string   "headline",                    null: false
@@ -914,40 +614,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   add_index "organizations", ["group_id"], name: "index_organizations_on_group_id", using: :btree
   add_index "organizations", ["name"], name: "index_organizations_uidx", unique: true, using: :btree
   add_index "organizations", ["party_type_id"], name: "index_organizations_on_party_type_id", using: :btree
-
-  create_table "outcome_person_map", id: false, force: :cascade do |t|
-    t.string "person_id"
-    t.string "animal_id"
-    t.string "outcome_date"
-    t.string "operation_type"
-    t.string "operation_sub_type"
-    t.string "arn"
-  end
-
-  create_table "outcome_save", id: false, force: :cascade do |t|
-    t.integer  "id"
-    t.integer  "animal_type_id"
-    t.string   "animal_id"
-    t.string   "name"
-    t.integer  "outcome_type_id"
-    t.datetime "outcome_date"
-    t.integer  "gender_id"
-    t.integer  "address_id"
-    t.string   "breed"
-    t.string   "coloring"
-    t.decimal  "weight"
-    t.datetime "dob"
-    t.boolean  "dob_known"
-    t.datetime "intake_date"
-    t.integer  "intake_type_id"
-    t.text     "description"
-    t.integer  "group_id"
-    t.string   "microchip_number"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "age"
-    t.integer  "fiscal_year"
-  end
 
   create_table "outcome_types", force: :cascade do |t|
     t.string   "name",                             null: false
@@ -996,33 +662,8 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   add_index "outcomes", ["name"], name: "index_outcomes_on_name", using: :btree
   add_index "outcomes", ["outcome_type_id"], name: "index_outcomes_on_outcome_type_id", using: :btree
 
-  create_table "outcomes_import", force: :cascade do |t|
-    t.integer  "atype_id",                    null: false
-    t.integer  "outcome_type_id",             null: false
-    t.datetime "outcome_date",                null: false
-    t.string   "anumber",         limit: 255, null: false
-    t.string   "name",            limit: 255
-    t.integer  "gender_id"
-    t.string   "breed",           limit: 255
-    t.string   "coloring",        limit: 255
-    t.datetime "dob"
-    t.boolean  "dob_known"
-    t.datetime "intake_date"
-    t.integer  "intake_type_id"
-    t.text     "description"
-    t.integer  "group_id",                    null: false
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.decimal  "weight"
-    t.string   "outcome_name"
-  end
-
-  add_index "outcomes_import", ["anumber", "group_id", "outcome_date"], name: "index_outcomes_import_uidx", unique: true, using: :btree
-  add_index "outcomes_import", ["breed"], name: "index_outcomes_import_on_breed", using: :btree
-  add_index "outcomes_import", ["group_id"], name: "index_outcomes_import_on_group_id", using: :btree
-  add_index "outcomes_import", ["name"], name: "index_outcomes_import_on_name", using: :btree
-
-  create_table "outcomes_staging", force: :cascade do |t|
+  create_table "outcomes_staging", id: false, force: :cascade do |t|
+    t.integer  "id"
     t.integer  "animal_type_id"
     t.string   "animal_id"
     t.string   "name"
@@ -1045,10 +686,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
     t.string   "age"
     t.integer  "fiscal_year"
   end
-
-  add_index "outcomes_staging", ["breed"], name: "index_outcomes_staging_on_breed", using: :btree
-  add_index "outcomes_staging", ["group_id"], name: "index_outcomes_staging_on_group_id", using: :btree
-  add_index "outcomes_staging", ["name"], name: "index_outcomes_staging_on_name", using: :btree
 
   create_table "parties", force: :cascade do |t|
     t.integer  "party_type_id", null: false
@@ -1121,24 +758,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   add_index "people", ["last_name", "first_name", "middle_name"], name: "index_people_on_last_name_and_first_name_and_middle_name", using: :btree
   add_index "people", ["party_type_id"], name: "index_people_on_party_type_id", using: :btree
 
-  create_table "people_save", id: false, force: :cascade do |t|
-    t.integer  "id"
-    t.integer  "party_type_id"
-    t.integer  "group_id"
-    t.string   "first_name"
-    t.string   "middle_name"
-    t.string   "last_name"
-    t.string   "salutation"
-    t.string   "suffix"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "person_id_map", id: false, force: :cascade do |t|
-    t.string  "person_id"
-    t.integer "party_id",  limit: 8
-  end
-
   create_table "phone_contacts", force: :cascade do |t|
     t.integer  "contact_type_id",                   null: false
     t.integer  "party_id",                          null: false
@@ -1171,101 +790,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   add_index "population_by_days", ["calendar_date", "group_id"], name: "index_population_by_days_on_calendar_date_and_group_id", unique: true, using: :btree
   add_index "population_by_days", ["group_id"], name: "index_population_by_days_on_group_id", using: :btree
 
-  create_table "pp_extended_outcomes", id: false, force: :cascade do |t|
-    t.string "animal_id"
-    t.string "arn"
-    t.string "microchip_number"
-    t.string "name"
-    t.string "animal_type"
-    t.string "primary_breed"
-    t.string "secondary_breed"
-    t.string "dob"
-    t.string "gender"
-    t.string "spayed_or_neutered"
-    t.string "prealtered"
-    t.string "danger"
-    t.string "danger_reason"
-    t.string "primary_color"
-    t.string "secondary_color"
-    t.string "operation_type"
-    t.string "operation_sub_type"
-    t.string "outcome_date"
-    t.string "outcome_date_time"
-    t.string "outcome_age_as_month"
-    t.string "by"
-    t.string "age_group"
-    t.string "altered"
-    t.string "site_name"
-    t.string "outcome_reason"
-    t.string "jurisdiction_out"
-    t.string "asilomar_status"
-    t.string "full_gender"
-  end
-
-  create_table "pp_person_by_operation", id: false, force: :cascade do |t|
-    t.string "person_id"
-    t.string "first_name"
-    t.string "last_name"
-    t.string "salutation"
-    t.string "date_created"
-    t.string "person_gender"
-    t.string "street_number"
-    t.string "street_name"
-    t.string "street_type"
-    t.string "street_direction"
-    t.string "street_direction2"
-    t.string "unit_number"
-    t.string "city"
-    t.string "city_alias"
-    t.string "province_abbr"
-    t.string "postal_code"
-    t.string "address_combined"
-    t.string "contact_by_address"
-    t.string "jurisdiction"
-    t.string "county"
-    t.string "phone_number"
-    t.string "contact_by_phone"
-    t.string "email"
-    t.string "contact_by_email"
-    t.string "operation_type"
-    t.string "operation_sub_type"
-    t.string "operation_date"
-    t.string "operation_by"
-    t.string "animal_id"
-    t.string "arn"
-    t.string "name"
-    t.string "petid"
-    t.string "animal_type"
-    t.string "dob"
-    t.string "microchip_number"
-    t.string "microchip_issuer"
-    t.string "location"
-    t.string "site"
-    t.string "primary_breed"
-    t.string "secondary_breed"
-    t.string "gender"
-    t.string "primary_color"
-    t.string "spayed_or_neutered"
-    t.string "age_in_months"
-    t.string "weight"
-    t.string "body_weight_unit"
-    t.string "opt_in"
-    t.string "opt_in_consent"
-    t.string "opt_in_created_in"
-    t.string "opt_in_created_by"
-    t.string "opt_in_created_timestamp"
-    t.string "opt_in_email"
-    t.string "opt_in_email_consent"
-    t.string "opt_in_email_created_in"
-    t.string "opt_in_email_created_by"
-    t.string "opt_in_email_created_timestamp"
-    t.string "opt_in_mail"
-    t.string "opt_in_mail_consent"
-    t.string "opt_in_mail_created_in"
-    t.string "opt_in_mail_created_by"
-    t.string "opt_in_mail_created_timestamp"
-  end
-
   create_table "privileges", force: :cascade do |t|
     t.integer  "user_id",    null: false
     t.integer  "right_id",   null: false
@@ -1277,33 +801,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   add_index "privileges", ["group_id"], name: "index_privileges_on_group_id", using: :btree
   add_index "privileges", ["right_id"], name: "index_privileges_on_right_id", using: :btree
   add_index "privileges", ["user_id", "right_id"], name: "index_privileges_on_user_id_and_right_id", unique: true, using: :btree
-
-  create_table "raw_intakes", force: :cascade do |t|
-    t.string   "animal_id",         limit: 255
-    t.string   "name",              limit: 255
-    t.integer  "group_id",                                      null: false
-    t.datetime "intake_date"
-    t.string   "found_location",    limit: 255
-    t.string   "intake_type",       limit: 255
-    t.string   "animal_type",       limit: 255
-    t.string   "gender",            limit: 255
-    t.string   "breed",             limit: 255
-    t.string   "color",             limit: 255
-    t.boolean  "parseable_address"
-    t.boolean  "valid_address"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.integer  "geo_quality_code"
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
-    t.string   "age"
-    t.string   "postal_code",       limit: 255
-    t.string   "fiscal_year"
-    t.boolean  "intake_location",               default: false, null: false
-    t.integer  "animal_type_id"
-    t.integer  "intake_type_id"
-    t.integer  "gender_id"
-  end
 
   create_table "relationship_types", force: :cascade do |t|
     t.string   "name",        null: false
@@ -1346,10 +843,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
 
   add_index "roles", ["group_id"], name: "index_roles_on_group_id", using: :btree
   add_index "roles", ["name", "group_id"], name: "index_roles_on_name_and_group_id", unique: true, using: :btree
-
-  create_table "saved_intakes", id: false, force: :cascade do |t|
-    t.string "found_location"
-  end
 
   create_table "service_request_status_types", force: :cascade do |t|
     t.string   "name",          null: false
@@ -1444,10 +937,10 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   add_foreign_key "animal_imports", "groups", name: "animal_imports_group_id_fk"
   add_foreign_key "animal_imports", "intake_types", name: "animal_imports_intake_type_id_fk"
   add_foreign_key "animal_imports", "kennels", name: "animal_imports_kennel_id_fk"
-  add_foreign_key "animal_services311_calls", "addresses", name: "animal_services311_address_id_fk"
-  add_foreign_key "animal_services311_calls", "groups", name: "animal_services311_group_id_fk"
-  add_foreign_key "animal_services311_calls", "service_request_status_types", name: "animal_services311_sr_status_type_id_fk"
-  add_foreign_key "animal_services311_calls", "service_request_types", name: "animal_services311_sr_type_id_fk"
+  add_foreign_key "animal_services311_calls", "addresses", name: "animal_services_311_address_id_fk"
+  add_foreign_key "animal_services311_calls", "groups", name: "animal_services_311_group_id_fk"
+  add_foreign_key "animal_services311_calls", "service_request_status_types", name: "animal_services_311_sr_status_type_id_fk"
+  add_foreign_key "animal_services311_calls", "service_request_types", name: "animal_services_311_sr_type_id_fk"
   add_foreign_key "animal_types", "groups", name: "animal_types_groups_fk"
   add_foreign_key "animals", "animal_types", name: "animals_animal_types_fk"
   add_foreign_key "animals", "groups", name: "animals_groups_fk"
@@ -1471,8 +964,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   add_foreign_key "kennel_types", "groups", name: "kennel_types_groups_fk"
   add_foreign_key "kennels", "groups", name: "kennels_groups"
   add_foreign_key "kennels", "kennel_types", name: "kennels_kennel_types"
-  add_foreign_key "latlong_addrs", "address_types", name: "latlong_addrs_address_type_id_fk"
-  add_foreign_key "latlong_addrs", "party_pks", column: "party_id", primary_key: "party_id", name: "latlong_addrs_party_id_fk", on_delete: :cascade
   add_foreign_key "length_of_stays", "groups", name: "length_of_stays_group_id_fk"
   add_foreign_key "length_of_stays", "outcomes", name: "length_of_stays_outcome_id_fk"
   add_foreign_key "media_contacts", "contact_pks", column: "id", primary_key: "contact_id", name: "media_contacts_pk_contact_id_fk", on_delete: :cascade
@@ -1507,99 +998,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
   add_foreign_key "service_request_types", "groups", name: "service_request_types_group_id"
   add_foreign_key "user_roles", "users", name: "user_roles_users_fk"
   add_foreign_key "users", "groups", name: "users_groups_fk"
-
-  create_view :day_count_during_years,  sql_definition: <<-SQL
-      SELECT ad.fiscal_year,
-      ad.group_id,
-      to_char(ad.outcome_date, 'DY'::text) AS day_of_week,
-      count(*) AS total_days
-     FROM ( SELECT DISTINCT o.fiscal_year,
-              o.group_id,
-              date_trunc('Day'::text, timezone((g.time_zone)::text, o.outcome_date)) AS outcome_date
-             FROM (outcomes o
-               JOIN groups g ON ((o.group_id = g.id)))) ad
-    GROUP BY ad.fiscal_year, ad.group_id, to_char(ad.outcome_date, 'DY'::text);
-  SQL
-
-  create_view :adoptions_by_days,  sql_definition: <<-SQL
-      SELECT y.fiscal_year,
-      to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text) AS day_index,
-      (
-          CASE (to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text), '9'::text) - (1)::numeric)
-              WHEN 0 THEN (7)::numeric
-              ELSE (to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text), '9'::text) - (1)::numeric)
-          END)::integer AS sort_order,
-      to_char(timezone((g.time_zone)::text, o.outcome_date), 'DY'::text) AS day_of_week,
-      y.total_days,
-      y.group_id,
-      count(*) AS number_adoptions,
-      round((((count(*))::numeric * 1.0) / ((y.total_days)::numeric * 1.0)), 2) AS avg_daily_adoptions
-     FROM ((outcomes o
-       JOIN groups g ON ((o.group_id = g.id)))
-       JOIN day_count_during_years y ON ((((to_char(timezone((g.time_zone)::text, o.outcome_date), 'DY'::text) = y.day_of_week) AND (o.fiscal_year = y.fiscal_year)) AND (o.group_id = y.group_id))))
-    WHERE (o.outcome_type_id = ( SELECT ot.id
-             FROM outcome_types ot
-            WHERE ((ot.group_id = o.group_id) AND ((ot.name)::text = 'Adoption'::text))))
-    GROUP BY y.fiscal_year, y.group_id, y.total_days, to_char(timezone((g.time_zone)::text, o.outcome_date), 'DY'::text),
-          CASE (to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text), '9'::text) - (1)::numeric)
-              WHEN 0 THEN (7)::numeric
-              ELSE (to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text), '9'::text) - (1)::numeric)
-          END, to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text);
-  SQL
-
-  create_view :adoptions_by_hours,  sql_definition: <<-SQL
-      SELECT o.group_id,
-      to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'HH24'::text), '99'::text) AS hour,
-      ot.name AS outcome_type,
-      count(*) AS total
-     FROM ((outcomes o
-       JOIN outcome_types ot ON (((o.outcome_type_id = ot.id) AND (o.group_id = ot.group_id))))
-       JOIN groups g ON ((o.group_id = g.id)))
-    GROUP BY o.group_id, to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'HH24'::text), '99'::text), ot.name;
-  SQL
-
-  create_view :animal_services311_heatmaps,  sql_definition: <<-SQL
-      SELECT r.name AS service_request_type,
-      s.name AS service_request_status_type,
-      c.group_id,
-      a.full_location,
-      a.latitude,
-      a.longitude,
-      a.postal_code,
-      c.fiscal_year,
-      count(*) AS total
-     FROM (((animal_services311_calls c
-       JOIN addresses a ON ((c.address_id = a.id)))
-       JOIN service_request_types r ON (((c.service_request_type_id = r.id) AND (c.group_id = r.group_id))))
-       JOIN service_request_status_types s ON (((c.service_request_status_type_id = s.id) AND (c.group_id = s.group_id))))
-    WHERE a.valid_address
-    GROUP BY r.name, s.name, c.group_id, a.full_location, a.latitude, a.longitude, a.postal_code, c.fiscal_year;
-  SQL
-
-  create_view :animal_services311_hotspots,  sql_definition: <<-SQL
-      SELECT animal_services311_heatmaps.full_location AS found_location,
-      animal_services311_heatmaps.latitude,
-      animal_services311_heatmaps.longitude,
-      animal_services311_heatmaps.group_id,
-      animal_services311_heatmaps.fiscal_year,
-      count(*) AS total
-     FROM animal_services311_heatmaps
-    GROUP BY animal_services311_heatmaps.full_location, animal_services311_heatmaps.latitude, animal_services311_heatmaps.longitude, animal_services311_heatmaps.group_id, animal_services311_heatmaps.fiscal_year
-   HAVING (count(*) >= 15);
-  SQL
-
-  create_view :animal_services311_hotspot_details,  sql_definition: <<-SQL
-      SELECT m.service_request_type,
-      s.found_location,
-      s.latitude,
-      s.longitude,
-      s.group_id,
-      s.fiscal_year,
-      count(*) AS total
-     FROM (animal_services311_hotspots s
-       JOIN animal_services311_heatmaps m ON ((((((s.found_location = m.full_location) AND (s.latitude = m.latitude)) AND (s.longitude = m.longitude)) AND (s.group_id = m.group_id)) AND (s.fiscal_year = m.fiscal_year))))
-    GROUP BY m.service_request_type, s.found_location, s.latitude, s.longitude, s.group_id, s.fiscal_year;
-  SQL
 
   create_view :hotspots,  sql_definition: <<-SQL
       SELECT intakes.found_location,
@@ -1659,21 +1057,6 @@ ActiveRecord::Schema.define(version: 20160305165825) do
     GROUP BY i.group_id, i.found_location, i.latitude, i.longitude, at.name, it.name, g.description, i.fiscal_year;
   SQL
 
-  create_view :length_of_stay_by_age_groups,  sql_definition: <<-SQL
-      SELECT l.group_id,
-      l.animal_type,
-      l.outcome_type,
-      a.name AS age_group,
-      a.id AS sort_order,
-      sum(l.length_of_stay) AS total_length,
-      count(*) AS total_animals,
-      round((((sum(l.length_of_stay))::numeric * 1.0) / ((count(*))::numeric * 1.0)), 2) AS avg_length_of_stay
-     FROM (length_of_stays l
-       JOIN age_groups a ON ((a.id = l.age_group_id)))
-    WHERE (l.age_group_id IS NOT NULL)
-    GROUP BY l.group_id, l.animal_type, l.outcome_type, a.name, a.id;
-  SQL
-
   create_view :outcome_heatmaps,  sql_definition: <<-SQL
       SELECT o.group_id,
       a.full_location AS found_location,
@@ -1693,13 +1076,97 @@ ActiveRecord::Schema.define(version: 20160305165825) do
     GROUP BY o.group_id, a.full_location, a.latitude, a.longitude, at.name, ot.name, g.description, o.fiscal_year;
   SQL
 
-  create_view :outcomes_by_zip_codes,  sql_definition: <<-SQL
-      SELECT o.group_id,
+  create_view :animal_services311_heatmaps,  sql_definition: <<-SQL
+      SELECT r.name AS service_request_type,
+      s.name AS service_request_status_type,
+      c.group_id,
+      a.full_location,
+      a.latitude,
+      a.longitude,
       a.postal_code,
-      count(*) AS total_outcomes
-     FROM (outcomes o
-       JOIN addresses a ON ((o.address_id = a.id)))
-    GROUP BY o.group_id, a.postal_code;
+      c.fiscal_year,
+      count(*) AS total
+     FROM (((animal_services311_calls c
+       JOIN addresses a ON ((c.address_id = a.id)))
+       JOIN service_request_types r ON (((c.service_request_type_id = r.id) AND (c.group_id = r.group_id))))
+       JOIN service_request_status_types s ON (((c.service_request_status_type_id = s.id) AND (c.group_id = s.group_id))))
+    WHERE a.valid_address
+    GROUP BY r.name, s.name, c.group_id, a.full_location, a.latitude, a.longitude, a.postal_code, c.fiscal_year;
+  SQL
+
+  create_view :animal_services311_hotspots,  sql_definition: <<-SQL
+      SELECT animal_services311_heatmaps.full_location AS found_location,
+      animal_services311_heatmaps.latitude,
+      animal_services311_heatmaps.longitude,
+      animal_services311_heatmaps.group_id,
+      animal_services311_heatmaps.fiscal_year,
+      count(*) AS total
+     FROM animal_services311_heatmaps
+    GROUP BY animal_services311_heatmaps.full_location, animal_services311_heatmaps.latitude, animal_services311_heatmaps.longitude, animal_services311_heatmaps.group_id, animal_services311_heatmaps.fiscal_year
+   HAVING (count(*) >= 15);
+  SQL
+
+  create_view :animal_services311_hotspot_details,  sql_definition: <<-SQL
+      SELECT m.service_request_type,
+      s.found_location,
+      s.latitude,
+      s.longitude,
+      s.group_id,
+      s.fiscal_year,
+      count(*) AS total
+     FROM (animal_services311_hotspots s
+       JOIN animal_services311_heatmaps m ON ((((((s.found_location = m.full_location) AND (s.latitude = m.latitude)) AND (s.longitude = m.longitude)) AND (s.group_id = m.group_id)) AND (s.fiscal_year = m.fiscal_year))))
+    GROUP BY m.service_request_type, s.found_location, s.latitude, s.longitude, s.group_id, s.fiscal_year;
+  SQL
+
+  create_view :adoptions_by_hours,  sql_definition: <<-SQL
+      SELECT o.group_id,
+      to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'HH24'::text), '99'::text) AS hour,
+      ot.name AS outcome_type,
+      count(*) AS total
+     FROM ((outcomes o
+       JOIN outcome_types ot ON (((o.outcome_type_id = ot.id) AND (o.group_id = ot.group_id))))
+       JOIN groups g ON ((o.group_id = g.id)))
+    GROUP BY o.group_id, to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'HH24'::text), '99'::text), ot.name;
+  SQL
+
+  create_view :day_count_during_years,  sql_definition: <<-SQL
+      SELECT ad.fiscal_year,
+      ad.group_id,
+      to_char(ad.outcome_date, 'DY'::text) AS day_of_week,
+      count(*) AS total_days
+     FROM ( SELECT DISTINCT o.fiscal_year,
+              o.group_id,
+              date_trunc('Day'::text, timezone((g.time_zone)::text, o.outcome_date)) AS outcome_date
+             FROM (outcomes o
+               JOIN groups g ON ((o.group_id = g.id)))) ad
+    GROUP BY ad.fiscal_year, ad.group_id, to_char(ad.outcome_date, 'DY'::text);
+  SQL
+
+  create_view :adoptions_by_days,  sql_definition: <<-SQL
+      SELECT y.fiscal_year,
+      to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text) AS day_index,
+      (
+          CASE (to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text), '9'::text) - (1)::numeric)
+              WHEN 0 THEN (7)::numeric
+              ELSE (to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text), '9'::text) - (1)::numeric)
+          END)::integer AS sort_order,
+      to_char(timezone((g.time_zone)::text, o.outcome_date), 'DY'::text) AS day_of_week,
+      y.total_days,
+      y.group_id,
+      count(*) AS number_adoptions,
+      round((((count(*))::numeric * 1.0) / ((y.total_days)::numeric * 1.0)), 2) AS avg_daily_adoptions
+     FROM ((outcomes o
+       JOIN groups g ON ((o.group_id = g.id)))
+       JOIN day_count_during_years y ON ((((to_char(timezone((g.time_zone)::text, o.outcome_date), 'DY'::text) = y.day_of_week) AND (o.fiscal_year = y.fiscal_year)) AND (o.group_id = y.group_id))))
+    WHERE (o.outcome_type_id = ( SELECT ot.id
+             FROM outcome_types ot
+            WHERE ((ot.group_id = o.group_id) AND ((ot.name)::text = 'Adoption'::text))))
+    GROUP BY y.fiscal_year, y.group_id, y.total_days, to_char(timezone((g.time_zone)::text, o.outcome_date), 'DY'::text),
+          CASE (to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text), '9'::text) - (1)::numeric)
+              WHEN 0 THEN (7)::numeric
+              ELSE (to_number(to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text), '9'::text) - (1)::numeric)
+          END, to_char(timezone((g.time_zone)::text, o.outcome_date), 'D'::text);
   SQL
 
   create_view :overall_length_of_stays,  sql_definition: <<-SQL
@@ -1712,6 +1179,30 @@ ActiveRecord::Schema.define(version: 20160305165825) do
      FROM length_of_stays
     WHERE (length_of_stays.length_of_stay IS NOT NULL)
     GROUP BY length_of_stays.animal_type, length_of_stays.outcome_type, length_of_stays.group_id;
+  SQL
+
+  create_view :length_of_stay_by_age_groups,  sql_definition: <<-SQL
+      SELECT l.group_id,
+      l.animal_type,
+      l.outcome_type,
+      a.name AS age_group,
+      a.id AS sort_order,
+      sum(l.length_of_stay) AS total_length,
+      count(*) AS total_animals,
+      round((((sum(l.length_of_stay))::numeric * 1.0) / ((count(*))::numeric * 1.0)), 2) AS avg_length_of_stay
+     FROM (length_of_stays l
+       JOIN age_groups a ON ((a.id = l.age_group_id)))
+    WHERE (l.age_group_id IS NOT NULL)
+    GROUP BY l.group_id, l.animal_type, l.outcome_type, a.name, a.id;
+  SQL
+
+  create_view :outcomes_by_zip_codes,  sql_definition: <<-SQL
+      SELECT o.group_id,
+      a.postal_code,
+      count(*) AS total_outcomes
+     FROM (outcomes o
+       JOIN addresses a ON ((o.address_id = a.id)))
+    GROUP BY o.group_id, a.postal_code;
   SQL
 
   create_view :intake_metrics, materialized: true,  sql_definition: <<-SQL
@@ -1836,6 +1327,46 @@ ActiveRecord::Schema.define(version: 20160305165825) do
      FROM (intakes i
        JOIN intake_types it ON (((i.intake_type_id = it.id) AND (i.group_id = it.group_id))))
     GROUP BY i.group_id, i.postal_code, it.name;
+  SQL
+
+  create_view :service_request_metrics, materialized: true,  sql_definition: <<-SQL
+      SELECT c.id,
+      c.service_request_id,
+      c.group_id,
+      c.service_request_type_id,
+      sr.name AS service_request_type,
+      c.owning_department,
+      c.method_received,
+      c.service_request_status_type_id,
+      st.name AS service_request_status_type,
+      c.status_change_date,
+      c.date_opened,
+      c.last_updated,
+      c.date_closed,
+      c.service_request_location,
+      c.address_id,
+      a.latitude,
+      a.longitude,
+      a.postal_code,
+      a.geo_quality_code,
+      a.feature_type,
+      a.valid_address,
+      c.jurisdiction,
+      c.jurisdiction_name,
+      c.fiscal_year,
+      t.calendar_year,
+      t.month,
+      t.day_of_month,
+      t.day_of_week,
+      t.day_of_year,
+      t.week,
+      t.quarter
+     FROM (((((animal_services311_calls c
+       JOIN groups g ON ((c.group_id = g.id)))
+       JOIN service_request_types sr ON (((c.service_request_type_id = sr.id) AND (c.group_id = sr.group_id))))
+       JOIN service_request_status_types st ON (((c.service_request_status_type_id = st.id) AND (c.group_id = st.group_id))))
+       LEFT JOIN addresses a ON ((c.address_id = a.id)))
+       JOIN time_dimension t ON (((c.date_opened)::date = t.calendar_date)));
   SQL
 
 end
