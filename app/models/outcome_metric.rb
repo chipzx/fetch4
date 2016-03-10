@@ -34,6 +34,10 @@ class OutcomeMetric < ActiveRecord::Base
     return create_by_year_series(by_zip_code)
   end
 
+  def self.outcomes_by_gender
+    by_gender = OutcomeMetric.where("trackable_animal and outcome_type IN ('Adoption') and gender NOT LIKE 'Unknown%'").group(:animal_type, :fiscal_year, :gender).order(:animal_type, :fiscal_year, :gender).count
+    return create_series(by_gender)
+  end
   private
   def readonly?
     true
