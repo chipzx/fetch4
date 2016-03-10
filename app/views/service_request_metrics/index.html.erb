@@ -1,7 +1,7 @@
 <section>
   <div class="row">
-   <div class="col-md-12 col-lg-12">
-     <h1 class="text-center">311 Call Metrics (Coming Soon!)</h1>
+   <div class="col-md-10 col-lg-10">
+     <h1 class="text-center">311 Call Metrics</h1>
    </div>
   </div>
 
@@ -10,12 +10,54 @@
       <hr/>
     </div>
     <div class="row">
-      <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
-      </div>
-      <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+      <div class="col-md-10 col-lg-10">
+        <%= render(
+              partial: "service_requests_by_week",
+              locals: { service_requests_by_week: @service_requests_by_week, 
+                        id: 'service_requests_by_week' }
+            )
+        %>
       </div>
     </div>
     <div class="row">
+      <hr/>
+    </div>
+    <div class="row">
+      <div class="col-md-10 col-lg-10">
+        <%= render(
+              partial: "service_requests_by_month",
+              locals: { service_requests_by_month: @service_requests_by_month, 
+                        id: 'service_requests_by_month' }
+            )
+        %>
+      </div>
+    </div>
+    <div class="row">
+      <hr/>
+    </div>
+    <div class="row">
+      <div class="col-md-10 col-lg-10">
+        <%= render(
+              partial: "service_requests_by_quarter",
+              locals: { service_requests_by_quarter: @service_requests_by_quarter, 
+                        id: 'service_requests_by_quarter' }
+            )
+        %>
+      </div>
+    </div>
+    <div class="row">
+      <hr/>
+    </div>
+    <div class="row">
+      <div class="col-md-10 col-lg-10">
+        <%= render(
+            partial: "service_requests_by_zip_code",
+            locals: { service_requests_by_zip_code: @service_requests_by_zip_code,
+                      id: 'service_requests_by_zip_code' }
+          )
+        %>
+      </div>
+    </div>
       <hr/>
     </div>
   </div>

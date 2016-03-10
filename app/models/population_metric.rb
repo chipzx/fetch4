@@ -46,7 +46,7 @@ class PopulationMetric < ActiveRecord::Base
       idata = intakes[key]
       odata = outcomes[key]
       idata.each_key do |period|
-        next if odata[period].nil?
+        next if odata.nil? || odata[period].nil?
         itotal = idata[period]
         ototal = odata[period]
         unless itotal.nil? || ototal.nil?

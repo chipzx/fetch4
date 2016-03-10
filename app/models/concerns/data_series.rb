@@ -48,8 +48,10 @@ module DataSeries
       return series
     end
   
-    def zero_month(month)
-      return month < 10 ? "0" + month.to_s : month.to_s
+    def zero_month(period)
+      return 'Unknown' if period.nil?
+      return period if (period.class == String)
+      return period < 10 ? "0" + period.to_s : period.to_s
     end
   end
 end
