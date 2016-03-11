@@ -14,12 +14,12 @@
         <div class="form-group">
           <label class="control-label col-lg-3 col-md-3">Animal Type</label>
           <div class="col-md-3 col-lg-3">
-            <%= f.select(:with_animal_type, @filterrific.select_options[:animal_type], :selected => 'Dog', class: 'form-control') %> 
+            <%= f.select(:with_animal_type, @filterrific.select_options[:animal_type], class: 'form-control') %> 
           </div>
 
           <label class="control-label col-lg-3 col-md-3">Intake Type</label>
           <div class="col-md-3 col-lg-3">
-              <%= f.select(:with_intake_type, @filterrific.select_options[:intake_type], :selected => 'Stray', class: 'form-control') %>
+              <%= f.select(:with_intake_type, @filterrific.select_options[:intake_type], class: 'form-control') %>
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@
 
           <label class="control-label col-lg-3 col-md-3">Fiscal Year</label>
           <div class="col-md-3 col-lg-3">
-            <%= f.select(:with_fy_type, @filterrific.select_options[:fy_type], :selected => "2015", class: 'form-control') %>
+            <%= f.select(:with_fy_type, @filterrific.select_options[:fy_type], class: 'form-control') %>
           </div>
         </div>
 
@@ -71,7 +71,8 @@
   </div>
   </div>
   
-  <p> Max intensity is <%= @max_intensity %> for <%= @latlngs.size %> records</p>
+  <p class="text-info"> Current filters are: Animal Type: [<strong><%= pp_filter(@atype) %></strong>]  Intake Type: [<strong><%= pp_filter(@itype)%></strong>]  Gender: [<strong><%= pp_filter(@gtype) %></strong>]  Fiscal Year: [<strong><%= pp_filter(@ftype) %></strong>]</p>
+
   <%= render(partial: "map",
              locals: { latlngs:       @latlngs, 
                        map_data:      @map_data,                           

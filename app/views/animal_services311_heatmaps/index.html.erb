@@ -64,11 +64,12 @@
     </div>
   </div>
 
-  <p> Max intensity is <%= @max_intensity %> for <%= @latlngs.size %> records</p>
-   <%= render(
+  <p class="text-info"> Current filters are: Request Type: [<strong><%= pp_filter(@rtype) %></strong>]  Status Type: [<strong><%= pp_filter(@stype)%></strong>]  Fiscal Year: [<strong><%= pp_filter(@ftype) %></strong>]</p>
+
+  <%= render(
        partial: 'map',
        locals: { latlngs: @latlngs, map_data: @map_data, max_intensity: @max_intensity, hotspots: @hotspots, hs_detail: @hs_detail }
-     ) %>
+    ) %>
 
 </section>
 
