@@ -1,11 +1,10 @@
 class AdoptionMetricsController < ApplicationController
 
   def index
-    @by_day_totals = AdoptionsByDay.by_day_totals
-    @by_hour_totals = AdoptionsByHour.by_hour_totals
-    @by_length_of_stay = OverallLengthOfStay.by_length_of_stay
-    @by_age_groups = LengthOfStayByAgeGroup.by_age_groups
-    @width="100%"
+    @by_day_totals = OutcomeMetric.adoptions_by_day_of_week
+    @by_hour_totals = OutcomeMetric.adoptions_by_hour
+    @by_length_of_stay = LengthOfStayMetric.by_length_of_stay
+    @by_age_groups = LengthOfStayMetric.by_age_groups
   end
 
   def by_day_ajax

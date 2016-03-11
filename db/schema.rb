@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160307210230) do
+ActiveRecord::Schema.define(version: 20160310175901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -88,10 +88,12 @@ ActiveRecord::Schema.define(version: 20160307210230) do
   end
 
   create_table "age_groups", force: :cascade do |t|
-    t.string   "name",        null: false
+    t.string   "name",                       null: false
     t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.integer  "from_in_months", default: 0, null: false
+    t.integer  "to_in_months",   default: 0, null: false
   end
 
   add_index "age_groups", ["name"], name: "index_age_groups_on_name", unique: true, using: :btree
@@ -275,6 +277,32 @@ ActiveRecord::Schema.define(version: 20160307210230) do
     t.string   "last_modified_by",   limit: 255, null: false
   end
 
+  create_table "austin_outcomes", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "animal_type_id"
+    t.string   "animal_id"
+    t.string   "name"
+    t.integer  "outcome_type_id"
+    t.datetime "outcome_date"
+    t.integer  "gender_id"
+    t.integer  "address_id"
+    t.string   "breed"
+    t.string   "coloring"
+    t.decimal  "weight"
+    t.datetime "dob"
+    t.boolean  "dob_known"
+    t.datetime "intake_date"
+    t.integer  "intake_type_id"
+    t.text     "description"
+    t.integer  "group_id"
+    t.string   "microchip_number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "age"
+    t.integer  "fiscal_year"
+    t.integer  "kennel_id"
+  end
+
   create_table "bastrop_heatmap_data", id: false, force: :cascade do |t|
     t.integer  "id"
     t.string   "animal_id",         limit: 255
@@ -384,6 +412,14 @@ ActiveRecord::Schema.define(version: 20160307210230) do
     t.datetime "updated_at"
   end
 
+  create_table "breed_group_mappings", force: :cascade do |t|
+    t.string   "animal_type",                   null: false
+    t.string   "breed_group",                   null: false
+    t.string   "breed",                         null: false
+    t.datetime "created_at",  default: "now()", null: false
+    t.datetime "updated_at",  default: "now()", null: false
+  end
+
   create_table "breed_groups", force: :cascade do |t|
     t.string   "name",        null: false
     t.text     "description"
@@ -392,6 +428,17 @@ ActiveRecord::Schema.define(version: 20160307210230) do
   end
 
   add_index "breed_groups", ["name"], name: "index_breed_groups_on_name", unique: true, using: :btree
+
+  create_table "color_group_mappings", force: :cascade do |t|
+    t.string   "color_group",                   null: false
+    t.string   "coloring",                      null: false
+    t.integer  "precedence",  default: 2,       null: false
+    t.datetime "created_at",  default: "now()", null: false
+    t.datetime "updated_at",  default: "now()", null: false
+  end
+
+  add_index "color_group_mappings", ["color_group"], name: "index_color_group_mappings_on_color_group", using: :btree
+  add_index "color_group_mappings", ["coloring"], name: "index_color_group_mappings_on_coloring", using: :btree
 
   create_table "color_groups", force: :cascade do |t|
     t.string   "name",        null: false
@@ -1659,21 +1706,6 @@ ActiveRecord::Schema.define(version: 20160307210230) do
     GROUP BY i.group_id, i.found_location, i.latitude, i.longitude, at.name, it.name, g.description, i.fiscal_year;
   SQL
 
-  create_view :length_of_stay_by_age_groups,  sql_definition: <<-SQL
-      SELECT l.group_id,
-      l.animal_type,
-      l.outcome_type,
-      a.name AS age_group,
-      a.id AS sort_order,
-      sum(l.length_of_stay) AS total_length,
-      count(*) AS total_animals,
-      round((((sum(l.length_of_stay))::numeric * 1.0) / ((count(*))::numeric * 1.0)), 2) AS avg_length_of_stay
-     FROM (length_of_stays l
-       JOIN age_groups a ON ((a.id = l.age_group_id)))
-    WHERE (l.age_group_id IS NOT NULL)
-    GROUP BY l.group_id, l.animal_type, l.outcome_type, a.name, a.id;
-  SQL
-
   create_view :outcome_heatmaps,  sql_definition: <<-SQL
       SELECT o.group_id,
       a.full_location AS found_location,
@@ -1700,18 +1732,6 @@ ActiveRecord::Schema.define(version: 20160307210230) do
      FROM (outcomes o
        JOIN addresses a ON ((o.address_id = a.id)))
     GROUP BY o.group_id, a.postal_code;
-  SQL
-
-  create_view :overall_length_of_stays,  sql_definition: <<-SQL
-      SELECT length_of_stays.animal_type,
-      length_of_stays.outcome_type,
-      length_of_stays.group_id,
-      sum(length_of_stays.length_of_stay) AS total_length,
-      count(*) AS total_animals,
-      round((((sum(length_of_stays.length_of_stay))::numeric * 1.0) / ((count(*))::numeric * 1.0)), 2) AS avg_length_of_stay
-     FROM length_of_stays
-    WHERE (length_of_stays.length_of_stay IS NOT NULL)
-    GROUP BY length_of_stays.animal_type, length_of_stays.outcome_type, length_of_stays.group_id;
   SQL
 
   create_view :intake_metrics, materialized: true,  sql_definition: <<-SQL
@@ -1887,7 +1907,7 @@ ActiveRecord::Schema.define(version: 20160307210230) do
       o.intake_date,
       it.trackable_intake,
       o.gender_id,
-      g.description AS gender,
+      s.description AS gender,
       o.breed,
       o.coloring,
       o.weight,
@@ -1919,6 +1939,35 @@ ActiveRecord::Schema.define(version: 20160307210230) do
        LEFT JOIN addresses a ON ((o.address_id = a.id)))
        JOIN time_dimension t ON (((o.outcome_date)::date = t.calendar_date)))
        LEFT JOIN outcome_postal_code_ranks r ON ((((a.postal_code)::text = (r.postal_code)::text) AND (o.group_id = r.group_id))));
+  SQL
+
+  create_view :length_of_stay_metrics,  sql_definition: <<-SQL
+      SELECT o.id AS outcome_id,
+      o.animal_id,
+      o.group_id,
+      o.animal_type,
+      o.gender,
+      o.intake_type,
+      o.intake_date,
+      o.outcome_type,
+      o.outcome_date,
+      ((o.outcome_date)::date - (o.intake_date)::date) AS length_of_stay,
+      o.age,
+      age_group(o.age) AS age_group,
+      breed_group(o.breed) AS breed_group,
+      color_group(o.coloring) AS color_group,
+      o.fiscal_year,
+      o.calendar_year,
+      o.month,
+      o.week,
+      o.quarter,
+      o.day_of_month,
+      o.day_of_week,
+      o.day_of_year,
+      a.from_in_months
+     FROM (outcome_metrics o
+       JOIN age_groups a ON (((age_group(o.age))::text = (a.name)::text)))
+    WHERE ((o.intake_date IS NOT NULL) AND (o.outcome_date IS NOT NULL));
   SQL
 
 end

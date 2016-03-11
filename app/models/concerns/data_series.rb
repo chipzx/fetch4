@@ -33,11 +33,10 @@ module DataSeries
           value = []
           # v has form "[[type, year, period], count]"
           f = v.flatten.slice(1,3) # get rid of type, it's the same value as key
-
-          dayMnth = "#{f[0]}/#{zero_month(f[1])}"
-          totalIntakes = f[2]
-          value << dayMnth
-          value << totalIntakes
+          label = "#{f[0]}: #{zero_month(f[1])}"
+          totals = f[2]
+          value << label
+          value << totals
           values << value
         end
         dataset = Hash.new

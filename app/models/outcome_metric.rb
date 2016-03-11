@@ -4,6 +4,8 @@ class OutcomeMetric < ActiveRecord::Base
 
   self.primary_key = :id
 
+  @@days = [ nil, "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" ]
+
   def self.refresh
     Scenic.database.refresh_materialized_view(table_name, concurrently: false)
   end
@@ -38,6 +40,24 @@ class OutcomeMetric < ActiveRecord::Base
     by_gender = OutcomeMetric.where("trackable_animal and outcome_type IN ('Adoption') and gender NOT LIKE 'Unknown%'").group(:animal_type, :fiscal_year, :gender).order(:animal_type, :fiscal_year, :gender).count
     return create_series(by_gender)
   end
+
+  def self.adoptions_by_hour
+    by_hour = OutcomeMetric.where("trackable_animal and outcome_type = 'Adoption'").group(:fiscal_year, :outcome_hour).order(:fiscal_year, :outcome_hour).count
+    return create_by_year_series(by_hour)
+  end
+
+  def self.adoptions_by_day_of_week
+    by_dow = OutcomeMetric.where("trackable_animal and outcome_type = 'Adoption'").group(:fiscal_year, :day_of_week).order(:fiscal_year, :day_of_week).count
+    by_dow = create_by_year_series(by_dow)
+    by_dow.each do |series|
+      data = series["data"]
+      data.each do |entry|
+        entry[0] =  @@days[entry[0]]
+      end
+    end
+    return by_dow
+  end
+
   private
   def readonly?
     true
