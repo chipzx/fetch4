@@ -33,7 +33,7 @@ module ProvisionedCodeTable
       defaults = self.unscope(:where).where('group_id = ?', root_id)
       raise Exception, "No default #{self.name} records found" if defaults.size == 0
       defaults.to_a.each do |obj|
-        new_obj = self.new(:name => obj.name, :standard_name => obj.standard_name, :description => obj.description, :group_id => new_group_id)
+        new_obj = self.new(:name => obj.name, :description => obj.description, :group_id => new_group_id)
         new_obj.save
         puts("Saved id: #{new_obj.id} name: #{new_obj.name} group_id: #{new_obj.group}")
       end
