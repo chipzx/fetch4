@@ -11,7 +11,7 @@ class OutcomeMetric < ActiveRecord::Base
   end
 
   def self.outcomes_by_day
-    by_day = OutcomeMetric.where("trackable_animal and fiscal_year = 2015 and month = 7").group(:animal_type, :fiscal_year, :day_of_year).order(:animal_type, :fiscal_year, :day_of_year).count
+    by_day = OutcomeMetric.where("trackable_animal").group(:animal_type, :fiscal_year, :day_of_year).order(:animal_type, :fiscal_year, :day_of_year).count
     return create_series(by_day)
   end
 
