@@ -1,6 +1,6 @@
 class Address < ActiveRecord::Base
 
-  validates :party_id, :address_type_id, :street_address_1, :city, :state, :postal_code, :country, presence: true
+  validates :party_id, :address_type_id, :street_address_1, :city, presence: true
   validates :street_address_1, uniqueness: {scope: [ :party_id, :street_address_2, :city, :state, :postal_code, :country, :address_type_id ] }
 
   geocoded_by :address do |obj, results|
