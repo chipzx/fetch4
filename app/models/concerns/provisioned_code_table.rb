@@ -44,4 +44,23 @@ puts("Defaults size is #{defaults.size}, new objects size is #{new_objs.size}")
       end
     end
   end
+
+  # monkeypatch alert - there are better ways to do this
+  # TODO: Do them
+  def self.subclasses
+    classes = []
+    ObjectSpace.each_object do |klass|
+      next unless Module === klass
+      classes << klass if self > klass
+    end 
+    return classes
+  end
+
+  # We want a list of all classes that include this module so that
+  # we can call the provision method on them when a new group gets defined
+  def self.provisionables
+    Dir["#{Rails.root.to_s}/app/models/*.rb"].each {|file| load(file)}
+    return subclasses
+  end
+
 end

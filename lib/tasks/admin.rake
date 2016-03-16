@@ -16,20 +16,12 @@ namespace :admin do
         newGroup.save!
         root_id = Group.find_by_name('root').id
         group_id = newGroup.id
-        puts "Provisioning animal_types for group_id #{group_id}"
-        AnimalType.provision(root_id, group_id)
-        puts "Provisioning intake_types for group_id #{group_id}"
-        IntakeType.provision(root_id, group_id)
-        puts "Provisioning outcome_types for group_id #{group_id}"
-        OutcomeType.provision(root_id, group_id)
-        puts "Provisioning gender types for group_id #{group_id}"
-        Gender.provision(root_id, group_id)
-        puts "Provisioning kennel types for group_id #{group_id}"
-        KennelType.provision(root_id, group_id)
-        puts "Provisioning roles for group_id #{group_id}"
-        Role.provision(root_id, group_id)
-        puts "Provisioning role_rights for group_id #{group_id}"
-        RoleRight.provision(root_id, group_id)
+        provisionable_classes = ProvisionedCodeTable.provisionables
+        raise 'No provisionables found' if provisionable_classes.empty?
+        provisionable_classes.each do |klass|
+          puts "Provisioning #{klass.name} for group_id #{group_id}"
+          klass.send "provision", root_id, group_id
+        end
       end
     end
   end

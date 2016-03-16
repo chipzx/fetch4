@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160314161839) do
+ActiveRecord::Schema.define(version: 20160316040642) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -301,6 +301,32 @@ ActiveRecord::Schema.define(version: 20160314161839) do
     t.string   "age"
     t.integer  "fiscal_year"
     t.integer  "kennel_id"
+  end
+
+  create_table "bastrop_2016_intakes", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "animal_type_id"
+    t.string   "animal_id"
+    t.string   "name"
+    t.integer  "group_id"
+    t.datetime "intake_date"
+    t.integer  "intake_type_id"
+    t.string   "found_location"
+    t.string   "postal_code"
+    t.integer  "address_id"
+    t.integer  "gender_id"
+    t.string   "breed"
+    t.string   "coloring"
+    t.string   "age"
+    t.float    "weight"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.integer  "geo_quality_code"
+    t.boolean  "parseable_address"
+    t.boolean  "valid_address"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "fiscal_year"
   end
 
   create_table "bastrop_heatmap_data", id: false, force: :cascade do |t|
@@ -1462,23 +1488,21 @@ ActiveRecord::Schema.define(version: 20160314161839) do
   end
 
   create_table "service_request_status_types", force: :cascade do |t|
-    t.string   "name",          null: false
-    t.string   "standard_name", null: false
+    t.string   "name",        null: false
     t.string   "description"
-    t.integer  "group_id",      null: false
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.integer  "group_id",    null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   add_index "service_request_status_types", ["name", "group_id"], name: "index_service_request_status_types_on_name_and_group_id", unique: true, using: :btree
 
   create_table "service_request_types", force: :cascade do |t|
-    t.string   "name",          null: false
-    t.string   "standard_name", null: false
+    t.string   "name",        null: false
     t.string   "description"
-    t.integer  "group_id",      null: false
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.integer  "group_id",    null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   add_index "service_request_types", ["name", "group_id"], name: "index_service_request_types_on_name_and_group_id", unique: true, using: :btree
