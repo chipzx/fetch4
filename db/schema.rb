@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160312154858) do
+ActiveRecord::Schema.define(version: 20160314161839) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -894,6 +894,18 @@ ActiveRecord::Schema.define(version: 20160312154858) do
     t.datetime "intake_date"
   end
 
+  create_table "map_markers", force: :cascade do |t|
+    t.string   "name",                           null: false
+    t.integer  "group_id",                       null: false
+    t.string   "icon_name",   default: "Marker", null: false
+    t.text     "description"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "map_markers", ["group_id"], name: "index_map_markers_on_group_id", using: :btree
+  add_index "map_markers", ["name", "group_id"], name: "index_map_markers_on_name_and_group_id", unique: true, using: :btree
+
   create_table "map_types", force: :cascade do |t|
     t.string   "name",        null: false
     t.text     "description"
@@ -1573,6 +1585,7 @@ ActiveRecord::Schema.define(version: 20160312154858) do
   add_foreign_key "latlong_addrs", "party_pks", column: "party_id", primary_key: "party_id", name: "latlong_addrs_party_id_fk", on_delete: :cascade
   add_foreign_key "length_of_stays", "groups", name: "length_of_stays_group_id_fk"
   add_foreign_key "length_of_stays", "outcomes", name: "length_of_stays_outcome_id_fk"
+  add_foreign_key "map_markers", "groups", name: "map_markers_group_id_fk"
   add_foreign_key "media_contacts", "contact_pks", column: "id", primary_key: "contact_id", name: "media_contacts_pk_contact_id_fk", on_delete: :cascade
   add_foreign_key "media_contacts", "contact_types", name: "media_contacts_contact_type_id_fk"
   add_foreign_key "media_contacts", "media_types", name: "media_contacts_media_type_fk"
