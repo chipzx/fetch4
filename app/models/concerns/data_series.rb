@@ -3,50 +3,35 @@ module DataSeries
 
   module ClassMethods
 
-    def create_by_year_series(result_set)
-      # result_set has form [[type, year], count] 
+    def create_hc_series(result_set, separator = " ")
       series = []
-      groups = result_set.to_a.group_by { |stat| stat[0][0] }
-      groups.each do |key, val|
-        values = []
-        val.each do |v|
-          value = []
-          f = v.flatten.slice(1,2)
-          value << f[0]
-          value << f[1]
-          values << value
-        end
-        dataset = Hash.new
-        dataset["name"] = key
-        dataset["data"] = values
-        series << dataset
-      end 
+      results = result_set.to_a
+
+      if results.size > 0 && results[0][0].kind_of?(Array)  
+        groups = results.group_by { |r| r[0][0] } 
+        groups.each do |key, val|
+          values = []
+          val.each do |v|
+            value = []
+            vf = v.flatten
+            f = vf.slice(1,vf.length-1)
+            label = f[0..f.length-2].join(separator)
+            totals = f[-1]
+            value << label
+            value << totals
+            values << value
+          end
+          dataset = Hash.new
+          dataset["name"] = key
+          dataset["data"] = values
+          series << dataset
+        end          
+      else
+        series = results
+      end    
       return series
     end
 
-    def create_series(result_set)
-      series = []
-      groups = result_set.to_a.group_by { |stat| stat[0][0] }
-      groups.each do |key, val|
-        values = []
-        val.each do |v|
-          value = []
-          # v has form "[[type, year, period], count]"
-          f = v.flatten.slice(1,3) # get rid of type, it's the same value as key
-          label = "#{f[0]}: #{zero_month(f[1])}"
-          totals = f[2]
-          value << label
-          value << totals
-          values << value
-        end
-        dataset = Hash.new
-        dataset["name"] = key
-        dataset["data"] = values
-        series << dataset
-      end
-      return series
-    end
-  
     def zero_month(period)
       return 'Unknown' if period.nil?
       return period if (period.class == String)
