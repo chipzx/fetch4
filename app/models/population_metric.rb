@@ -3,7 +3,9 @@ class PopulationMetric < ActiveRecord::Base
   include DataSeries
 
   def self.io_by_day
-
+    intakes = hash_by_animal_type(IntakeMetric.intakes_by_day)
+    outcomes = hash_by_animal_type(OutcomeMetric.outcomes_by_day)
+    return merge_period_totals(intakes, outcomes)
   end
 
   def self.io_by_month
