@@ -18,6 +18,11 @@ class IntakeMetric < ActiveRecord::Base
     return create_hc_series(by_month)
   end
 
+  def self.intakes_by_zip_code
+    # "count_all" is the name of the column produced by the call to the count method
+    by_zip_code = IntakeMetric.where("trackable_animal AND postal_code IS NOT NULL AND intake_type = ?", 'Stray').group(:postal_code).order("count_all DESC").limit(10).count
+    return create_hc_series(by_zip_code)
+  end
 
   private
   def readonly?

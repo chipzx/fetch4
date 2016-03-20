@@ -24,7 +24,7 @@ class ServiceRequestMetric < ActiveRecord::Base
   end
 
   def self.service_requests_by_zip_code
-    by_zip_code = ServiceRequestMetric.where("rank <= 5").group(:service_request_type, :fiscal_year, :postal_code).order(:service_request_type, :fiscal_year, :postal_code).count
+    by_zip_code = ServiceRequestMetric.where("postal_code IN (SELECT postal_code FROM (SELECT postal_code, count(*) as totals FROM service_request_metrics where postal_code IS NOT NULL group by postal_code order by totals DESC LIMIT 10) top_zips) AND rank <= 7").group(:service_request_type, :postal_code).order("count_all DESC").count
     return create_hc_series(by_zip_code)
   end
 
