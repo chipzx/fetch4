@@ -1,27 +1,10 @@
-<%= line_chart(io_by_month,
-  id: id,
-  xtitle: 'Month',
-  ytitle: 'Outcomes minus Intakes',
-  library:
-  {
-    title:  {
-      text:  'Outcomes Minus Intakes By Month',
-      align: 'center'
-    },
-    chart: {
-      borderWidth: 2,
-      plotBackgroundColor: 'rgba(255,255,255,.9)',
-      plotShadow: true,
-      plotBorderWidth: 1,
-      backgroundColor: '#eee'
-    },
-    legend: {
-      align: 'right',
-      verticalAlign: 'top',
-      y: 75,
-      x: -50,
-    layout: 'vertical'
-    }
-  }
-  )
+<%=  render(partial: "standard_column_chart",
+            locals:  { data_series: @io_by_month, 
+                       is_stacked: false,
+                       id: 'population_by_month', 
+                       title: "Outcomes Minus Intakes By Month",
+                       xtitle: "Date",
+                       ytitle: "Outcomes Minus Intakes"
+                     }
+           )
  %>

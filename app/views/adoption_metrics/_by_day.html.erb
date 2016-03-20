@@ -1,28 +1,10 @@
-<section>
-  <%= column_chart( by_day_totals, 
-id: id,
-xtitle: 'Day of Week', 
-ytitle: 'Number of Adoptions', 
-library: 
-  { 
-    title:  { 
-      text:  'Adoptions By Day of Week', 
-      align: 'center' 
-    }, 
-    chart: { 
-      borderWidth: 2, 
-      plotBackgroundColor: 'rgba(255,255,255,.9)', 
-      plotShadow: true, 
-      plotBorderWidth: 1, 
-      backgroundColor: '#eee'
-    }, 
-    legend: { 
-      align: 'right', 
-      verticalAlign: 'top', 
-      y: 75, 
-      x: -50, 
-    layout: 'vertical' 
-    }
-  }
-) %>
-</section>
+<%=  render(partial: "standard_column_chart",
+            locals:  { data_series: @by_day_totals, 
+                       is_stacked: false,
+                       id: 'adoptions_by_day_of_week', 
+                       title: "Adoptions By Day of Week",
+                       xtitle: "Day of Week",
+                       ytitle: "Number of Adoptions"
+                     }
+           )
+ %>

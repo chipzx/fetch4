@@ -1,29 +1,10 @@
-<section>
-  <%= column_chart( by_length_of_stay,
-id: id,
-xtitle: 'Animal Type',
-ytitle: 'Average Length Of Stay',
-library:
-  {
-    title:  {
-      text:  'Average Length of Stay for Adoptions',
-      align: 'center'
-    },
-    chart: {
-      borderWidth: 2,
-      plotBackgroundColor: 'rgba(255,255,255,.9)',
-      plotShadow: true,
-      plotBorderWidth: 1,
-      backgroundColor: '#eee'
-    },
-    legend: {
-      align: 'right',
-      verticalAlign: 'top',
-      y: 75,
-      x: -50,
-    layout: 'vertical'
-    }
-  }
-) %>
-</section>
-
+<%=  render(partial: "standard_column_chart",
+            locals:  { data_series: @by_length_of_stay, 
+                       is_stacked: false,
+                       id: 'average_length_of_stay', 
+                       title: "Average Length of Stay for Adoptions",
+                       xtitle: "Animal Type",
+                       ytitle: "Average Length of Stay"
+                     }
+           )
+ %>

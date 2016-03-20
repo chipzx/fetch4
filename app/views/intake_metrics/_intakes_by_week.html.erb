@@ -1,27 +1,11 @@
-<%= column_chart(intakes_by_week,
-  id: id,
-  xtitle: 'Week of Year',
-  ytitle: 'Total Intakes',
-  library:
-  {
-    title:  {
-      text:  'Intakes By Week',
-      align: 'center'
-    },
-    chart: {
-      borderWidth: 2,
-      plotBackgroundColor: 'rgba(255,255,255,.9)',
-      plotShadow: true,
-      plotBorderWidth: 1,
-      backgroundColor: '#eee'
-    },
-    legend: {
-      align: 'right',
-      verticalAlign: 'top',
-      y: 75,
-      x: -50,
-    layout: 'vertical'
-    }
-  }
-  )
+<%= 
+  render(partial: "standard_column_chart",
+         locals: { data_series: @intakes_by_week,
+                   is_stacked: false,
+                   id: "intakes_by_week",
+                   title: "Intakes By Week",
+                   xtitle: "Date", 
+                   ytitle: "Total Intakes"
+                 }
+        )
  %>

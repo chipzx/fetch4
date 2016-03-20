@@ -1,27 +1,11 @@
-<%= line_chart(intake_by_days,
-  id: id,
-  xtitle: 'Date',
-  ytitle: 'Total Intakes',
-  library:
-  {
-    title:  {
-      text:  'Intakes By Day',
-      align: 'center'
-    },
-    chart: {
-      borderWidth: 2,
-      plotBackgroundColor: 'rgba(255,255,255,.9)',
-      plotShadow: true,
-      plotBorderWidth: 1,
-      backgroundColor: '#eee'
-    },
-    legend: {
-      align: 'right',
-      verticalAlign: 'top',
-      y: 75,
-      x: -50,
-    layout: 'vertical'
-    }
-  }
-  )
+<%= 
+  render(partial: "standard_line_chart",
+         locals: { data_series: @intake_by_days,
+                   is_stacked: false,
+                   id: "intakes_by_day",
+                   title: "Intakes By Day",
+                   xtitle: "Date",
+                   ytitle: "Total Intakes"
+                 }
+        )
  %>

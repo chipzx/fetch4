@@ -1,28 +1,10 @@
-<section>
-  <%= column_chart( by_hour_totals, 
-id: id,
-xtitle: 'Hour of Day', 
-ytitle: 'Number of Adoptions', 
-library: 
-  { 
-    title:  { 
-      text:  'Adoptions By Hour of Day', 
-      align: 'center' 
-    }, 
-    chart: { 
-      borderWidth: 2, 
-      plotBackgroundColor: 'rgba(255,255,255,.9)', 
-      plotShadow: true, 
-      plotBorderWidth: 1, 
-      backgroundColor: '#eee'
-    }, 
-    legend: { 
-      align: 'right', 
-      verticalAlign: 'top', 
-      y: 75, 
-      x: -50, 
-    layout: 'vertical' 
-    }
-  }
-) %>
-</section>
+<%=  render(partial: "standard_column_chart",
+            locals:  { data_series: @by_hour_totals, 
+                       is_stacked: false,
+                       id: 'adoptions_by_hour_of_day', 
+                       title: "Adoptions By Hour of Day",
+                       xtitle: "Hour of Day",
+                       ytitle: "Number of Adoptions"
+                     }
+           )
+ %>

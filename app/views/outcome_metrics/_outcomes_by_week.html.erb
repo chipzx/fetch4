@@ -1,27 +1,10 @@
-<%= column_chart(outcomes_by_week,
-  id: id,
-  xtitle: 'Week',
-  ytitle: 'Total Outcomes',
-  library:
-  {
-    title:  {
-      text:  'Outcomes By Week',
-      align: 'center'
-    },
-    chart: {
-      borderWidth: 2,
-      plotBackgroundColor: 'rgba(255,255,255,.9)',
-      plotShadow: true,
-      plotBorderWidth: 1,
-      backgroundColor: '#eee'
-    },
-    legend: {
-      align: 'right',
-      verticalAlign: 'top',
-      y: 75,
-      x: -50,
-    layout: 'vertical'
-    }
-  }
-  )
+<%=  render(partial: "standard_column_chart",
+            locals:  { data_series: @outcomes_by_week, 
+                       is_stacked: false,
+                       id: 'outcomes_by_week', 
+                       title: "Outcomes By Week",
+                       xtitle: "Week",
+                       ytitle: "Total Outcomes"
+                     }
+           )
  %>

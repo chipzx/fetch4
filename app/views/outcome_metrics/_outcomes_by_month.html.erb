@@ -1,27 +1,10 @@
-<%= line_chart(outcomes_by_month,
-  id: id,
-  xtitle: 'Month',
-  ytitle: 'Total Outcomes',
-  library:
-  {
-    title:  {
-      text:  'Outcomes By Month',
-      align: 'center'
-    },
-    chart: {
-      borderWidth: 2,
-      plotBackgroundColor: 'rgba(255,255,255,.9)',
-      plotShadow: true,
-      plotBorderWidth: 1,
-      backgroundColor: '#eee'
-    },
-    legend: {
-      align: 'right',
-      verticalAlign: 'top',
-      y: 75,
-      x: -50,
-    layout: 'vertical'
-    }
-  }
-  )
+<%=  render(partial: "standard_column_chart",
+            locals:  { data_series: @outcomes_by_month, 
+                       is_stacked: false,
+                       id: 'outcomes_by_month', 
+                       title: "Outcomes By Month",
+                       xtitle: "Month",
+                       ytitle: "Total Outcomes"
+                     }
+           )
  %>
