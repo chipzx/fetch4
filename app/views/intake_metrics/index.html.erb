@@ -11,8 +11,8 @@
     <div class="row">
       <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
         <%= render(
-              partial: "intake_by_days",
-              locals: { intake_by_days: @intake_by_days, id: 'intake_by_days' }
+              partial: "intakes_by_day",
+              locals: { intakes_by_day: @intakes_by_day, id: 'intakes_by_day' }
             )
         %>
       </div>
@@ -37,8 +37,8 @@
       </div>
       <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
         <%= render(
-              partial: "by_zip_code",
-              locals: { by_zip_code: @by_zip_code, id: 'strays_by_zip_code' }
+              partial: "intakes_by_quarter",
+              locals: { intakes_by_quarter: @intakes_by_quarter, id: 'intakes_by_quarter' }
             )
         %>
       </div>
@@ -49,10 +49,20 @@
     <div class="row">
       <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
         <%= render(
-            partial: "by_intake_gender",
-            locals: { by_intake_gender: @by_intake_gender, id: 'intakes_by_gender' }
+              partial: "intakes_by_zip_code",
+              locals: { intakes_by_zip_code: @intakes_by_zip_code, id: 'intakes_by_zip_code' }
+            )
+        %>
+      </div>
+      <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+        <%= render(
+            partial: "intakes_by_gender",
+            locals: { intakes_by_gender: @intakes_by_gender, id: 'intakes_by_gender' }
           )
         %>
       </div>
+    </div>
+    <div class="row">
+      <hr/>
     </div>
   </div>

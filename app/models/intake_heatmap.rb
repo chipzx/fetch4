@@ -34,6 +34,6 @@ class IntakeHeatmap < ActiveRecord::Base
   end
 
   def self.options_for_fy_type
-    opts = { "All" => nil, "2014" => "2014", "2015" => "2015" }
+    opts = { "All" => nil, "2014" => "2014", "2015" => "2015", "2016" => "2016" }
   end
 end

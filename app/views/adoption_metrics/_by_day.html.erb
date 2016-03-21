@@ -1,7 +1,7 @@
 <%=  render(partial: "standard_column_chart",
-            locals:  { data_series: @by_day_totals, 
+            locals:  { data_series: by_day_totals, 
                        is_stacked: false,
-                       id: 'adoptions_by_day_of_week', 
+                       id: id, 
                        title: "Adoptions By Day of Week",
                        xtitle: "Day of Week",
                        ytitle: "Number of Adoptions"

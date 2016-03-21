@@ -7,27 +7,39 @@ class OutcomeMetric < ActiveRecord::Base
   @@days = [ nil, "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" ]
 
   def self.refresh
+    # make sure outcomes have intake dates (if available) so we can calc length of stay in outcome_metrics
+    connection.execute(
+"UPDATE outcomes o                                                                                           
+    SET intake_date = i.intake_date, 
+        intake_type_id = lookup_intake_type_id(i.intake_type, o.group_id) 
+   FROM intake_metrics i
+  WHERE o.animal_id = i.animal_id
+    AND o.group_id = i.group_id 
+    AND o.intake_date IS NULL
+    AND i.intake_date = (SELECT MAX(i2.intake_date) 
+                         FROM   intake_metrics i2
+                         WHERE  i2.animal_id = i.animal_id
+                           AND  i2.animal_id = o.animal_id
+                           AND  i2.group_id = o.group_id
+                           AND  i2.intake_date <= o.outcome_date)")
+
     Scenic.database.refresh_materialized_view(table_name, concurrently: false)
   end
 
   def self.outcomes_by_day
-    by_day = OutcomeMetric.where("trackable_animal").group(:animal_type, :fiscal_year, :day_of_year).order(:animal_type, :fiscal_year, :day_of_year).count
-    return create_hc_series(by_day)
+    return outcomes_by_period(:day_of_year)
   end
 
   def self.outcomes_by_week
-    by_week = OutcomeMetric.where("trackable_animal").group(:animal_type, :fiscal_year, :week).order(:animal_type, :fiscal_year, :week).count
-    return create_hc_series(by_week)
+    return outcomes_by_period(:week)
   end
   
   def self.outcomes_by_month
-    by_month = OutcomeMetric.where("trackable_animal").group(:animal_type, :fiscal_year, :month).order(:animal_type, :fiscal_year, :month).count
-    return create_hc_series(by_month)
+    return outcomes_by_period(:month)
   end
 
   def self.outcomes_by_quarter
-    by_month = OutcomeMetric.where("trackable_animal").group(:animal_type, :fiscal_year, :quarter).order(:animal_type, :fiscal_year, :quarter).count
-    return create_hc_series(by_month)
+    return outcomes_by_period(:quarter)
   end
 
   def self.outcomes_by_zip_code
@@ -58,9 +70,24 @@ class OutcomeMetric < ActiveRecord::Base
     return by_dow
   end
 
+  def self.adoptions_by_length_of_stay
+    length_of_stay = OutcomeMetric.where("trackable_animal AND outcome_type = 'Adoption' AND length_of_stay IS NOT NULL").group(:animal_type).order(:animal_type).average(:length_of_stay)
+    return create_hc_series(length_of_stay)
+  end
+
+  def self.adoptions_by_age_groups
+    los_by_age_group = OutcomeMetric.where("trackable_animal AND outcome_type = 'Adoption' AND age_group IS NOT NULL").group(:animal_type, :age_group).order(:animal_type, :age_group).average(:length_of_stay)
+    return create_hc_series(los_by_age_group)
+  end
+
   private
   def readonly?
     true
+  end
+
+  def self.outcomes_by_period(period)
+    by_period = OutcomeMetric.where("trackable_animal").group(:animal_type, :fiscal_year, period).order(:animal_type, :fiscal_year, period).count
+    return create_hc_series(by_period)
   end
 
 end

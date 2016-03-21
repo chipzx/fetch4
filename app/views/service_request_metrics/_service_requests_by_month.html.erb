@@ -1,7 +1,7 @@
 <%=  render(partial: "standard_column_chart",
-            locals:  { data_series: @service_requests_by_month, 
+            locals:  { data_series: service_requests_by_month, 
                        is_stacked: true,
-                       id: 'service_requests_by_month', 
+                       id: id, 
                        title: "Service Requests By Month",
                        xtitle: "Month",
                        ytitle: "Total Service Requests"

@@ -37,8 +37,8 @@
       </div>
       <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
         <%= render(
-             partial: "outcomes_by_zip_code",
-             locals: { outcomes_by_zip_code: @outcomes_by_zip_code, id: 'outcomes_by_zip_code' }
+             partial: "outcomes_by_quarter",
+             locals: { outcomes_by_quarter: @outcomes_by_quarter, id: 'outcomes_by_quarter' }
             )
         %>
       </div>
@@ -49,8 +49,15 @@
     <div class="row">
       <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
         <%= render(
-              partial: "by_outcome_gender",
-             locals: { by_outcome_gender: @outcomes_by_gender, id: 'outcome_by_gender' }
+             partial: "outcomes_by_zip_code",
+             locals: { outcomes_by_zip_code: @outcomes_by_zip_code, id: 'outcomes_by_zip_code' }
+            )
+        %>
+      </div>
+      <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+        <%= render(
+              partial: "outcomes_by_gender",
+             locals: { outcomes_by_gender: @outcomes_by_gender, id: 'outcomes_by_gender' }
             )
         %>
       </div>

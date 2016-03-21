@@ -1,7 +1,7 @@
 <%=  render(partial: "standard_column_chart",
-            locals:  { data_series: @by_length_of_stay, 
+            locals:  { data_series: by_length_of_stay, 
                        is_stacked: false,
-                       id: 'average_length_of_stay', 
+                       id: id, 
                        title: "Average Length of Stay for Adoptions",
                        xtitle: "Animal Type",
                        ytitle: "Average Length of Stay"

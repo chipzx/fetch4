@@ -11,10 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160316040642) do
+ActiveRecord::Schema.define(version: 20160320234927) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "aac_outcomes", id: false, force: :cascade do |t|
+    t.string   "animal_id"
+    t.string   "name"
+    t.datetime "outcome_date"
+    t.string   "outcome_type"
+    t.string   "outcome_subtype"
+    t.string   "animal_type"
+    t.string   "gender"
+    t.string   "age"
+    t.string   "breed"
+    t.string   "color"
+    t.datetime "intake_date"
+  end
 
   create_table "addr_to_outcome_map", id: false, force: :cascade do |t|
     t.integer  "address_id"
@@ -97,6 +111,32 @@ ActiveRecord::Schema.define(version: 20160316040642) do
   end
 
   add_index "age_groups", ["name"], name: "index_age_groups_on_name", unique: true, using: :btree
+
+  create_table "ahs_2016_intakes", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "animal_type_id"
+    t.string   "animal_id"
+    t.string   "name"
+    t.integer  "group_id"
+    t.datetime "intake_date"
+    t.integer  "intake_type_id"
+    t.string   "found_location"
+    t.string   "postal_code"
+    t.integer  "address_id"
+    t.integer  "gender_id"
+    t.string   "breed"
+    t.string   "coloring"
+    t.string   "age"
+    t.float    "weight"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.integer  "geo_quality_code"
+    t.boolean  "parseable_address"
+    t.boolean  "valid_address"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "fiscal_year"
+  end
 
   create_table "animal_galleries", force: :cascade do |t|
     t.integer  "animal_id",                          null: false
@@ -301,6 +341,28 @@ ActiveRecord::Schema.define(version: 20160316040642) do
     t.string   "age"
     t.integer  "fiscal_year"
     t.integer  "kennel_id"
+  end
+
+  create_table "bastrop_2016_addresses", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "party_id"
+    t.integer  "address_type_id"
+    t.string   "street_address_1"
+    t.string   "street_address_2"
+    t.string   "city"
+    t.string   "county"
+    t.string   "state"
+    t.string   "postal_code"
+    t.string   "country"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "geo_quality_code"
+    t.string   "feature_type"
+    t.boolean  "partial_match"
+    t.boolean  "valid_address"
+    t.text     "full_location"
   end
 
   create_table "bastrop_2016_intakes", id: false, force: :cascade do |t|
@@ -1822,42 +1884,6 @@ ActiveRecord::Schema.define(version: 20160316040642) do
     GROUP BY o.group_id, a.postal_code;
   SQL
 
-  create_view :intake_metrics, materialized: true,  sql_definition: <<-SQL
-      SELECT i.id,
-      i.group_id,
-      at.name AS animal_type,
-      it.name AS intake_type,
-      s.name AS gender,
-      i.weight,
-      i.age,
-      i.breed,
-      i.coloring,
-      i.address_id,
-      i.fiscal_year,
-      at.trackable_animal,
-      it.trackable_intake,
-      it.live_intake,
-      i.latitude,
-      i.longitude,
-      i.geo_quality_code,
-      i.postal_code,
-      t.calendar_date,
-      t.calendar_year,
-      t.quarter,
-      t.month,
-      t.week,
-      t.day_of_month,
-      t.day_of_week,
-      t.day_of_year,
-      to_number(to_char(timezone((g.time_zone)::text, i.intake_date), 'HH24'::text), '99'::text) AS intake_hour
-     FROM (((((intakes i
-       JOIN groups g ON ((i.group_id = g.id)))
-       JOIN animal_types at ON (((i.animal_type_id = at.id) AND (i.group_id = at.group_id))))
-       JOIN intake_types it ON (((i.intake_type_id = it.id) AND (i.group_id = it.group_id))))
-       JOIN genders s ON (((i.gender_id = s.id) AND (i.group_id = s.group_id))))
-       JOIN time_dimension t ON (((i.intake_date)::date = t.calendar_date)));
-  SQL
-
   create_view :intake_genders,  sql_definition: <<-SQL
       SELECT at.name AS animal_type,
       g.description AS gender,
@@ -1977,6 +2003,44 @@ ActiveRecord::Schema.define(version: 20160316040642) do
             ORDER BY count(*) DESC) o;
   SQL
 
+  create_view :intake_metrics, materialized: true,  sql_definition: <<-SQL
+      SELECT i.id,
+      i.group_id,
+      at.name AS animal_type,
+      it.name AS intake_type,
+      s.name AS gender,
+      i.animal_id,
+      i.weight,
+      i.age,
+      i.breed,
+      i.coloring,
+      i.address_id,
+      i.fiscal_year,
+      at.trackable_animal,
+      it.trackable_intake,
+      it.live_intake,
+      i.latitude,
+      i.longitude,
+      i.geo_quality_code,
+      i.postal_code,
+      i.intake_date,
+      t.calendar_date,
+      t.calendar_year,
+      t.quarter,
+      t.month,
+      t.week,
+      t.day_of_month,
+      t.day_of_week,
+      t.day_of_year,
+      to_number(to_char(timezone((g.time_zone)::text, i.intake_date), 'HH24'::text), '99'::text) AS intake_hour
+     FROM (((((intakes i
+       JOIN groups g ON ((i.group_id = g.id)))
+       JOIN animal_types at ON (((i.animal_type_id = at.id) AND (i.group_id = at.group_id))))
+       JOIN intake_types it ON (((i.intake_type_id = it.id) AND (i.group_id = it.group_id))))
+       JOIN genders s ON (((i.gender_id = s.id) AND (i.group_id = s.group_id))))
+       JOIN time_dimension t ON (((i.intake_date)::date = t.calendar_date)));
+  SQL
+
   create_view :outcome_metrics, materialized: true,  sql_definition: <<-SQL
       SELECT o.id,
       o.group_id,
@@ -2000,6 +2064,7 @@ ActiveRecord::Schema.define(version: 20160316040642) do
       o.coloring,
       o.weight,
       o.age,
+      age_group(o.age) AS age_group,
       o.fiscal_year,
       t.calendar_year,
       t.month,
@@ -2017,6 +2082,7 @@ ActiveRecord::Schema.define(version: 20160316040642) do
       a.feature_type,
       a.full_location,
       a.valid_address,
+      ((o.outcome_date)::date - (o.intake_date)::date) AS length_of_stay,
       r.rank AS postal_code_rank
      FROM ((((((((outcomes o
        JOIN groups g ON ((o.group_id = g.id)))
@@ -2027,35 +2093,6 @@ ActiveRecord::Schema.define(version: 20160316040642) do
        LEFT JOIN addresses a ON ((o.address_id = a.id)))
        JOIN time_dimension t ON (((o.outcome_date)::date = t.calendar_date)))
        LEFT JOIN outcome_postal_code_ranks r ON ((((a.postal_code)::text = (r.postal_code)::text) AND (o.group_id = r.group_id))));
-  SQL
-
-  create_view :length_of_stay_metrics,  sql_definition: <<-SQL
-      SELECT o.id AS outcome_id,
-      o.animal_id,
-      o.group_id,
-      o.animal_type,
-      o.gender,
-      o.intake_type,
-      o.intake_date,
-      o.outcome_type,
-      o.outcome_date,
-      ((o.outcome_date)::date - (o.intake_date)::date) AS length_of_stay,
-      o.age,
-      age_group(o.age) AS age_group,
-      breed_group(o.breed) AS breed_group,
-      color_group(o.coloring) AS color_group,
-      o.fiscal_year,
-      o.calendar_year,
-      o.month,
-      o.week,
-      o.quarter,
-      o.day_of_month,
-      o.day_of_week,
-      o.day_of_year,
-      a.from_in_months
-     FROM (outcome_metrics o
-       JOIN age_groups a ON (((age_group(o.age))::text = (a.name)::text)))
-    WHERE ((o.intake_date IS NOT NULL) AND (o.outcome_date IS NOT NULL));
   SQL
 
 end

@@ -1,8 +1,8 @@
 <%= 
   render(partial: "standard_column_chart",
-         locals: { data_series: @by_intake_gender,
+         locals: { data_series: intakes_by_gender,
                    is_stacked: false,
-                   id: "intakes_by_gender",
+                   id: id,
                    title: "Stray Intakes By Gender",
                    xtitle: "Gender", 
                    ytitle: "Stray Intakes"

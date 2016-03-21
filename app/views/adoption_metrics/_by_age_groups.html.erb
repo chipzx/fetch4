@@ -1,7 +1,7 @@
 <%=  render(partial: "standard_column_chart",
-            locals:  { data_series: @by_age_groups,
+            locals:  { data_series: by_age_groups,
                        is_stacked: false,
-                       id: 'length_of_stay_by_age_groups', 
+                       id: id, 
                        title: "Average Length of Stay By Age Groups",
                        xtitle: "Age Group",
                        ytitle: "Average Length of Stay"

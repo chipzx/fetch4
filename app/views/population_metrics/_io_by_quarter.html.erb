@@ -1,8 +1,8 @@
 <%=  render(partial: "standard_column_chart",
-            locals:  { data_series: @population_by_days, 
+            locals:  { data_series: io_by_quarter, 
                        is_stacked: false,
-                       id: 'population_by_day', 
-                       title: "Outcomes Minus Intakes By Day",
+                       id: id, 
+                       title: "Outcomes Minus Intakes By Quarter",
                        xtitle: "Date",
                        ytitle: "Outcomes Minus Intakes"
                      }

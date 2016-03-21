@@ -8,14 +8,20 @@ class IntakeMetric < ActiveRecord::Base
     Scenic.database.refresh_materialized_view(table_name, concurrently: false)
   end
 
+  def self.intakes_by_day
+    return self.intakes_by_period(:day_of_year)
+  end
+
   def self.intakes_by_week
-    by_week = IntakeMetric.where("trackable_animal").group(:animal_type, :fiscal_year, :week).order(:animal_type, :fiscal_year, :week).count
-    return create_hc_series(by_week)
+    return self.intakes_by_period(:week)
   end
   
   def self.intakes_by_month
-    by_month = IntakeMetric.where("trackable_animal").group(:animal_type, :fiscal_year, :month).order(:animal_type, :fiscal_year, :month).count
-    return create_hc_series(by_month)
+    return self.intakes_by_period(:month)
+  end
+
+  def self.intakes_by_quarter
+    return self.intakes_by_period(:quarter)
   end
 
   def self.intakes_by_zip_code
@@ -27,6 +33,11 @@ class IntakeMetric < ActiveRecord::Base
   private
   def readonly?
     true
+  end
+
+  def self.intakes_by_period(period)
+    by_period = IntakeMetric.where("trackable_animal").group(:animal_type, :fiscal_year, period).order(:animal_type, :fiscal_year, period).count
+    return create_hc_series(by_period)
   end
 
 end

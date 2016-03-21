@@ -12,8 +12,8 @@
     <div class="row">
       <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
         <%= render(
-              partial: "population_by_day",
-              locals: { population_by_days: @population_by_days, id: "population_by_day" })
+              partial: "io_by_day",
+              locals: { io_by_day: @io_by_day, id: "io_by_day" })
         %>
       </div>
       <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
@@ -31,6 +31,12 @@
         <%= render(
               partial: "io_by_month",
               locals: { io_by_month: @io_by_month, id: "io_by_month" })
+        %>
+      </div>
+      <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+        <%= render(
+              partial: "io_by_quarter",
+              locals: { io_by_quarter: @io_by_quarter, id: "io_by_quarter" })
         %>
       </div>
     </div>

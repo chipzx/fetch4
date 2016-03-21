@@ -1,8 +1,8 @@
 <%= 
-  render(partial: "standard_line_chart",
-         locals: { data_series: @intake_by_days,
+  render(partial: "standard_column_chart",
+         locals: { data_series: intakes_by_day,
                    is_stacked: false,
-                   id: "intakes_by_day",
+                   id: id,
                    title: "Intakes By Day",
                    xtitle: "Date",
                    ytitle: "Total Intakes"
