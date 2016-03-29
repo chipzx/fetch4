@@ -1,7 +1,7 @@
 module Loader
   class LoadRunner
   
-    attr_accessor :data_load_record, :records, :start_time, :end_time
+    attr_accessor :data_load_record, :records, :start_time, :end_time, :inputs
 
     def initialize(group_name, import_type, data_as_of)
       set_group_and_time_zone(group_name)
@@ -20,11 +20,12 @@ module Loader
     def load
       set_start_time
       success = false
+      @inputs = []
       begin
         @data_load_record = get_data_load_record
         file_path = data_load_record.data_path
-        @records = read_file_into_records(file_path, data_load_record.load_class)
-puts("Read #{@records} records from #{file_path}")
+        @records = read_file_into_records(file_path, data_load_record.load_class, @inputs)
+puts("Read #{@records.length} records from #{file_path}")
         update_animals(@records)
         archive_file(file_path, data_load_record.archive_dir_path)
         success = true
@@ -39,7 +40,7 @@ puts("Read #{@records} records from #{file_path}")
     def get_data_load_record()
       data_load_record = DataLoad.where("group_id = ? AND data_load_type_id = ?", @group.id, @import_type)
       if (data_load_record.nil?)
-        raise Exception, "No data load record found for group #{@group.name} import type  #{@import_type}"
+        raise Exception, "No data load record found for group #{@group.name} import type  #{@import_type}", caller
       end
       return data_load_record.first
     end
@@ -66,13 +67,13 @@ puts("Read #{@records} records from #{file_path}")
       @updates = [] 
       new_recs = Hash.new
       records.each do |rec|
-        # save each record, hashed by the anumber
         new_recs[rec.anumber] = rec
-        db_rec = Animal.find_by_anumber(rec.anumber)
-        if (db_rec.nil?)
+        db_rec = Animal.where("anumber = ? and group_id = ?", 
+                              rec.anumber, @group.id)
+        if (db_rec[0].nil?)
           @adds << rec
         else
-          if (changed(rec, db_rec))
+          if (changed(rec, db_rec[0]))
             @updates << rec
           end
         end
@@ -95,7 +96,7 @@ puts("Read #{@records} records from #{file_path}")
 
     def get_outcomes(new_recs)
       @outcomes = []
-      Animal.all.to_a.each do |a|
+      Animal.where("group_id = ?", @group.id).to_a.each do |a|
         unless new_recs.has_key?(a.anumber)
           @outcomes << a
         end
@@ -104,27 +105,32 @@ puts("Read #{@records} records from #{file_path}")
 
     def do_updates
       ActiveRecord::Base.transaction do
-puts "Adding new animals"
+        puts "Adding new animals"
         @adds.each do |rec|
-puts "\tAdded #{rec.anumber} #{rec.name}"
-          rec.save
+          puts "\tAdding #{rec.anumber} #{rec.name}"
+          rec.save!
+          rec.index
         end
-puts "Updating existing animals"
+        puts "Updating existing animals"
         @updates.each do |rec|
-puts "\tUpdated #{rec.anumber} #{rec.name}"
+          puts "\tUpdating #{rec.anumber} #{rec.name}"
           update_animal(rec)
         end
-puts "Updating outcomes"
+        puts "Updating outcomes"
         @outcomes.each do |rec|
-puts "\tMoving #{rec.anumber} #{rec.name} to outcomes"
+          puts "\tMoving #{rec.anumber} #{rec.name} to outcomes"
           move_to_outcomes(rec)
         end
       end
       end_time = set_end_time
+      Sunspot.commit
     end
 
     def update_animal(rec)
-      animal = Animal.where("anumber = ?", rec.anumber).first
+      puts rec
+      animal = Animal.where("anumber = ? AND group_id = ?", rec.anumber, @group.id).first
+      raise Exception, "Could not find #{rec.anumber} for #{@group.id}", caller if animal.nil?
+      puts animal
       animal.name = rec.name unless rec.name.eql?(animal.name)
       animal.intake_date = rec.intake_date unless rec.intake_date.eql?(animal.intake_date)
       animal.breed = rec.breed unless rec.breed.eql?(animal.breed)
@@ -133,7 +139,8 @@ puts "\tMoving #{rec.anumber} #{rec.name} to outcomes"
       animal.dob = rec.dob unless rec.dob.eql?(animal.dob)
       animal.weight = rec.weight unless rec.weight.eql?(animal.weight)
       animal.description = rec.description unless rec.description.eql?(animal.description)
-      animal.save
+      animal.save!
+      animal.index
     end
 
     def move_to_outcomes(animal)
@@ -162,18 +169,18 @@ puts("Moving #{outcome} to outcomes")
     end
 
     def set_group_and_time_zone(group_name)
-      group = Group.where("name = ?", group_name)
-      raise Exception, "There is no group named #{group_name}" if group.nil?
-      @group = group.first # group_name is unique, so there's only one
+      @group = Group.find_by_name(group_name)
+      raise Exception, "There is no group named #{group_name}" if @group.nil?
       @tz = ActiveSupport::TimeZone.new(@group.time_zone)
       Time.zone = @tz
     end
 
-    def read_file_into_records(file_path, loader_class)
+    def read_file_into_records(file_path, loader_class, inputs)
       # instantiate the load class - loaders should always be in Loader:: namespace
       clazz = loader_class.split("::").inject(Object) { |o, c| o.const_get c }
       @loader = clazz.new(@group, @data_as_of)
       @loader.read_file(file_path)
+      inputs = @loader.records
       return @loader.animals
     end
   

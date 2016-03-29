@@ -3,7 +3,7 @@ module Loader
 
   class CsvLoader
   
-    attr_accessor :added, :updated, :deleted, :group, :tz, :effective_date
+    attr_accessor :added, :updated, :deleted, :group, :tz, :effective_date, :records
   
     def initialize(group)
       @added   = 0
@@ -20,6 +20,7 @@ module Loader
       if (File.exist?(file_path))
         get_effective_date(file_path)
         CSV.foreach(file_path, options) do |data|
+puts("Data class from CSV.foreach is #{data.class}")
           yield data
           records << data
         end

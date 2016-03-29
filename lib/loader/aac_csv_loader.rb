@@ -9,6 +9,7 @@ module Loader
     attr_reader :animals
 
     def initialize(group, data_as_of)
+      super(group)
       @group = group
       @data_as_of = data_as_of
       @animals = []
