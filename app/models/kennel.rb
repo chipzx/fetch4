@@ -8,11 +8,12 @@ class Kennel < ActiveRecord::Base
     full_name ? "#{building}-#{name}" : name
   end
 
-  def self.new_kennel(name)
+  def self.new_kennel(name, group_id)
     k = Kennel.new
     k.name = name
+    k.group_id = group_id
     k.kennel_type_id = KennelType.default_type.id
-    k.save!
+    return k
   end
 
 end

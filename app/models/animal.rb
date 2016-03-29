@@ -78,9 +78,21 @@ class Animal < ActiveRecord::Base
   end
 
   def age
-    return if self.dob.nil?
+    return 'NA' if self.dob.nil?
     now = Time.zone.now
-    now.year - self.dob.year - ((now.month > self.dob.month || (now.month == self.dob.month && now.day >= dob.day)) ? 0 : 1)
+    today_in_months = now.year*12 + now.month
+    dob_in_months = self.dob.year*12 + dob.month
+    age_in_months = today_in_months - dob_in_months 
+    years = age_in_months/12
+    months = age_in_months % 12
+    age_str = ""
+    age_str = "#{years} yr" if (years > 0)
+    age_str += "s" if years > 1
+    age_str += " " if (years > 0 && months > 0)
+    age_str += "#{months} mon" if (months > 0)
+    age_str += "s" if months > 1
+    age_str = "Under 1 month" if (years == 0 && months == 0)
+    return age_str
   end 
 
   def days_under_care

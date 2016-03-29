@@ -212,6 +212,29 @@ ActiveRecord::Schema.define(version: 20160320234927) do
   add_index "animal_services311_calls", ["service_request_status_type_id", "group_id"], name: "anml_srvcs_311_calls_sr_status_type_group", using: :btree
   add_index "animal_services311_calls", ["service_request_type_id", "group_id"], name: "animal_service_311_calls_sr_type_group", using: :btree
 
+  create_table "animal_services311_calls_ahs", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.string   "service_request_id"
+    t.integer  "group_id"
+    t.integer  "service_request_type_id"
+    t.string   "owning_department"
+    t.string   "method_received"
+    t.integer  "service_request_status_type_id"
+    t.datetime "status_change_date"
+    t.datetime "date_opened"
+    t.datetime "last_updated"
+    t.datetime "date_closed"
+    t.string   "service_request_location"
+    t.integer  "address_id"
+    t.string   "jurisdiction"
+    t.string   "jurisdiction_name"
+    t.string   "map_page"
+    t.string   "map_tile"
+    t.integer  "fiscal_year"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "animal_services_csr_calls", force: :cascade do |t|
     t.string   "service_request_number",         limit: 255,                 null: false
     t.string   "sr_type_code",                   limit: 255,                 null: false
@@ -1142,6 +1165,32 @@ ActiveRecord::Schema.define(version: 20160320234927) do
   add_index "outcomes", ["microchip_number"], name: "index_outcomes_on_microchip_number", using: :btree
   add_index "outcomes", ["name"], name: "index_outcomes_on_name", using: :btree
   add_index "outcomes", ["outcome_type_id"], name: "index_outcomes_on_outcome_type_id", using: :btree
+
+  create_table "outcomes_before_aac_update", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.integer  "animal_type_id"
+    t.string   "animal_id"
+    t.string   "name"
+    t.integer  "outcome_type_id"
+    t.datetime "outcome_date"
+    t.integer  "gender_id"
+    t.integer  "address_id"
+    t.string   "breed"
+    t.string   "coloring"
+    t.decimal  "weight"
+    t.datetime "dob"
+    t.boolean  "dob_known"
+    t.datetime "intake_date"
+    t.integer  "intake_type_id"
+    t.text     "description"
+    t.integer  "group_id"
+    t.string   "microchip_number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "age"
+    t.integer  "fiscal_year"
+    t.integer  "kennel_id"
+  end
 
   create_table "outcomes_import", force: :cascade do |t|
     t.integer  "atype_id",                    null: false
