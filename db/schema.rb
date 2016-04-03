@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160320234927) do
+ActiveRecord::Schema.define(version: 20160401234841) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -590,6 +590,13 @@ ActiveRecord::Schema.define(version: 20160320234927) do
 
   add_index "contacts", ["contact_type_id"], name: "index_contacts_on_contact_type_id", using: :btree
   add_index "contacts", ["party_id", "contact_type_id"], name: "index_contacts_on_party_id_and_contact_type_id", using: :btree
+
+  create_table "dashboards", force: :cascade do |t|
+    t.integer "group_id",                                null: false
+    t.string  "name",                default: "Default", null: false
+    t.string  "description"
+    t.string  "default_time_period", default: "monthly", null: false
+  end
 
   create_table "data_load_logs", force: :cascade do |t|
     t.integer  "data_load_id",               null: false

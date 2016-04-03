@@ -36,8 +36,8 @@ class IntakeMetric < ActiveRecord::Base
   end
 
   def self.intakes_by_period(period)
-    by_period = IntakeMetric.where("trackable_animal").group(:animal_type, :fiscal_year, period).order(:animal_type, :fiscal_year, period).count
-    return create_hc_series(by_period)
+    by_period = IntakeMetric.where("trackable_animal and intake_date <= now()").group(:animal_type, :fiscal_year, period).order(:animal_type, :fiscal_year, period).count
+    return create_hc_series(by_period, period)
   end
 
 end

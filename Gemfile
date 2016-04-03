@@ -76,6 +76,7 @@ gem 'mail'
 # gems for reporting
 gem 'scenic'
 gem 'chartkick'
+gem 'chartkick-remote'
 gem 'groupdate'
 gem 'active_median'
 gem 'thinreports-rails'

@@ -3,7 +3,9 @@ module DataSeries
 
   module ClassMethods
 
-    def create_hc_series(result_set, separator = " ")
+  @@months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
+
+    def create_hc_series(result_set, period = :year, separator = " ")
       series = []
       results = result_set.to_a
 
@@ -17,7 +19,7 @@ module DataSeries
             f = vf.slice(1,vf.length-1)
             label = f[0..f.length-2].join(separator)
             totals = f[-1]
-            value << label
+            value << format_label(label, period)
             value << totals
             values << value
           end
@@ -32,10 +34,78 @@ module DataSeries
       return series
     end
 
-    def zero_month(period)
-      return 'Unknown' if period.nil?
-      return period if (period.class == String)
-      return period < 10 ? "0" + period.to_s : period.to_s
+    def format_label(label, period)
+      return label if period == :year
+      return as_quarter(label) if period == :quarter
+      return as_month(label) if period == :month
+      return as_week(label) if period == :week
+      return as_day(label) if period == :day_of_year
+      return as_hour(label) if period == :hour
+      return label
+    end
+   
+    def as_hour(label)
+      hh24 = label.to_i
+      if (hh24 < 13)
+        "#{hh24} AM"
+      else
+        "#{hh24-12} PM"
+      end
+    end
+
+    def as_period(label)
+      begin
+        elems = label.split(" ")
+        if (elems.length == 2)
+          year = elems[0].to_i
+          period = elems[1].to_i
+          return yield(period, year)
+        end
+      #rescue
+      #  puts("Unable to parse #{label} as a year-period string")
+      end
+      return label
+    end
+
+    def validate_period(period, min, max)
+      if (period < min || period > max)
+        raise Exception, "period value is #{period}, must be between #{min} and #{max}", caller
+      end
+    end
+
+    def as_quarter(label)
+      as_period(label) do |period, year| 
+        validate_period(period, 1, 4)
+        "#{year} Q#{period}" 
+      end
+
+    end
+
+    def as_month(label)
+      as_period(label) do |period, year| 
+        validate_period(period, 1, 12)
+        "#{year} #{@@months[period-1]}"
+      end
+    end
+
+    def as_week(label)
+      as_period(label) do |period, year|
+        validate_period(period, 1, 53)
+        date_str = ""
+        if (period == 53) # don't know why Date.commercial doesn't handle this
+          date_str = "Dec 31" 
+        else
+          date_str = Date.commercial(year, period, 7).strftime("%b %e")
+        end
+        #{year} #{date_str}"
+      end
+    end
+
+    def as_day(label)
+      as_period(label) do |period, year|
+        validate_period(period, 1, 366)
+        Date.strptime("#{year}-#{period}", "%Y-%j").to_s
+      end
     end
 
     def hash_entries(series)

@@ -1,4 +1,4 @@
-<%= column_chart(data_series,
+<%= column_chart(
   stacked: is_stacked,
   id: id,
   xtitle: xtitle,
@@ -24,5 +24,5 @@
     layout: 'vertical'
     }
   }
-  )
+  ) { data_series }
  %>

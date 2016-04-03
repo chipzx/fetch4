@@ -48,6 +48,7 @@ class Outcome < ActiveRecord::Base
   # TODO: Move this to a concern
   # returns string suitable to be inserted as an Interval in the database
   def self.calc_age(end_date, start_date)
+    return nil if end_date.nil? || start_date.nil?
     days = end_date.day - start_date.day
     months = end_date.month - start_date.month
     years = end_date.year - start_date.year

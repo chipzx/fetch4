@@ -55,7 +55,7 @@ class OutcomeMetric < ActiveRecord::Base
 
   def self.adoptions_by_hour
     by_hour = OutcomeMetric.where("trackable_animal and outcome_type = 'Adoption'").group(:fiscal_year, :outcome_hour).order(:fiscal_year, :outcome_hour).count
-    return create_hc_series(by_hour)
+    return create_hc_series(by_hour, :hour)
   end
 
   def self.adoptions_by_day_of_week
@@ -87,7 +87,7 @@ class OutcomeMetric < ActiveRecord::Base
 
   def self.outcomes_by_period(period)
     by_period = OutcomeMetric.where("trackable_animal").group(:animal_type, :fiscal_year, period).order(:animal_type, :fiscal_year, period).count
-    return create_hc_series(by_period)
+    return create_hc_series(by_period, period)
   end
 
 end

@@ -119,7 +119,8 @@ puts("Read #{@records.length} records from #{file_path}")
         puts "Updating outcomes"
         @outcomes.each do |rec|
           puts "\tMoving #{rec.anumber} #{rec.name} to outcomes"
-          move_to_outcomes(rec)
+          # turned off until outcome import is automated
+          # move_to_outcomes(rec)
         end
       end
       end_time = set_end_time

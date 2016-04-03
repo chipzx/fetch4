@@ -6,18 +6,19 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'welcome#index'
 
-  resources :welcome
-  resources :animal_services311_heatmaps
-  resources :animals
+  resources :welcome, only: [:index, :show]
+  resources :animals, only: [:index, :show]
   resources :animal_galleries
-  resources :intake_heatmaps
-  resources :outcome_heatmaps
-  resources :adoption_metrics
-  resources :intake_metrics
-  resources :outcome_metrics
-  resources :service_request_metrics
-  resources :population_metrics
-  resources :imports
+  resources :intake_heatmaps, only: [:index, :show]
+  resources :outcome_heatmaps, only: [:index, :show]
+  resources :animal_services311_heatmaps, only: [:index, :show]
+  resources :adoption_metrics, only: [:index, :show]
+  resources :intake_metrics, only: [:index, :show]
+  resources :outcome_metrics, only: [:index, :show]
+  resources :service_request_metrics, only: [:index, :show]
+  resources :population_metrics, only: [:index, :show]
+  resources :imports, only: [:index, :show]
+  resources :dashboards, only: [:index, :show]
 
   Rails.application.routes.draw do
     resources :intake_heatmaps do
