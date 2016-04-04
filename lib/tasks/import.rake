@@ -5,7 +5,6 @@ namespace :import do
   desc "Import animal inventory data"
   task :import_animals, [:arg1] => :environment do |t, args|
     group_name = args[:arg1]
-    pp = PetpointCsvLoader(group_name, DateTime.now)
     if (group_name.nil?) 
       puts "Must supply a group name - quitting"
     else
