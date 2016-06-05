@@ -80,3 +80,7 @@ gem 'chartkick-remote'
 gem 'groupdate'
 gem 'active_median'
 gem 'thinreports-rails'
+
+# gems for converting to Excel
+gem 'axlsx'
+gem 'axlsx_rails'
